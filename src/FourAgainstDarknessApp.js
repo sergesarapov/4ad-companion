@@ -116,6 +116,7 @@ export const FourAgainstDarknessApp = () => {
 
   return (
     <>
+      <p className='mb-4'>To avoid losing your progress in the current dungeon, make sure to save your dungeon slug: <b>{slug}</b></p>
       <button
         className="mb-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
         onClick={() => navigate("/")}
@@ -184,16 +185,6 @@ export const FourAgainstDarknessApp = () => {
           />
         ))}
       </div>
-      <footer className="bg-gray-200 mt-8 py-4 px-6 text-center">
-        <p className="text-sm text-gray-600">
-          Four Against Darkness is a game by Andrea Sfiligoi, published by Ganesha Games.
-          <br />
-          Official website: <a href="https://www.ganeshagames.net/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">www.ganeshagames.net</a>
-        </p>
-        <p className="text-sm text-gray-600 mt-2">
-          Disclaimer: This companion app is not part of the official Four Against Darkness game and is not affiliated with or endorsed by Ganesha Games.
-        </p>
-      </footer>
       <FloatingDice />
     </>
   );
