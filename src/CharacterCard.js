@@ -98,6 +98,13 @@ export const CharacterCard = ({ character, setCharacter }) => {
     }
   };
 
+  const deleteEquipment = (itemToDelete) => {
+    setLocalCharacter((prev) => ({
+      ...prev,
+      equipment: prev.equipment.filter((item) => item !== itemToDelete),
+    }));
+  };
+
   const toggleEditMode = () => {
     setIsEditMode(!isEditMode);
   };
@@ -281,7 +288,10 @@ export const CharacterCard = ({ character, setCharacter }) => {
             <h3 className="text-lg font-semibold">Equipment</h3>
             <ul>
               {localCharacter.equipment.map((item, index) => (
-                <li key={index}>{item}</li>
+                <div className='flex m-2'>
+                  <li key={index}>{item}</li>
+                  <button className='ml-2 pr-2 pl-2 inline border bg-red-500 rounded' onClick={() => deleteEquipment(item)}>del</button>
+                </div>
               ))}
             </ul>
             <div className="flex space-x-2 mt-2">
@@ -407,7 +417,7 @@ export const CharacterCard = ({ character, setCharacter }) => {
                     Roll Attack <Dice6 className="inline-block ml-2" />
                   </button>
                   {attackRoll && (
-                    <p className="inline text-gray-700">
+                    <p className="inline dark:text-white text-gray-700">
                       {character.name} rolled {attackRoll}
                     </p>
                   )}
@@ -421,7 +431,7 @@ export const CharacterCard = ({ character, setCharacter }) => {
                     Roll Defense <Dice6 className="inline-block ml-2" />
                   </button>
                   {defenseRoll && (
-                    <p className="inline text-gray-700">
+                    <p className="inline dark:text-white text-gray-700">
                       {character.name} rolled {defenseRoll}
                     </p>
                   )}
