@@ -1,70 +1,85 @@
-# Getting Started with Create React App
+# Four Against Darkness Companion App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a web-based companion app for the solo tabletop role-playing game "Four Against Darkness" by Andrea Sfiligoi. This app is designed to enhance your gaming experience by providing digital tools to manage your dungeon, characters, and encounters.
 
-## Available Scripts
+## Disclaimer
 
-In the project directory, you can run:
+This companion app is not part of the official Four Against Darkness game and is not affiliated with or endorsed by Ganesha Games. Four Against Darkness is a game by Andrea Sfiligoi, published by Ganesha Games.
 
-### `npm start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Dungeon Grid**: A digital representation of your dungeon layout.
+- **Character Management**: Keep track of up to four characters, including their stats, equipment, and spells.
+- **Encounter Tracking**: Manage and track various encounters throughout your adventure.
+- **Adventure Logging**: Keep track of your adventures by leaving short log entries.
+- **Persistent Storage**: Your dungeon, characters, and encounters are saved in the browser's local storage.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Getting Started
 
-### `npm test`
+### Prerequisites
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Node.js (version 18 or higher)
+- npm (usually comes with Node.js)
+- npm install --global yarn
 
-### `npm run build`
+### Installation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Clone the repository:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+   ```
+   git clone https://github.com/sergesarapov/4ad-companion.git
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. Navigate to the project directory:
 
-### `npm run eject`
+   ```
+   cd 4ad-companion
+   ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+3. Install the dependencies:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+   ```
+   yarn
+   ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+4. Start the development server:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+   ```
+   yarn start
+   ```
 
-## Learn More
+5. Open your browser and visit `http://localhost:3000` to see the app running.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Usage
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Use the Dungeon Grid to map out your adventure.
+- Add and manage up to four characters in the Characters section.
+- Track encounters in the Encounters section. Add new encounters as you progress through your adventure.
+- All data is automatically saved to your browser's local storage.
 
-### Code Splitting
+## Technologies Used
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- React
+- React Router
+- Tailwind CSS
 
-### Analyzing the Bundle Size
+## Contributing
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-### Making a Progressive Web App
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+This project is open source.
 
-### Advanced Configuration
+## Acknowledgments
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- Andrea Sfiligoi and Ganesha Games for creating the amazing "Four Against Darkness" game.
+- All the solo RPG enthusiasts who inspired this project.
 
-### Deployment
+## Contact
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+If you have any questions, feel free to reach out or open an issue in this repository.
 
-### `npm run build` fails to minify
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Remember to support the original game creators by purchasing "Four Against Darkness" and its supplements from [Ganesha Games](https://www.ganeshagames.net/).
