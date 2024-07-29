@@ -116,7 +116,7 @@ export const FourAgainstDarknessApp = () => {
 
   return (
     <>
-      <p className='mb-4'>To avoid losing your progress in the current dungeon, make sure to save your dungeon slug: <b>{slug}</b></p>
+      <p className='mb-4'>To avoid losing your progress in the current dungeon, make sure to save your dungeon address: /dungeon/<b>{slug}</b></p>
       <button
         className="mb-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
         onClick={() => navigate("/")}
