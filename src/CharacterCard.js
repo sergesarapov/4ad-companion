@@ -7,7 +7,7 @@ export const CharacterCard = ({ character, setCharacter }) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [localCharacter, setLocalCharacter] = useState(character);
   const [attackRoll, setAttackRoll] = useState(null);
-  const [defenceRoll, setDefenceRoll] = useState(null);
+  const [defenseRoll, setDefenseRoll] = useState(null);
   const [newSpell, setNewSpell] = useState({ name: "", slots: 0 });
   const [newEquipment, setNewEquipment] = useState("");
 
@@ -111,9 +111,9 @@ export const CharacterCard = ({ character, setCharacter }) => {
     setAttackRoll(roll);
   };
 
-  const rollDefence = () => {
+  const rollDefense = () => {
     const roll = Math.floor(Math.random() * 6) + 1;
-    setDefenceRoll(roll);
+    setDefenseRoll(roll);
   };
 
   const incrementLife = () => {
@@ -131,7 +131,7 @@ export const CharacterCard = ({ character, setCharacter }) => {
   };
 
   return (
-    <div className="p-4 bg-gray-100 rounded-lg shadow">
+    <div className={`p-4 bg-gray-100 rounded-lg shadow ${isCollapsed && 'h-20'}`}>
       {isEditMode ? (
         <div className="space-y-4">
           <div>
@@ -224,18 +224,18 @@ export const CharacterCard = ({ character, setCharacter }) => {
           </div>
           <div>
             <label
-              htmlFor="defence"
+              htmlFor="defense"
               className="block text-sm font-medium text-gray-700"
             >
-              Defence
+              Defense
             </label>
             <input
               type="number"
-              id="defence"
-              name="defence"
-              value={localCharacter.defence}
+              id="defense"
+              name="defense"
+              value={localCharacter.defense}
               onChange={handleInputChange}
-              placeholder="Defence"
+              placeholder="Defense"
               className="mt-1 block w-full p-2 border border-gray-300 rounded"
               min="0"
             />
@@ -413,16 +413,16 @@ export const CharacterCard = ({ character, setCharacter }) => {
                   )}
                 </div>
                 <div>
-                  Defence: {character.defence}
+                  Defense: {character.defense}
                   <button
-                    onClick={rollDefence}
+                    onClick={rollDefense}
                     className="m-2 bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 transition-colors"
                   >
-                    Roll Defence <Dice6 className="inline-block ml-2" />
+                    Roll Defense <Dice6 className="inline-block ml-2" />
                   </button>
-                  {defenceRoll && (
+                  {defenseRoll && (
                     <p className="inline text-gray-700">
-                      {character.name} rolled {defenceRoll}
+                      {character.name} rolled {defenseRoll}
                     </p>
                   )}
                 </div>
@@ -465,9 +465,8 @@ export const CharacterCard = ({ character, setCharacter }) => {
                         {spell.checkedSlots.map((checked, i) => (
                           <button
                             key={i}
-                            className={`w-4 h-4 border rounded ${
-                              checked ? "bg-green-500" : "bg-red-500"
-                            }`}
+                            className={`w-4 h-4 border rounded ${checked ? "bg-green-500" : "bg-red-500"
+                              }`}
                             onClick={() => toggleSlotChecked(index, i)}
                           />
                         ))}

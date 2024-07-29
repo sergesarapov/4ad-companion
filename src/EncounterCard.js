@@ -37,7 +37,7 @@ export const EncounterCard = ({ encounter, setEncounter }) => {
   };
 
   return (
-    <div className="p-4 bg-gray-100 rounded-lg shadow m-2">
+    <div className="p-4 bg-gray-100 rounded-lg shadow mt-2 mb-2">
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-bold">{localEncounter.name}</h2>
@@ -52,6 +52,19 @@ export const EncounterCard = ({ encounter, setEncounter }) => {
         >
           {isCollapsed ? <MdExpandMore /> : <MdExpandLess />}
         </button>
+      </div>
+      <div className="mt-2">
+        <p>Count / Boss HP:</p>
+        <div className="flex flex-wrap w-2/4 mt-1">
+          {localEncounter.count.map((checked, index) => (
+            <button
+              key={index}
+              className={`m-1 w-6 h-6 border rounded ${checked ? "bg-blue-500" : "bg-gray-200"
+                }`}
+              onClick={() => toggleCount(index)}
+            />
+          ))}
+        </div>
       </div>
       {!isCollapsed && (
         <div className="mt-4">
@@ -176,20 +189,19 @@ export const EncounterCard = ({ encounter, setEncounter }) => {
               </div>
             </>
           )}
-          <div className="mt-2">
+          {/* <div className="mt-2">
             <p>Count / Boss HP:</p>
             <div className="flex flex-wrap w-2/4 mt-1">
               {localEncounter.count.map((checked, index) => (
                 <button
                   key={index}
-                  className={`m-1 w-6 h-6 border rounded ${
-                    checked ? "bg-blue-500" : "bg-gray-200"
-                  }`}
+                  className={`m-1 w-6 h-6 border rounded ${checked ? "bg-blue-500" : "bg-gray-200"
+                    }`}
                   onClick={() => toggleCount(index)}
                 />
               ))}
             </div>
-          </div>
+          </div> */}
           <button
             onClick={toggleEditMode}
             className="bg-blue-500 text-white px-4 py-2 rounded mt-4 hover:bg-blue-600 transition-colors"

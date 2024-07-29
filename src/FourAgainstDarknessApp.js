@@ -27,10 +27,10 @@ export const FourAgainstDarknessApp = () => {
           level: 1,
           gold: 0,
           attack: 0,
-          defence: 0,
+          defense: 0,
           fullLife: 0,
           currentLife: 0,
-          equipment: [],
+          equipment: ['bandage'],
           spells: [],
           notes: "",
         }))
