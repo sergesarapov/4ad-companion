@@ -162,7 +162,7 @@ export const FourAgainstDarknessApp = () => {
       <h2 className="text-xl font-bold mt-6 mb-2">Adventure Log</h2>
       <div className="mb-4">
         <textarea
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="dark:bg-gray-800 dark:text-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           rows="3"
           placeholder="Enter a new log entry..."
           value={newLogEntry}

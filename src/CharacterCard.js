@@ -131,13 +131,13 @@ export const CharacterCard = ({ character, setCharacter }) => {
   };
 
   return (
-    <div className={`p-4 bg-gray-100 rounded-lg shadow ${isCollapsed && 'h-20'}`}>
+    <div className={`dark:bg-gray-800 dark:text-white p-4 bg-gray-100 rounded-lg shadow ${isCollapsed && 'h-20'}`}>
       {isEditMode ? (
         <div className="space-y-4">
           <div>
             <label
               htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm dark:text-slate-400 font-medium text-gray-700"
             >
               Name
             </label>
@@ -148,13 +148,13 @@ export const CharacterCard = ({ character, setCharacter }) => {
               value={localCharacter.name}
               onChange={handleInputChange}
               placeholder="Name"
-              className="mt-1 block w-full p-2 border border-gray-300 rounded"
+              className="dark:bg-gray-800 mt-1 block w-full p-2 border border-gray-300 rounded"
             />
           </div>
           <div>
             <label
               htmlFor="class"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm dark:text-slate-400 font-medium text-gray-700"
             >
               Class
             </label>
@@ -165,13 +165,13 @@ export const CharacterCard = ({ character, setCharacter }) => {
               value={localCharacter.class}
               onChange={handleInputChange}
               placeholder="Class"
-              className="mt-1 block w-full p-2 border border-gray-300 rounded"
+              className="dark:bg-gray-800 mt-1 block w-full p-2 border border-gray-300 rounded"
             />
           </div>
           <div>
             <label
               htmlFor="level"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm dark:text-slate-400 font-medium text-gray-700"
             >
               Level
             </label>
@@ -182,14 +182,14 @@ export const CharacterCard = ({ character, setCharacter }) => {
               value={localCharacter.level}
               onChange={handleInputChange}
               placeholder="Level"
-              className="mt-1 block w-full p-2 border border-gray-300 rounded"
+              className="dark:bg-gray-800 mt-1 block w-full p-2 border border-gray-300 rounded"
               min="1"
             />
           </div>
           <div>
             <label
               htmlFor="gold"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm dark:text-slate-400 font-medium text-gray-700"
             >
               Gold
             </label>
@@ -200,14 +200,14 @@ export const CharacterCard = ({ character, setCharacter }) => {
               value={localCharacter.gold}
               onChange={handleInputChange}
               placeholder="Gold"
-              className="mt-1 block w-full p-2 border border-gray-300 rounded"
+              className="dark:bg-gray-800 mt-1 block w-full p-2 border border-gray-300 rounded"
               min="0"
             />
           </div>
           <div>
             <label
               htmlFor="attack"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm dark:text-slate-400 font-medium text-gray-700"
             >
               Attack
             </label>
@@ -218,14 +218,14 @@ export const CharacterCard = ({ character, setCharacter }) => {
               value={localCharacter.attack}
               onChange={handleInputChange}
               placeholder="Attack"
-              className="mt-1 block w-full p-2 border border-gray-300 rounded"
+              className="dark:bg-gray-800 mt-1 block w-full p-2 border border-gray-300 rounded"
               min="0"
             />
           </div>
           <div>
             <label
               htmlFor="defense"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm dark:text-slate-400 font-medium text-gray-700"
             >
               Defense
             </label>
@@ -236,14 +236,14 @@ export const CharacterCard = ({ character, setCharacter }) => {
               value={localCharacter.defense}
               onChange={handleInputChange}
               placeholder="Defense"
-              className="mt-1 block w-full p-2 border border-gray-300 rounded"
+              className="dark:bg-gray-800 mt-1 block w-full p-2 border border-gray-300 rounded"
               min="0"
             />
           </div>
           <div>
             <label
               htmlFor="fullLife"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm dark:text-slate-400 font-medium text-gray-700"
             >
               Full Life
             </label>
@@ -254,14 +254,14 @@ export const CharacterCard = ({ character, setCharacter }) => {
               value={localCharacter.fullLife}
               onChange={handleInputChange}
               placeholder="Full Life"
-              className="mt-1 block w-full p-2 border border-gray-300 rounded"
+              className="dark:bg-gray-800 mt-1 block w-full p-2 border border-gray-300 rounded"
               min="0"
             />
           </div>
           <div>
             <label
               htmlFor="currentLife"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm dark:text-slate-400 font-medium text-gray-700"
             >
               Current Life
             </label>
@@ -272,7 +272,7 @@ export const CharacterCard = ({ character, setCharacter }) => {
               value={localCharacter.currentLife}
               onChange={handleInputChange}
               placeholder="Current Life"
-              className="mt-1 block w-full p-2 border border-gray-300 rounded"
+              className="dark:bg-gray-800 mt-1 block w-full p-2 border border-gray-300 rounded"
               min="0"
               max={localCharacter.fullLife}
             />
@@ -290,7 +290,7 @@ export const CharacterCard = ({ character, setCharacter }) => {
                 value={newEquipment}
                 onChange={(e) => setNewEquipment(e.target.value)}
                 placeholder="New Equipment"
-                className="w-1/2 p-2 border border-gray-300 rounded"
+                className="dark:bg-gray-800 w-1/2 p-2 border border-gray-300 rounded"
               />
               <button
                 onClick={addEquipment}
@@ -310,7 +310,7 @@ export const CharacterCard = ({ character, setCharacter }) => {
                   value={spell.name}
                   onChange={(e) => handleSpellChange(index, e)}
                   placeholder="Spell Name"
-                  className="w-1/2 p-2 border border-gray-300 rounded"
+                  className="dark:bg-gray-800 w-1/2 p-2 border border-gray-300 rounded"
                 />
                 <input
                   type="number"
@@ -318,7 +318,7 @@ export const CharacterCard = ({ character, setCharacter }) => {
                   value={spell.slots}
                   onChange={(e) => handleSpellChange(index, e)}
                   placeholder="Slots"
-                  className="w-1/4 p-2 border border-gray-300 rounded"
+                  className="dark:bg-gray-800 w-1/4 p-2 border border-gray-300 rounded"
                   min="0"
                 />
               </div>
@@ -331,7 +331,7 @@ export const CharacterCard = ({ character, setCharacter }) => {
                   setNewSpell({ ...newSpell, name: e.target.value })
                 }
                 placeholder="New Spell Name"
-                className="w-1/2 p-2 border border-gray-300 rounded"
+                className="dark:bg-gray-800 p-2 border border-gray-300 rounded"
               />
               <input
                 type="number"
@@ -343,7 +343,7 @@ export const CharacterCard = ({ character, setCharacter }) => {
                   })
                 }
                 placeholder="Slots"
-                className="w-1/4 p-2 border border-gray-300 rounded"
+                className="dark:bg-gray-800 w-1/4 p-2 border border-gray-300 rounded"
                 min="0"
               />
               <button
@@ -357,7 +357,7 @@ export const CharacterCard = ({ character, setCharacter }) => {
           <div>
             <label
               htmlFor="notes"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm dark:text-slate-400 font-medium text-gray-700"
             >
               Notes
             </label>
@@ -367,7 +367,7 @@ export const CharacterCard = ({ character, setCharacter }) => {
               value={localCharacter.notes}
               onChange={handleInputChange}
               placeholder="Notes"
-              className="mt-1 block w-full p-2 border border-gray-300 rounded"
+              className="dark:bg-gray-800 mt-1 block w-full p-2 border border-gray-300 rounded"
             />
           </div>
           <button
@@ -382,7 +382,7 @@ export const CharacterCard = ({ character, setCharacter }) => {
           <div className="flex justify-between items-center">
             <div>
               <h2 className="text-2xl font-bold">{localCharacter.name}</h2>
-              <p className="text-sm text-gray-500">{localCharacter.class}</p>
+              <p className="text-sm dark:text-slate-400 text-gray-500">{localCharacter.class}</p>
             </div>
             <button
               onClick={toggleCollapsed}
@@ -393,7 +393,7 @@ export const CharacterCard = ({ character, setCharacter }) => {
           </div>
           {!isCollapsed && (
             <>
-              <p className="text-sm">Level: {localCharacter.level}</p>
+              <p className="text-sm dark:text-slate-400">Level: {localCharacter.level}</p>
               <div className="flex-col">
                 <div className="mt-2">
                   <p className="text-l">Gold: {localCharacter.gold}</p>

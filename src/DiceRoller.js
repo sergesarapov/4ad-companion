@@ -19,7 +19,7 @@ export const DiceRoller = ({ title, d }) => {
   };
 
   return (
-    <div className="pb-4 bg-gray-100">
+    <div className="dark:bg-gray-800 pb-4 bg-gray-100">
       <h3>{title}</h3>
       <button
         onClick={rollDice}

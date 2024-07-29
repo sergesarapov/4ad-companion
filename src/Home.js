@@ -9,7 +9,7 @@ export const Home = () => {
   };
 
   return (
-    <>
+    <div className='h-[80vh]'>
       <button
         onClick={createNewDungeon}
         className="mb-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
@@ -17,6 +17,6 @@ export const Home = () => {
         Delve into a new dungeon
       </button>
       <div>Select a dungeon or create a new one!</div>
-    </>
+    </div>
   );
 };

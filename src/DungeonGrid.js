@@ -42,7 +42,7 @@ export const DungeonGrid = ({ grid, onGridUpdate }) => {
 
   return (
     <div
-      className="p-4 bg-gray-100 rounded-md mt-4 overflow-x-auto"
+      className="dark:bg-gray-800 p-4 bg-gray-100 rounded-md mt-4 overflow-x-auto"
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
     >
@@ -58,9 +58,8 @@ export const DungeonGrid = ({ grid, onGridUpdate }) => {
           row.map((cell, colIndex) => (
             <div
               key={`${rowIndex}-${colIndex}`}
-              className={`w-6 h-6 border border-gray-300 cursor-pointer ${
-                cell ? "bg-gray-700" : "bg-white"
-              }`}
+              className={`w-6 h-6 border border-gray-300 cursor-pointer ${cell ? "dark:bg-white bg-gray-700" : "dark:bg-gray-800 bg-white"
+                }`}
               onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
               onMouseEnter={() => handleMouseEnter(rowIndex, colIndex)}
               data-coord={`${rowIndex}-${colIndex}`}
