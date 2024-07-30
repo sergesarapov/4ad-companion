@@ -10,6 +10,8 @@ export const CharacterCard = ({ character, setCharacter }) => {
   const [defenseRoll, setDefenseRoll] = useState(null);
   const [newSpell, setNewSpell] = useState({ name: "", slots: 0 });
   const [newEquipment, setNewEquipment] = useState("");
+  const [isAttackRolling, setIsAttackRolling] = useState(false);
+  const [isDefenseRolling, setIsDefenseRolling] = useState(false);
 
   useEffect(() => {
     setCharacter(localCharacter);
@@ -114,13 +116,25 @@ export const CharacterCard = ({ character, setCharacter }) => {
   };
 
   const rollAttack = () => {
-    const roll = Math.floor(Math.random() * 6) + 1;
-    setAttackRoll(roll);
+    setIsAttackRolling(true);
+    const rollDuration = 1000; // 1 second of rolling animation
+    setAttackRoll(null);
+
+    setTimeout(() => {
+      setAttackRoll(Math.floor(Math.random() * 6) + 1);
+      setIsAttackRolling(false);
+    }, rollDuration);
   };
 
   const rollDefense = () => {
-    const roll = Math.floor(Math.random() * 6) + 1;
-    setDefenseRoll(roll);
+    setIsDefenseRolling(true);
+    const rollDuration = 1000; // 1 second of rolling animation
+    setDefenseRoll(null);
+
+    setTimeout(() => {
+      setDefenseRoll(Math.floor(Math.random() * 6) + 1);
+      setIsDefenseRolling(false);
+    }, rollDuration);
   };
 
   const incrementLife = () => {
@@ -412,13 +426,15 @@ export const CharacterCard = ({ character, setCharacter }) => {
                   Attack: {character.attack}
                   <button
                     onClick={rollAttack}
-                    className="m-2 bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 transition-colors"
+                    className="inline-flex m-2 bg-green-500 text-white px-2 py-2 rounded hover:bg-green-600 transition-colors"
                   >
-                    Roll Attack <Dice6 className="inline-block ml-2" />
+                    Roll Attack <div className={`ml-2 inline-flex transition-all duration-200 ease-in-out
+          ${isAttackRolling ? 'animate-spin' : ''}
+        `}><Dice6 className="text-white" /></div>
                   </button>
                   {attackRoll && (
                     <p className="inline dark:text-white text-gray-700">
-                      {character.name} rolled {attackRoll}
+                      {character.name} rolled {attackRoll} ({localCharacter.attack >= 0 ? '+' : ''}{localCharacter.attack})
                     </p>
                   )}
                 </div>
@@ -426,13 +442,15 @@ export const CharacterCard = ({ character, setCharacter }) => {
                   Defense: {character.defense}
                   <button
                     onClick={rollDefense}
-                    className="m-2 bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 transition-colors"
+                    className="inline-flex m-2 bg-yellow-500 text-white px-2 py-2 rounded hover:bg-yellow-600 transition-colors"
                   >
-                    Roll Defense <Dice6 className="inline-block ml-2" />
+                    Roll Defense <div className={`ml-2 inline-flex transition-all duration-200 ease-in-out
+          ${isDefenseRolling ? 'animate-spin' : ''}
+        `}><Dice6 className="text-white" /></div>
                   </button>
                   {defenseRoll && (
                     <p className="inline dark:text-white text-gray-700">
-                      {character.name} rolled {defenseRoll}
+                      {character.name} rolled {defenseRoll} ({localCharacter.defense >= 0 ? '+' : ''}{localCharacter.defense})
                     </p>
                   )}
                 </div>
