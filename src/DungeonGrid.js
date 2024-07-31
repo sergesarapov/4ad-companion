@@ -99,56 +99,59 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
     >
-      <h2 className="text-xl font-bold mb-2">Dungeon Map</h2>
       <DiceRoller title="Roll for room" d="d66" />
       <DiceRoller title="Roll for contents" d="2d6" />
       <DiceRoller title="Define the outcome" d="d6" />
-      <div className="mb-2 space-x-2">
-        <button
-          className={`font-bold py-2 px-4 rounded ${mode === 'draw'
-            ? 'bg-blue-500 text-white'
-            : 'bg-gray-300 text-gray-700'
-            }`}
-          onClick={toggleDrawMode}
-        >
-          <Pencil className="inline-block mr-2" size={16} />
-          Draw
-        </button>
-        <button
-          className={`font-bold py-2 px-4 rounded ${mode === 'character'
-            ? 'bg-blue-500 text-white'
-            : 'bg-gray-300 text-gray-700'
-            }`}
-          onClick={toggleCharacterMode}
-        >
-          <Users className="inline-block mr-2" size={16} />
-          Place Characters
-        </button>
-        <button
-          className={`font-bold py-2 px-4 rounded ${mode === 'door'
-            ? 'bg-blue-500 text-white'
-            : 'bg-gray-300 text-gray-700'
-            }`}
-          onClick={toggleDoorMode}
-        >
-          <DoorClosed className="inline-block mr-2" size={16} />
-          Place Doors
-        </button>
-        <button
-          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-          onClick={rotateDoorOrientation}
-        >
-          <RotateCw className="inline-block mr-2" size={16} />
-          Rotate Door
-        </button>
-        <div className="inline-block dark:bg-white bg-gray-700 relative justify-center w-6 h-6 border border-gray-400">
-          <div className="absolute w-full h-1 bg-amber-800" style={{
-            width: doorOrientation === 'top' || doorOrientation === 'bottom' ? '100%' : '4px',
-            height: doorOrientation === 'left' || doorOrientation === 'right' ? '100%' : '4px',
-            top: doorOrientation === 'top' ? 0 : doorOrientation === 'bottom' ? 'calc(100% - 4px)' : '',
-            left: doorOrientation === 'left' ? 0 : doorOrientation === 'right' ? 'calc(100% - 4px)' : '',
-            // transform: doorOrientation === 'top' || doorOrientation === 'bottom' ? 'translateY(-1px)' : 'translateX(-1px)',
-          }}></div>
+      <h2 className="text-xl font-bold mb-2">Dungeon Map</h2>
+      <div className="mb-2">
+        <div className="mb-2 space-x-2">
+          <button
+            className={`font-bold py-2 px-4 rounded ${mode === 'draw'
+              ? 'bg-blue-500 text-white'
+              : 'bg-gray-300 text-gray-700'
+              }`}
+            onClick={toggleDrawMode}
+          >
+            <Pencil className="inline-block mr-2" size={16} />
+            Draw
+          </button>
+          <button
+            className={`font-bold py-2 px-4 rounded ${mode === 'character'
+              ? 'bg-blue-500 text-white'
+              : 'bg-gray-300 text-gray-700'
+              }`}
+            onClick={toggleCharacterMode}
+          >
+            <Users className="inline-block mr-2" size={16} />
+            Place Characters
+          </button>
+        </div>
+        <div className="inline-flex align-center mb-2 space-x-2">
+          <button
+            className={`font-bold py-2 px-4 rounded ${mode === 'door'
+              ? 'bg-blue-500 text-white'
+              : 'bg-gray-300 text-gray-700'
+              }`}
+            onClick={toggleDoorMode}
+          >
+            <DoorClosed className="inline-block mr-2" size={16} />
+            Place Doors
+          </button>
+          <button
+            className="inline-flex align-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+            onClick={rotateDoorOrientation}
+          >
+            <RotateCw className="mr-2 place-self-center" size={16} />
+            Rotate Door
+            <div className="ml-2 inline-block dark:bg-white bg-gray-700 relative justify-center w-6 h-6 border border-gray-400">
+              <i className="absolute w-full h-1 bg-amber-500 dark:bg-amber-800" style={{
+                width: doorOrientation === 'top' || doorOrientation === 'bottom' ? '100%' : '4px',
+                height: doorOrientation === 'left' || doorOrientation === 'right' ? '100%' : '4px',
+                top: doorOrientation === 'top' ? 0 : doorOrientation === 'bottom' ? 'calc(100% - 4px)' : 0,
+                left: doorOrientation === 'left' ? 0 : doorOrientation === 'right' ? 'calc(100% - 4px)' : 0,
+              }}></i>
+            </div>
+          </button>
         </div>
       </div>
       <div
@@ -167,23 +170,22 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
               data-coord={`${rowIndex}-${colIndex}`}
             >
               {cell.door && (
-                <div
-                  className='absolute bg-amber-800'
+                <i
+                  className='absolute bg-amber-500 dark:bg-amber-800'
                   style={{
                     width: cell.door === 'top' || cell.door === 'bottom' ? '100%' : '4px',
                     height: cell.door === 'left' || cell.door === 'right' ? '100%' : '4px',
-                    top: cell.door === 'top' ? 0 : cell.door === 'bottom' ? 'calc(100% - 4px)' : '',
-                    left: cell.door === 'left' ? 0 : cell.door === 'right' ? 'calc(100% - 4px)' : '',
-                    transform: cell.door === 'top' || cell.door === 'bottom' ? 'translateY(-1px)' : 'translateX(-1px)',
+                    top: cell.door === 'top' ? 0 : cell.door === 'bottom' ? 'calc(100% - 4px)' : 0,
+                    left: cell.door === 'left' ? 0 : cell.door === 'right' ? 'calc(100% - 4px)' : 0,
                   }}
-                ></div>
+                ></i>
               )}
               {position &&
                 position.row === rowIndex &&
                 position.col === colIndex && (
                   <Users
                     size={20}
-                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-red-500"
+                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white dark:text-red-500"
                   />
                 )}
             </div>

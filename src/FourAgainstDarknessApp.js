@@ -92,7 +92,6 @@ export const FourAgainstDarknessApp = () => {
       notes: "",
     };
     setEncounters([...encounters, newEncounter]);
-    // setEncounters((prevEncounters) => [newEncounter, ...prevEncounters]);
   };
 
   const addLogEntry = () => {
