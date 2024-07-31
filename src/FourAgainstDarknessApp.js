@@ -9,15 +9,19 @@ import { FloatingDice } from "./FloatingDice";
 export const FourAgainstDarknessApp = () => {
   const { slug } = useParams();
   const savedGrid = localStorage.getItem(`dungeon-${slug}`);
+  const savedCharacterPosition = localStorage.getItem(`character-position-${slug}`);
   const savedCharacters = localStorage.getItem(`characters-${slug}`);
   const savedEncounters = localStorage.getItem(`encounters-${slug}`);
   const savedLogEntries = localStorage.getItem(`log-entries-${slug}`);
+
+  const [characterPosition, setCharacterPosition] = useState(
+    savedCharacterPosition ?
+      JSON.parse(savedCharacterPosition) : null
+  );
   const [grid, setGrid] = useState(
     savedGrid
       ? JSON.parse(savedGrid)
-      : Array(28)
-        .fill()
-        .map(() => Array(20).fill(false))
+      : Array(28).fill().map(() => Array(20).fill(false))
   );
   const [characters, setCharacters] = useState(
     savedCharacters
@@ -54,6 +58,7 @@ export const FourAgainstDarknessApp = () => {
     if (savedCharacters) setCharacters(JSON.parse(savedCharacters));
     if (savedEncounters) setEncounters(JSON.parse(savedEncounters));
     if (savedLogEntries) setLogEntries(JSON.parse(savedLogEntries));
+    if (savedCharacterPosition) setCharacterPosition(JSON.parse(savedCharacterPosition));
   }, [slug]);
 
   useEffect(() => {
@@ -71,6 +76,10 @@ export const FourAgainstDarknessApp = () => {
   useEffect(() => {
     localStorage.setItem(`log-entries-${slug}`, JSON.stringify(logEntries));
   }, [logEntries, slug]);
+
+  useEffect(() => {
+    localStorage.setItem(`character-position-${slug}`, JSON.stringify(characterPosition));
+  }, [characterPosition, slug]);
 
   const addNewEncounter = () => {
     const newEncounter = {
@@ -112,6 +121,10 @@ export const FourAgainstDarknessApp = () => {
     );
   };
 
+  const handleCharacterPosition = (pos) => {
+    setCharacterPosition(pos);
+  }
+
   const navigate = useNavigate();
 
   return (
@@ -123,7 +136,7 @@ export const FourAgainstDarknessApp = () => {
       >
         Home
       </button>
-      <DungeonGrid grid={grid} onGridUpdate={setGrid} />
+      <DungeonGrid grid={grid} position={characterPosition} onGridUpdate={setGrid} onCharacterUpdate={handleCharacterPosition} />
       <h2 className="text-xl font-bold mt-6 mb-2">Characters</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
         {characters.map((character, index) => (
@@ -146,7 +159,6 @@ export const FourAgainstDarknessApp = () => {
         + New Encounter
       </button>
       <div className="flex flex-col-reverse">
-        {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4"> */}
         {encounters.map((encounter, index) => (
           <EncounterCard
             key={index}
