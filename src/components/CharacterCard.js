@@ -117,7 +117,7 @@ export const CharacterCard = ({ character, setCharacter }) => {
 
   const rollAttack = () => {
     setIsAttackRolling(true);
-    const rollDuration = 1000; // 1 second of rolling animation
+    const rollDuration = 500; // 0.5 second of rolling animation
     setAttackRoll(null);
 
     setTimeout(() => {
@@ -128,7 +128,7 @@ export const CharacterCard = ({ character, setCharacter }) => {
 
   const rollDefense = () => {
     setIsDefenseRolling(true);
-    const rollDuration = 1000; // 1 second of rolling animation
+    const rollDuration = 500; // 0.5 second of rolling animation
     setDefenseRoll(null);
 
     setTimeout(() => {

@@ -7,7 +7,7 @@ export const FloatingDice = () => {
 
     const rollDice = () => {
         setIsRolling(true);
-        const rollDuration = 1000; // 1 second of rolling animation
+        const rollDuration = 500; // 0.5 second of rolling animation
         const rollInterval = 50; // Update every 50ms during rolling
 
         const rollAnimation = setInterval(() => {
