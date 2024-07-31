@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { FourAgainstDarknessApp } from "./FourAgainstDarknessApp";
 import { Home } from "./Home";
-import { DarkModeToggle } from "./DarkModeToggle";
+import { DarkModeToggle } from "./components/DarkModeToggle";
 import { SpeedInsights } from "@vercel/speed-insights/react"
 
 const App = () => {

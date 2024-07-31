@@ -6,7 +6,7 @@ const orientations = ['top', 'right', 'bottom', 'left'];
 
 export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUpdate }) => {
   const [isDrawing, setIsDrawing] = useState(false);
-  const [mode, setMode] = useState('draw'); // 'draw', 'character', or 'door', 'erase'
+  const [mode, setMode] = useState('draw'); // 'draw', 'character', 'door', 'erase'
   const [doorOrientation, setDoorOrientation] = useState('top');
   const drawingValue = useRef(false);
 

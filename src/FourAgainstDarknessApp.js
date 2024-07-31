@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { CharacterCard } from "./CharacterCard";
-import { DungeonGrid } from "./DungeonGrid";
-import { EncounterCard } from "./EncounterCard";
-import { LogEntry } from "./LogEntry";
-import { FloatingDice } from "./FloatingDice";
+import { CharacterCard } from "./components/CharacterCard";
+import { DungeonGrid } from "./components/DungeonGrid";
+import { EncounterCard } from "./components/EncounterCard";
+import { LogEntry } from "./components/LogEntry";
+import { FloatingDice } from "./components/FloatingDice";
 
 export const FourAgainstDarknessApp = () => {
   const { slug } = useParams();
