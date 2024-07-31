@@ -1,12 +1,12 @@
 import React, { useState, useCallback, useRef } from "react";
 import { DiceRoller } from "./DiceRoller";
-import { Users, Pencil, DoorClosed, RotateCw } from "lucide-react";
+import { Users, Pencil, DoorClosed, RotateCw, Eraser } from "lucide-react";
 
 const orientations = ['top', 'right', 'bottom', 'left'];
 
 export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUpdate }) => {
   const [isDrawing, setIsDrawing] = useState(false);
-  const [mode, setMode] = useState('draw'); // 'draw', 'character', or 'door'
+  const [mode, setMode] = useState('draw'); // 'draw', 'character', or 'door', 'erase'
   const [doorOrientation, setDoorOrientation] = useState('top');
   const drawingValue = useRef(false);
 
@@ -50,6 +50,10 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
         toggleCell(rowIndex, colIndex);
       } else if (mode === 'door') {
         toggleDoor(rowIndex, colIndex);
+      } else if (mode === 'erase') {
+        setIsDrawing(true);
+        drawingValue.current = false;
+        toggleCell(rowIndex, colIndex);
       }
     },
     [grid, mode, doorOrientation]
@@ -57,7 +61,7 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
 
   const handleMouseEnter = useCallback(
     (rowIndex, colIndex) => {
-      if (isDrawing && mode === 'draw') {
+      if (isDrawing && (mode === 'draw' || mode === 'erase')) {
         toggleCell(rowIndex, colIndex);
       }
     },
@@ -76,6 +80,10 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
 
   const toggleDrawMode = () => {
     setMode('draw');
+  };
+
+  const toggleEraseMode = () => {
+    setMode('erase');
   };
 
   const toggleCharacterMode = () => {
@@ -104,7 +112,7 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
       <DiceRoller title="Define the outcome" d="d6" />
       <h2 className="text-xl font-bold mb-2">Dungeon Map</h2>
       <div className="mb-2">
-        <div className="mb-2 space-x-2">
+        <div className="flex mb-2 space-x-2">
           <button
             className={`font-bold py-2 px-4 rounded ${mode === 'draw'
               ? 'bg-blue-500 text-white'
@@ -124,6 +132,12 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
           >
             <Users className="inline-block mr-2" size={16} />
             Place Characters
+          </button>
+          <button onClick={toggleEraseMode} className={`inline-flex place-center place-self-center bg-red-500 text-white font-bold py-3 px-3 rounded ${mode === 'erase'
+            ? 'bg-red-700 text-gray-700'
+            : 'bg-red-500 text-white'
+            }`}>
+            <Eraser className="inline-block" size={16} />
           </button>
         </div>
         <div className="inline-flex align-center mb-2 space-x-2">
