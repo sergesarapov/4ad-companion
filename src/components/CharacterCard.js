@@ -13,6 +13,8 @@ export const CharacterCard = ({ character, setCharacter }) => {
   const [isAttackRolling, setIsAttackRolling] = useState(false);
   const [isDefenseRolling, setIsDefenseRolling] = useState(false);
 
+  const rollDuration = 500; // 0.3 seconds of rolling animation
+
   useEffect(() => {
     setCharacter(localCharacter);
   }, [localCharacter]);
@@ -117,7 +119,6 @@ export const CharacterCard = ({ character, setCharacter }) => {
 
   const rollAttack = () => {
     setIsAttackRolling(true);
-    const rollDuration = 500; // 0.5 second of rolling animation
     setAttackRoll(null);
 
     setTimeout(() => {
@@ -128,7 +129,6 @@ export const CharacterCard = ({ character, setCharacter }) => {
 
   const rollDefense = () => {
     setIsDefenseRolling(true);
-    const rollDuration = 500; // 0.5 second of rolling animation
     setDefenseRoll(null);
 
     setTimeout(() => {
@@ -434,7 +434,7 @@ export const CharacterCard = ({ character, setCharacter }) => {
                   </button>
                   {attackRoll && (
                     <p className="inline dark:text-white text-gray-700">
-                      {character.name} rolled {attackRoll} ({localCharacter.attack >= 0 ? '+' : ''}{localCharacter.attack})
+                      Result: {attackRoll} ({localCharacter.attack >= 0 ? '+' : ''}{localCharacter.attack})
                     </p>
                   )}
                 </div>
@@ -450,7 +450,7 @@ export const CharacterCard = ({ character, setCharacter }) => {
                   </button>
                   {defenseRoll && (
                     <p className="inline dark:text-white text-gray-700">
-                      {character.name} rolled {defenseRoll} ({localCharacter.defense >= 0 ? '+' : ''}{localCharacter.defense})
+                      Result: {defenseRoll} ({localCharacter.defense >= 0 ? '+' : ''}{localCharacter.defense})
                     </p>
                   )}
                 </div>
