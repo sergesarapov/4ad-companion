@@ -5,6 +5,7 @@ import { DungeonGrid } from "./components/DungeonGrid";
 import { EncounterCard } from "./components/EncounterCard";
 import { LogEntry } from "./components/LogEntry";
 import { FloatingDice } from "./components/FloatingDice";
+import { DiceRoller } from "./components/DiceRoller";
 
 export const FourAgainstDarknessApp = () => {
   const { slug } = useParams();
@@ -135,6 +136,11 @@ export const FourAgainstDarknessApp = () => {
       >
         Home
       </button>
+      <div className='dark:bg-gray-800 bg-gray-100  p-4 space-y-2 rounded'>
+        <DiceRoller title="Roll for room" d="d66" />
+        <DiceRoller title="Roll for contents" d="2d6" />
+        <DiceRoller title="Define the outcome" d="d6" />
+      </div>
       <DungeonGrid grid={grid} position={characterPosition} onGridUpdate={setGrid} onCharacterUpdate={handleCharacterPosition} />
       <h2 className="text-xl font-bold mt-6 mb-2">Characters</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">

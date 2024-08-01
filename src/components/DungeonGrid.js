@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useRef } from "react";
-import { DiceRoller } from "./DiceRoller";
 import { Users, Pencil, DoorClosed, RotateCw, Eraser } from "lucide-react";
 
 const orientations = ['top', 'right', 'bottom', 'left'];
@@ -107,9 +106,6 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
     >
-      <DiceRoller title="Roll for room" d="d66" />
-      <DiceRoller title="Roll for contents" d="2d6" />
-      <DiceRoller title="Define the outcome" d="d6" />
       <h2 className="text-xl font-bold mb-2">Dungeon Map</h2>
       <div className="mb-2">
         <div className="flex mb-2 space-x-2">
