@@ -1,6 +1,7 @@
 {
   "overrides": [
     {
+      "files": ["/src/*.js"],
       "rules": {
         "react-hooks/exhaustive-deps": "off"
       }
