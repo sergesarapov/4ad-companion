@@ -128,12 +128,12 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
               }`}
             onClick={toggleDrawMode}
           >
-            <Pencil className="inline-block mr-2" size={16} />
+            <Pencil className="inline-block mr-2 mb-1" size={16} />
             Draw
           </button>
-          <button onClick={toggleEraseMode} className={`inline-flex place-center place-self-center bg-red-500 text-white font-bold py-3 px-3 rounded ${mode === 'erase'
-            ? 'bg-red-700 text-gray-700'
-            : 'bg-red-500 text-white'
+          <button onClick={toggleEraseMode} className={`inline-flex place-center place-self-center font-bold py-3 px-3 rounded ${mode === 'erase'
+            ? 'bg-red-500 text-white'
+            : 'bg-red-300 text-gray-700'
             }`}>
             <Eraser className="inline-block" size={16} />
           </button>
@@ -146,8 +146,8 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
               }`}
             onClick={toggleDoorMode}
           >
-            <DoorClosed className="inline-block mr-2" size={16} />
-            Place Doors
+            <DoorClosed className="inline-block mr-2 mb-1" size={16} />
+            Door
           </button>
           <button
             className="inline-flex align-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
@@ -173,19 +173,19 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
               }`}
             onClick={toggleCharacterMode}
           >
-            <Users className="inline-block mr-2" size={16} />
-            Place Characters
+            <Users className="inline-block mr-2 mb-1" size={16} />
+            Party
           </button>
           <button
             disabled={encounterCount <= 0}
-            className={`font-bold py-2 px-4 rounded ${mode === 'encounter'
+            className={`font-bold px-4 rounded ${mode === 'encounter'
               ? 'bg-blue-500 text-white'
               : 'bg-gray-300 text-gray-700'
               }`}
             onClick={toggleEncounterMode}
           >
-            <Swords className="inline-block mr-2" size={16} />
-            Place Encounters
+            <Swords className="inline-block mr-2 mb-1" size={16} />
+            Encounter
             <select
               disabled={encounterCount <= 0}
               value={selectedEncounter}
