@@ -1,12 +1,13 @@
 import React, { useState, useCallback, useRef } from "react";
-import { Users, Pencil, DoorClosed, RotateCw, Eraser } from "lucide-react";
+import { Users, Pencil, DoorClosed, RotateCw, Eraser, Swords } from "lucide-react";
 
 const orientations = ['top', 'right', 'bottom', 'left'];
 
-export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUpdate }) => {
+export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUpdate, encounterCount = 0 }) => {
   const [isDrawing, setIsDrawing] = useState(false);
-  const [mode, setMode] = useState('draw'); // 'draw', 'character', 'door', 'erase'
+  const [mode, setMode] = useState('draw'); // 'draw', 'character', 'door', 'erase', 'encounter'
   const [doorOrientation, setDoorOrientation] = useState('top');
+  const [selectedEncounter, setSelectedEncounter] = useState(1);
   const drawingValue = useRef(false);
 
   const toggleCell = (rowIndex, colIndex) => {
@@ -41,6 +42,25 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
     });
   };
 
+  const toggleEncounter = (rowIndex, colIndex) => {
+    onGridUpdate((prevGrid) => {
+      const newGrid = prevGrid.map((row, rIndex) =>
+        row.map((cell, cIndex) => {
+          if (rIndex === rowIndex && cIndex === colIndex) {
+            // Toggle encounter state
+            if (cell.encounter === selectedEncounter) {
+              return { ...cell, encounter: null };
+            } else {
+              return { ...cell, encounter: selectedEncounter };
+            }
+          }
+          return cell;
+        })
+      );
+      return newGrid;
+    });
+  };
+
   const handleMouseDown = useCallback(
     (rowIndex, colIndex) => {
       if (mode === 'draw') {
@@ -53,9 +73,11 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
         setIsDrawing(true);
         drawingValue.current = false;
         toggleCell(rowIndex, colIndex);
+      } else if (mode === 'encounter') {
+        toggleEncounter(rowIndex, colIndex);
       }
     },
-    [grid, mode, doorOrientation]
+    [grid, mode, doorOrientation, selectedEncounter]
   );
 
   const handleMouseEnter = useCallback(
@@ -77,21 +99,11 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
     }
   }, [mode]);
 
-  const toggleDrawMode = () => {
-    setMode('draw');
-  };
-
-  const toggleEraseMode = () => {
-    setMode('erase');
-  };
-
-  const toggleCharacterMode = () => {
-    setMode('character');
-  };
-
-  const toggleDoorMode = () => {
-    setMode('door');
-  };
+  const toggleDrawMode = () => setMode('draw');
+  const toggleEraseMode = () => setMode('erase');
+  const toggleCharacterMode = () => setMode('character');
+  const toggleDoorMode = () => setMode('door');
+  const toggleEncounterMode = () => setMode('encounter');
 
   const rotateDoorOrientation = () => {
     setDoorOrientation((prev) => {
@@ -119,16 +131,6 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
             <Pencil className="inline-block mr-2" size={16} />
             Draw
           </button>
-          <button
-            className={`font-bold py-2 px-4 rounded ${mode === 'character'
-              ? 'bg-blue-500 text-white'
-              : 'bg-gray-300 text-gray-700'
-              }`}
-            onClick={toggleCharacterMode}
-          >
-            <Users className="inline-block mr-2" size={16} />
-            Place Characters
-          </button>
           <button onClick={toggleEraseMode} className={`inline-flex place-center place-self-center bg-red-500 text-white font-bold py-3 px-3 rounded ${mode === 'erase'
             ? 'bg-red-700 text-gray-700'
             : 'bg-red-500 text-white'
@@ -136,7 +138,7 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
             <Eraser className="inline-block" size={16} />
           </button>
         </div>
-        <div className="inline-flex align-center mb-2 space-x-2">
+        <div className="flex align-center mb-2 space-x-2">
           <button
             className={`font-bold py-2 px-4 rounded ${mode === 'door'
               ? 'bg-blue-500 text-white'
@@ -161,6 +163,41 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
                 left: doorOrientation === 'left' ? 0 : doorOrientation === 'right' ? 'calc(100% - 4px)' : 0,
               }}></i>
             </div>
+          </button>
+        </div>
+        <div className="inline-flex align-center mb-2 space-x-2">
+          <button
+            className={`font-bold py-2 px-4 rounded ${mode === 'character'
+              ? 'bg-blue-500 text-white'
+              : 'bg-gray-300 text-gray-700'
+              }`}
+            onClick={toggleCharacterMode}
+          >
+            <Users className="inline-block mr-2" size={16} />
+            Place Characters
+          </button>
+          <button
+            disabled={encounterCount <= 0}
+            className={`font-bold py-2 px-4 rounded ${mode === 'encounter'
+              ? 'bg-blue-500 text-white'
+              : 'bg-gray-300 text-gray-700'
+              }`}
+            onClick={toggleEncounterMode}
+          >
+            <Swords className="inline-block mr-2" size={16} />
+            Place Encounters
+            <select
+              disabled={encounterCount <= 0}
+              value={selectedEncounter}
+              onChange={(e) => setSelectedEncounter(Number(e.target.value))}
+              className="bg-white border border-gray-300 rounded-md text-gray-700 py-1 px-2 ml-2"
+            >
+              {[...Array(encounterCount)].map((_, i) => (
+                <option key={i + 1} value={i + 1}>
+                  {i + 1}
+                </option>
+              ))}
+            </select>
           </button>
         </div>
       </div>
@@ -189,6 +226,11 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
                     left: cell.door === 'left' ? 0 : cell.door === 'right' ? 'calc(100% - 4px)' : 0,
                   }}
                 ></i>
+              )}
+              {cell.encounter && (
+                <div className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white dark:text-red-500">
+                  {cell.encounter}
+                </div>
               )}
               {position &&
                 position.row === rowIndex &&

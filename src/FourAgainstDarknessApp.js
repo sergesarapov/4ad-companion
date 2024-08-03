@@ -141,7 +141,13 @@ export const FourAgainstDarknessApp = () => {
         <DiceRoller title="Roll for contents" d="2d6" />
         <DiceRoller title="Define the outcome" d="d6" />
       </div>
-      <DungeonGrid grid={grid} position={characterPosition} onGridUpdate={setGrid} onCharacterUpdate={handleCharacterPosition} />
+      <DungeonGrid
+        grid={grid}
+        position={characterPosition}
+        encounterCount={encounters.length}
+        onGridUpdate={setGrid}
+        onCharacterUpdate={handleCharacterPosition}
+      />
       <h2 className="text-xl font-bold mt-6 mb-2">Characters</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
         {characters.map((character, index) => (
@@ -167,6 +173,7 @@ export const FourAgainstDarknessApp = () => {
         {encounters.map((encounter, index) => (
           <EncounterCard
             key={index}
+            counter={index + 1}
             encounter={encounter}
             setEncounter={(newEncounter) => {
               const updatedEncounters = [...encounters];
