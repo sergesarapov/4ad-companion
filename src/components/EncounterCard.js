@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { MdExpandMore, MdExpandLess } from "react-icons/md";
 
-export const EncounterCard = ({ encounter, setEncounter }) => {
+export const EncounterCard = ({ counter, encounter, setEncounter }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [localEncounter, setLocalEncounter] = useState(encounter);
@@ -40,7 +40,7 @@ export const EncounterCard = ({ encounter, setEncounter }) => {
     <div className="dark:bg-gray-800 dark:text-white p-4 bg-gray-100 rounded-lg shadow mt-2 mb-2">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold">{localEncounter.name}</h2>
+          <h2 className="text-2xl font-bold"><span >{counter}.{' '}</span>{localEncounter.name}</h2>
           <p className="text-sm dark:text-slate-400 text-gray-500">{localEncounter.type}</p>
           <p className="text-sm dark:text-slate-400 text-gray-500">
             Status: {localEncounter.status}

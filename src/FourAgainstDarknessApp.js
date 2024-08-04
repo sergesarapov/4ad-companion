@@ -1,23 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { CharacterCard } from "./CharacterCard";
-import { DungeonGrid } from "./DungeonGrid";
-import { EncounterCard } from "./EncounterCard";
-import { LogEntry } from "./LogEntry";
-import { FloatingDice } from "./FloatingDice";
+import { CharacterCard } from "./components/CharacterCard";
+import { DungeonGrid } from "./components/DungeonGrid";
+import { EncounterCard } from "./components/EncounterCard";
+import { LogEntry } from "./components/LogEntry";
+import { FloatingDice } from "./components/FloatingDice";
+import { DiceRoller } from "./components/DiceRoller";
 
 export const FourAgainstDarknessApp = () => {
   const { slug } = useParams();
   const savedGrid = localStorage.getItem(`dungeon-${slug}`);
+  const savedCharacterPosition = localStorage.getItem(`character-position-${slug}`);
   const savedCharacters = localStorage.getItem(`characters-${slug}`);
   const savedEncounters = localStorage.getItem(`encounters-${slug}`);
   const savedLogEntries = localStorage.getItem(`log-entries-${slug}`);
+
+  const [characterPosition, setCharacterPosition] = useState(
+    savedCharacterPosition ?
+      JSON.parse(savedCharacterPosition) : null
+  );
   const [grid, setGrid] = useState(
     savedGrid
       ? JSON.parse(savedGrid)
-      : Array(28)
-        .fill()
-        .map(() => Array(20).fill(false))
+      : Array(28).fill().map(() => Array(20).fill(false))
   );
   const [characters, setCharacters] = useState(
     savedCharacters
@@ -54,6 +59,7 @@ export const FourAgainstDarknessApp = () => {
     if (savedCharacters) setCharacters(JSON.parse(savedCharacters));
     if (savedEncounters) setEncounters(JSON.parse(savedEncounters));
     if (savedLogEntries) setLogEntries(JSON.parse(savedLogEntries));
+    if (savedCharacterPosition) setCharacterPosition(JSON.parse(savedCharacterPosition));
   }, [slug]);
 
   useEffect(() => {
@@ -72,6 +78,10 @@ export const FourAgainstDarknessApp = () => {
     localStorage.setItem(`log-entries-${slug}`, JSON.stringify(logEntries));
   }, [logEntries, slug]);
 
+  useEffect(() => {
+    localStorage.setItem(`character-position-${slug}`, JSON.stringify(characterPosition));
+  }, [characterPosition, slug]);
+
   const addNewEncounter = () => {
     const newEncounter = {
       name: "New Encounter",
@@ -83,7 +93,6 @@ export const FourAgainstDarknessApp = () => {
       notes: "",
     };
     setEncounters([...encounters, newEncounter]);
-    // setEncounters((prevEncounters) => [newEncounter, ...prevEncounters]);
   };
 
   const addLogEntry = () => {
@@ -112,6 +121,10 @@ export const FourAgainstDarknessApp = () => {
     );
   };
 
+  const handleCharacterPosition = (pos) => {
+    setCharacterPosition(pos);
+  }
+
   const navigate = useNavigate();
 
   return (
@@ -123,7 +136,18 @@ export const FourAgainstDarknessApp = () => {
       >
         Home
       </button>
-      <DungeonGrid grid={grid} onGridUpdate={setGrid} />
+      <div className='dark:bg-gray-800 bg-gray-100  p-4 space-y-2 rounded'>
+        <DiceRoller title="Roll for room" d="d66" />
+        <DiceRoller title="Roll for contents" d="2d6" />
+        <DiceRoller title="Define the outcome" d="d6" />
+      </div>
+      <DungeonGrid
+        grid={grid}
+        position={characterPosition}
+        encounterCount={encounters.length}
+        onGridUpdate={setGrid}
+        onCharacterUpdate={handleCharacterPosition}
+      />
       <h2 className="text-xl font-bold mt-6 mb-2">Characters</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
         {characters.map((character, index) => (
@@ -146,10 +170,10 @@ export const FourAgainstDarknessApp = () => {
         + New Encounter
       </button>
       <div className="flex flex-col-reverse">
-        {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4"> */}
         {encounters.map((encounter, index) => (
           <EncounterCard
             key={index}
+            counter={index + 1}
             encounter={encounter}
             setEncounter={(newEncounter) => {
               const updatedEncounters = [...encounters];

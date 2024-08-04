@@ -13,6 +13,8 @@ export const CharacterCard = ({ character, setCharacter }) => {
   const [isAttackRolling, setIsAttackRolling] = useState(false);
   const [isDefenseRolling, setIsDefenseRolling] = useState(false);
 
+  const rollDuration = 500; // 0.3 seconds of rolling animation
+
   useEffect(() => {
     setCharacter(localCharacter);
   }, [localCharacter]);
@@ -117,7 +119,6 @@ export const CharacterCard = ({ character, setCharacter }) => {
 
   const rollAttack = () => {
     setIsAttackRolling(true);
-    const rollDuration = 1000; // 1 second of rolling animation
     setAttackRoll(null);
 
     setTimeout(() => {
@@ -128,7 +129,6 @@ export const CharacterCard = ({ character, setCharacter }) => {
 
   const rollDefense = () => {
     setIsDefenseRolling(true);
-    const rollDuration = 1000; // 1 second of rolling animation
     setDefenseRoll(null);
 
     setTimeout(() => {
@@ -302,10 +302,10 @@ export const CharacterCard = ({ character, setCharacter }) => {
             <h3 className="text-lg font-semibold">Equipment</h3>
             <ul>
               {localCharacter.equipment.map((item, index) => (
-                <div className='flex m-2'>
-                  <li key={index}>{item}</li>
+                <li key={index} className='flex m-2'>
+                  <div>{item}</div>
                   <button className='ml-2 pr-2 pl-2 inline border bg-red-500 rounded' onClick={() => deleteEquipment(item)}>del</button>
-                </div>
+                </li>
               ))}
             </ul>
             <div className="flex space-x-2 mt-2">
@@ -434,7 +434,7 @@ export const CharacterCard = ({ character, setCharacter }) => {
                   </button>
                   {attackRoll && (
                     <p className="inline dark:text-white text-gray-700">
-                      {character.name} rolled {attackRoll} ({localCharacter.attack >= 0 ? '+' : ''}{localCharacter.attack})
+                      Result: {attackRoll} ({localCharacter.attack >= 0 ? '+' : ''}{localCharacter.attack})
                     </p>
                   )}
                 </div>
@@ -450,7 +450,7 @@ export const CharacterCard = ({ character, setCharacter }) => {
                   </button>
                   {defenseRoll && (
                     <p className="inline dark:text-white text-gray-700">
-                      {character.name} rolled {defenseRoll} ({localCharacter.defense >= 0 ? '+' : ''}{localCharacter.defense})
+                      Result: {defenseRoll} ({localCharacter.defense >= 0 ? '+' : ''}{localCharacter.defense})
                     </p>
                   )}
                 </div>
