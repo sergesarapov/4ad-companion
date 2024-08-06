@@ -478,7 +478,7 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
                   onClick={rollAttack}
                   className="inline-flex m-2 bg-green-500 text-white px-2 py-2 rounded hover:bg-green-600 transition-colors"
                 >
-                  Roll Attack <div className={`ml-2 inline-flex transition-all duration-200 ease-in-out
+                  Roll <div className={`ml-2 inline-flex transition-all duration-200 ease-in-out
           ${isAttackRolling ? 'animate-spin' : ''}
         `}><Dice6 className="text-white" /></div>
                 </button>
@@ -494,7 +494,7 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
                   onClick={rollDefense}
                   className="inline-flex m-2 bg-yellow-500 text-white px-2 py-2 rounded hover:bg-yellow-600 transition-colors"
                 >
-                  Roll Defense <div className={`ml-2 inline-flex transition-all duration-200 ease-in-out
+                  Roll <div className={`ml-2 inline-flex transition-all duration-200 ease-in-out
           ${isDefenseRolling ? 'animate-spin' : ''}
         `}><Dice6 className="text-white" /></div>
                 </button>
