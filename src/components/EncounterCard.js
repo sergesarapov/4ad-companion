@@ -59,10 +59,10 @@ export const EncounterCard = ({ counter, encounter, setEncounter }) => {
           {localEncounter.count.map((checked, index) => (
             <button
               key={index}
-              className={`m-1 w-6 h-6 border rounded ${checked ? "bg-blue-500" : "bg-gray-200"
+              className={`m-1 w-6 h-6 border text-sm rounded ${checked ? " text-gray-100 bg-blue-500" : "text-gray-800 bg-gray-200"
                 }`}
               onClick={() => toggleCount(index)}
-            />
+            >{index + 1}</button>
           ))}
         </div>
       </div>
