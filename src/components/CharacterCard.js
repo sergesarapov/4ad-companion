@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Dice6 } from "lucide-react";
-import { MdExpandMore, MdExpandLess } from "react-icons/md";
+import { ConfirmModal } from './ConfirmModal';
 
-export const CharacterCard = ({ character, setCharacter }) => {
+export const CharacterCard = ({ character, setCharacter, importedCharacters = [], onImport }) => {
   const [isEditMode, setIsEditMode] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(true);
   const [localCharacter, setLocalCharacter] = useState(character);
+  const [selectedImportedCharacter, setSelectedImportedCharacter] = useState(importedCharacters?.[0]?.id ?? null);
   const [attackRoll, setAttackRoll] = useState(null);
   const [defenseRoll, setDefenseRoll] = useState(null);
   const [newSpell, setNewSpell] = useState({ name: "", slots: 0 });
   const [newEquipment, setNewEquipment] = useState("");
   const [isAttackRolling, setIsAttackRolling] = useState(false);
   const [isDefenseRolling, setIsDefenseRolling] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const rollDuration = 500; // 0.3 seconds of rolling animation
 
@@ -113,10 +114,6 @@ export const CharacterCard = ({ character, setCharacter }) => {
     setIsEditMode(!isEditMode);
   };
 
-  const toggleCollapsed = () => {
-    setIsCollapsed(!isCollapsed);
-  };
-
   const rollAttack = () => {
     setIsAttackRolling(true);
     setAttackRoll(null);
@@ -151,152 +148,201 @@ export const CharacterCard = ({ character, setCharacter }) => {
     }));
   };
 
+  const handleImportCharacter = () => {
+    setIsModalOpen(true);
+  };
+
+  const confirmImportCharacter = () => {
+    setIsModalOpen(false);
+    const foundCharacter = importedCharacters.find(c => c.id === selectedImportedCharacter);
+    if (foundCharacter) {
+      setLocalCharacter((prev) => ({ ...foundCharacter, key: prev.key }));
+      onImport(foundCharacter.key, foundCharacter.id);
+      toggleEditMode();
+    }
+  };
+
+  const cancelImportCharacter = () => {
+    setIsModalOpen(false);
+  };
+
   return (
-    <div className={`dark:bg-gray-800 dark:text-white p-4 bg-gray-100 rounded-lg shadow ${isCollapsed && 'h-20'}`}>
+    <div className='dark:bg-gray-800 dark:text-white p-4 bg-gray-100 rounded-b rounded-tr shadow'>
       {isEditMode ? (
-        <div className="space-y-4">
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-sm dark:text-slate-400 font-medium text-gray-700"
+        <div className="flex flex-col flex-wrap">
+          {importedCharacters.length > 0 && <div className='mb-6'>
+            <select
+              value={selectedImportedCharacter}
+              onChange={(e) => setSelectedImportedCharacter(e.target.value)}
+              className="dark:bg-gray-800 bg-white border border-gray-300 rounded-md py-1 px-1 text-ellipsis"
             >
-              Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={localCharacter.name}
-              onChange={handleInputChange}
-              placeholder="Name"
-              className="dark:bg-gray-800 mt-1 block w-full p-2 border border-gray-300 rounded"
-            />
+              {importedCharacters.map((char, i) => (
+                <option className='text-ellipsis' key={i + 1} value={char.id}>
+                  {char.name}{' '}
+                  {char.class}{' '}
+                  Level:{' '}{char.level}
+                </option>
+              ))}
+            </select>
+            <button className='ml-2 bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 transition-colors' onClick={handleImportCharacter}>Migrate</button>
+            {isModalOpen && <ConfirmModal
+              title="Confirm Migration"
+              text="The character will be removed from the original dungeon and the current slot will be entirely rewritten. Are you sure you want to migrate the character?"
+              isOpen={isModalOpen}
+              onClose={cancelImportCharacter}
+              onConfirm={confirmImportCharacter}
+            />}
+          </div>}
+          <div className='flex space-x-4'>
+            <div>
+              <div>
+                <label
+                  htmlFor="name"
+                  className="block text-sm dark:text-slate-400 font-medium text-gray-700"
+                >
+                  Name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={localCharacter.name}
+                  onChange={handleInputChange}
+                  placeholder="Name"
+                  className="w-[100px] dark:bg-gray-800 mt-1 block p-2 border border-gray-300 rounded"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="class"
+                  className="block text-sm dark:text-slate-400 font-medium text-gray-700"
+                >
+                  Class
+                </label>
+                <input
+                  type="text"
+                  id="class"
+                  name="class"
+                  value={localCharacter.class}
+                  onChange={handleInputChange}
+                  placeholder="Class"
+                  className="w-[100px] dark:bg-gray-800 mt-1 block p-2 border border-gray-300 rounded"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="level"
+                  className="block text-sm dark:text-slate-400 font-medium text-gray-700"
+                >
+                  Level
+                </label>
+                <input
+                  type="number"
+                  id="level"
+                  name="level"
+                  value={localCharacter.level}
+                  onChange={handleInputChange}
+                  placeholder="Level"
+                  className="w-[100px] dark:bg-gray-800 mt-1 block p-2 border border-gray-300 rounded"
+                  min="1"
+                />
+              </div>
+            </div>
+            <div>
+              <div>
+                <label
+                  htmlFor="gold"
+                  className="block text-sm dark:text-slate-400 font-medium text-gray-700"
+                >
+                  Gold
+                </label>
+                <input
+                  type="number"
+                  id="gold"
+                  name="gold"
+                  value={localCharacter.gold}
+                  onChange={handleInputChange}
+                  placeholder="Gold"
+                  className="w-[100px] dark:bg-gray-800 mt-1 block p-2 border border-gray-300 rounded"
+                  min="0"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="attack"
+                  className="block text-sm dark:text-slate-400 font-medium text-gray-700"
+                >
+                  Attack
+                </label>
+                <input
+                  type="number"
+                  id="attack"
+                  name="attack"
+                  value={localCharacter.attack}
+                  onChange={handleInputChange}
+                  placeholder="Attack"
+                  className="w-[100px] dark:bg-gray-800 mt-1 block p-2 border border-gray-300 rounded"
+                  min="0"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="defense"
+                  className="block text-sm dark:text-slate-400 font-medium text-gray-700"
+                >
+                  Defense
+                </label>
+                <input
+                  type="number"
+                  id="defense"
+                  name="defense"
+                  value={localCharacter.defense}
+                  onChange={handleInputChange}
+                  placeholder="Defense"
+                  className="w-[100px] dark:bg-gray-800 mt-1 block p-2 border border-gray-300 rounded"
+                  min="0"
+                />
+              </div>
+            </div>
           </div>
-          <div>
-            <label
-              htmlFor="class"
-              className="block text-sm dark:text-slate-400 font-medium text-gray-700"
-            >
-              Class
-            </label>
-            <input
-              type="text"
-              id="class"
-              name="class"
-              value={localCharacter.class}
-              onChange={handleInputChange}
-              placeholder="Class"
-              className="dark:bg-gray-800 mt-1 block w-full p-2 border border-gray-300 rounded"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="level"
-              className="block text-sm dark:text-slate-400 font-medium text-gray-700"
-            >
-              Level
-            </label>
-            <input
-              type="number"
-              id="level"
-              name="level"
-              value={localCharacter.level}
-              onChange={handleInputChange}
-              placeholder="Level"
-              className="dark:bg-gray-800 mt-1 block w-full p-2 border border-gray-300 rounded"
-              min="1"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="gold"
-              className="block text-sm dark:text-slate-400 font-medium text-gray-700"
-            >
-              Gold
-            </label>
-            <input
-              type="number"
-              id="gold"
-              name="gold"
-              value={localCharacter.gold}
-              onChange={handleInputChange}
-              placeholder="Gold"
-              className="dark:bg-gray-800 mt-1 block w-full p-2 border border-gray-300 rounded"
-              min="0"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="attack"
-              className="block text-sm dark:text-slate-400 font-medium text-gray-700"
-            >
-              Attack
-            </label>
-            <input
-              type="number"
-              id="attack"
-              name="attack"
-              value={localCharacter.attack}
-              onChange={handleInputChange}
-              placeholder="Attack"
-              className="dark:bg-gray-800 mt-1 block w-full p-2 border border-gray-300 rounded"
-              min="0"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="defense"
-              className="block text-sm dark:text-slate-400 font-medium text-gray-700"
-            >
-              Defense
-            </label>
-            <input
-              type="number"
-              id="defense"
-              name="defense"
-              value={localCharacter.defense}
-              onChange={handleInputChange}
-              placeholder="Defense"
-              className="dark:bg-gray-800 mt-1 block w-full p-2 border border-gray-300 rounded"
-              min="0"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="fullLife"
-              className="block text-sm dark:text-slate-400 font-medium text-gray-700"
-            >
-              Full Life
-            </label>
-            <input
-              type="number"
-              id="fullLife"
-              name="fullLife"
-              value={localCharacter.fullLife}
-              onChange={handleInputChange}
-              placeholder="Full Life"
-              className="dark:bg-gray-800 mt-1 block w-full p-2 border border-gray-300 rounded"
-              min="0"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="currentLife"
-              className="block text-sm dark:text-slate-400 font-medium text-gray-700"
-            >
-              Current Life
-            </label>
-            <input
-              type="number"
-              id="currentLife"
-              name="currentLife"
-              value={localCharacter.currentLife}
-              onChange={handleInputChange}
-              placeholder="Current Life"
-              className="dark:bg-gray-800 mt-1 block w-full p-2 border border-gray-300 rounded"
-              min="0"
-              max={localCharacter.fullLife}
-            />
+          <div className='flex space-x-4'>
+            <div>
+              <label
+                htmlFor="fullLife"
+                className="block text-sm dark:text-slate-400 font-medium text-gray-700"
+              >
+                Full Life
+              </label>
+              <input
+                type="number"
+                id="fullLife"
+                name="fullLife"
+                value={localCharacter.fullLife}
+                onChange={handleInputChange}
+                placeholder="Full Life"
+                className="w-[100px] dark:bg-gray-800 mt-1 block p-2 border border-gray-300 rounded"
+                min="0"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="currentLife"
+                className="block text-sm dark:text-slate-400 font-medium text-gray-700"
+              >
+                Current Life
+              </label>
+              <input
+                type="number"
+                id="currentLife"
+                name="currentLife"
+                value={localCharacter.currentLife}
+                onChange={handleInputChange}
+                placeholder="Current Life"
+                className="dark:bg-gray-800 w-[100px] mt-1 block p-2 border border-gray-300 rounded"
+                min="0"
+                max={localCharacter.fullLife}
+              />
+            </div>
           </div>
           <div>
             <h3 className="text-lg font-semibold">Equipment</h3>
@@ -313,8 +359,8 @@ export const CharacterCard = ({ character, setCharacter }) => {
                 type="text"
                 value={newEquipment}
                 onChange={(e) => setNewEquipment(e.target.value)}
-                placeholder="New Equipment"
-                className="dark:bg-gray-800 w-1/2 p-2 border border-gray-300 rounded"
+                placeholder="Equipment Name"
+                className="max-w-[216px] dark:bg-gray-800 p-2 border border-gray-300 rounded"
               />
               <button
                 onClick={addEquipment}
@@ -334,7 +380,7 @@ export const CharacterCard = ({ character, setCharacter }) => {
                   value={spell.name}
                   onChange={(e) => handleSpellChange(index, e)}
                   placeholder="Spell Name"
-                  className="dark:bg-gray-800 w-1/2 p-2 border border-gray-300 rounded"
+                  className="max-w-[148px] dark:bg-gray-800 p-2 border border-gray-300 rounded"
                 />
                 <input
                   type="number"
@@ -342,7 +388,7 @@ export const CharacterCard = ({ character, setCharacter }) => {
                   value={spell.slots}
                   onChange={(e) => handleSpellChange(index, e)}
                   placeholder="Slots"
-                  className="dark:bg-gray-800 w-1/4 p-2 border border-gray-300 rounded"
+                  className="dark:bg-gray-800 w-[60px] p-2 border border-gray-300 rounded"
                   min="0"
                 />
               </div>
@@ -354,8 +400,8 @@ export const CharacterCard = ({ character, setCharacter }) => {
                 onChange={(e) =>
                   setNewSpell({ ...newSpell, name: e.target.value })
                 }
-                placeholder="New Spell Name"
-                className="dark:bg-gray-800 p-2 border border-gray-300 rounded"
+                placeholder="Spell Name"
+                className="max-w-[148px] dark:bg-gray-800 p-2 border border-gray-300 rounded"
               />
               <input
                 type="number"
@@ -367,7 +413,7 @@ export const CharacterCard = ({ character, setCharacter }) => {
                   })
                 }
                 placeholder="Slots"
-                className="dark:bg-gray-800 w-1/4 p-2 border border-gray-300 rounded"
+                className="dark:bg-gray-800 w-[60px] p-2 border border-gray-300 rounded"
                 min="0"
               />
               <button
@@ -391,15 +437,20 @@ export const CharacterCard = ({ character, setCharacter }) => {
               value={localCharacter.notes}
               onChange={handleInputChange}
               placeholder="Notes"
-              className="dark:bg-gray-800 mt-1 block w-full p-2 border border-gray-300 rounded"
+              className="dark:bg-gray-800 mt-1 block w-1/2 p-2 border border-gray-300 rounded"
             />
           </div>
-          <button
-            onClick={toggleEditMode}
-            className="bg-blue-500 text-white px-4 py-2 rounded mt-4 hover:bg-blue-600 transition-colors"
-          >
-            Save
-          </button>
+          <div>
+            <button
+              onClick={() => {
+                setCharacter(localCharacter);
+                toggleEditMode();
+              }}
+              className="bg-blue-500 text-white px-4 py-2 rounded mt-4 hover:bg-blue-600 transition-colors"
+            >
+              Save
+            </button>
+          </div>
         </div>
       ) : (
         <div>
@@ -409,111 +460,103 @@ export const CharacterCard = ({ character, setCharacter }) => {
               <p className="text-sm dark:text-slate-400 text-gray-500">{localCharacter.class}</p>
             </div>
             <button
-              onClick={toggleCollapsed}
+              onClick={toggleEditMode}
               className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
             >
-              {isCollapsed ? <MdExpandMore /> : <MdExpandLess />}
+              Edit
             </button>
           </div>
-          {!isCollapsed && (
-            <>
-              <p className="text-sm dark:text-slate-400">Level: {localCharacter.level}</p>
-              <div className="flex-col">
-                <div className="mt-2">
-                  <p className="text-l">Gold: {localCharacter.gold}</p>
-                </div>
-                <div>
-                  Attack: {character.attack}
-                  <button
-                    onClick={rollAttack}
-                    className="inline-flex m-2 bg-green-500 text-white px-2 py-2 rounded hover:bg-green-600 transition-colors"
-                  >
-                    Roll Attack <div className={`ml-2 inline-flex transition-all duration-200 ease-in-out
+          <div>
+            <p className="text-sm dark:text-slate-400">Level: {localCharacter.level}</p>
+            <div className="flex-col">
+              <div className="mt-2">
+                <p className="text-l">Gold: {localCharacter.gold}</p>
+              </div>
+              <div>
+                Attack: {character.attack}
+                <button
+                  onClick={rollAttack}
+                  className="inline-flex m-2 bg-green-500 text-white px-2 py-2 rounded hover:bg-green-600 transition-colors"
+                >
+                  Roll Attack <div className={`ml-2 inline-flex transition-all duration-200 ease-in-out
           ${isAttackRolling ? 'animate-spin' : ''}
         `}><Dice6 className="text-white" /></div>
-                  </button>
-                  {attackRoll && (
-                    <p className="inline dark:text-white text-gray-700">
-                      Result: {attackRoll} ({localCharacter.attack >= 0 ? '+' : ''}{localCharacter.attack})
-                    </p>
-                  )}
-                </div>
-                <div>
-                  Defense: {character.defense}
-                  <button
-                    onClick={rollDefense}
-                    className="inline-flex m-2 bg-yellow-500 text-white px-2 py-2 rounded hover:bg-yellow-600 transition-colors"
-                  >
-                    Roll Defense <div className={`ml-2 inline-flex transition-all duration-200 ease-in-out
+                </button>
+                {attackRoll && (
+                  <p className="inline dark:text-white text-gray-700">
+                    Result: {attackRoll} ({localCharacter.attack >= 0 ? '+' : ''}{localCharacter.attack})
+                  </p>
+                )}
+              </div>
+              <div>
+                Defense: {character.defense}
+                <button
+                  onClick={rollDefense}
+                  className="inline-flex m-2 bg-yellow-500 text-white px-2 py-2 rounded hover:bg-yellow-600 transition-colors"
+                >
+                  Roll Defense <div className={`ml-2 inline-flex transition-all duration-200 ease-in-out
           ${isDefenseRolling ? 'animate-spin' : ''}
         `}><Dice6 className="text-white" /></div>
-                  </button>
-                  {defenseRoll && (
-                    <p className="inline dark:text-white text-gray-700">
-                      Result: {defenseRoll} ({localCharacter.defense >= 0 ? '+' : ''}{localCharacter.defense})
-                    </p>
-                  )}
-                </div>
-              </div>
-              <p className="mt-2">
-                Life:
-                <span>
-                  {localCharacter.currentLife}/{localCharacter.fullLife}
-                </span>
-              </p>
-              <div className="flex space-x-2 mt-2">
-                <button
-                  onClick={incrementLife}
-                  className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 transition-colors"
-                >
-                  +1 Life
                 </button>
-                <button
-                  onClick={decrementLife}
-                  className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition-colors"
-                >
-                  -1 Life
-                </button>
+                {defenseRoll && (
+                  <p className="inline dark:text-white text-gray-700">
+                    Result: {defenseRoll} ({localCharacter.defense >= 0 ? '+' : ''}{localCharacter.defense})
+                  </p>
+                )}
               </div>
-              <div className="mt-4">
-                <h3 className="text-lg font-semibold">Equipment</h3>
-                <ul>
-                  {localCharacter.equipment.map((item, index) => (
-                    <li key={index}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-              <div className="mt-4">
-                <h3 className="text-lg font-semibold">Spells</h3>
-                <ul>
-                  {localCharacter.spells.map((spell, index) => (
-                    <li key={index} className="flex items-center">
-                      {spell.name}
-                      <div className="ml-1 flex space-x-1">
-                        {spell.checkedSlots.map((checked, i) => (
-                          <button
-                            key={i}
-                            className={`w-4 h-4 border rounded ${checked ? "bg-green-500" : "bg-red-500"
-                              }`}
-                            onClick={() => toggleSlotChecked(index, i)}
-                          />
-                        ))}
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <p className="mt-4">
-                <strong>Notes:</strong> {localCharacter.notes}
-              </p>
+            </div>
+            <p className="mt-2">
+              Life:
+              <span>
+                {localCharacter.currentLife}/{localCharacter.fullLife}
+              </span>
+            </p>
+            <div className="flex space-x-2 mt-2">
               <button
-                onClick={toggleEditMode}
-                className="bg-blue-500 text-white px-4 py-2 rounded mt-4 hover:bg-blue-600 transition-colors"
+                onClick={incrementLife}
+                className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 transition-colors"
               >
-                Edit
+                +1 Life
               </button>
-            </>
-          )}
+              <button
+                onClick={decrementLife}
+                className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition-colors"
+              >
+                -1 Life
+              </button>
+            </div>
+            <div className="mt-4">
+              <h3 className="text-lg font-semibold">Equipment</h3>
+              <ul>
+                {localCharacter.equipment.map((item, index) => (
+                  <li key={index}>{item}</li>
+                ))}
+              </ul>
+            </div>
+            <div className="mt-4">
+              <h3 className="text-lg font-semibold">Spells</h3>
+              <ul>
+                {localCharacter.spells.map((spell, index) => (
+                  <li key={index} className="flex items-center">
+                    {spell.name}
+                    <div className="ml-1 flex space-x-1">
+                      {spell.checkedSlots.map((checked, i) => (
+                        <button
+                          key={i}
+                          className={`w-4 h-4 border rounded ${checked ? "bg-green-500" : "bg-red-500"
+                            }`}
+                          onClick={() => toggleSlotChecked(index, i)}
+                        />
+                      ))}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <p className="mt-4">
+              <strong>Notes:</strong> {localCharacter.notes}
+            </p>
+          </div>
         </div>
       )}
     </div>

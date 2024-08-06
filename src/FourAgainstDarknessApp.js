@@ -6,6 +6,10 @@ import { EncounterCard } from "./components/EncounterCard";
 import { LogEntry } from "./components/LogEntry";
 import { FloatingDice } from "./components/FloatingDice";
 import { DiceRoller } from "./components/DiceRoller";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import "react-tabs/style/react-tabs.css";
+import { getValuesByRegex } from './utils/getLocalStorageValues';
+import { ulid } from 'ulid';
 
 export const FourAgainstDarknessApp = () => {
   const { slug } = useParams();
@@ -41,6 +45,8 @@ export const FourAgainstDarknessApp = () => {
           equipment: ['bandage'],
           spells: [],
           notes: "",
+          id: ulid(),
+          key: `characters-${slug}`,
         }))
   );
 
@@ -125,7 +131,35 @@ export const FourAgainstDarknessApp = () => {
     setCharacterPosition(pos);
   }
 
+  const handleImport = (key, id) => {
+    const characters = localStorage.getItem(key);
+    if (characters) {
+      // const parsed = JSON.parse(characters).filter(c => c.id !== id);
+      const parsed = JSON.parse(characters).map(c => c.id === id ? {
+        name: "Name",
+        class: "Class",
+        level: 1,
+        gold: 0,
+        attack: 0,
+        defense: 0,
+        fullLife: 0,
+        currentLife: 0,
+        equipment: ['bandage'],
+        spells: [],
+        notes: "",
+        id,
+        key,
+      } : c);
+      localStorage.setItem(key, JSON.stringify(parsed));
+    }
+  }
+
   const navigate = useNavigate();
+
+  const importedCharacters = getValuesByRegex(/characters-.*/);
+  const filteredCharactersToImport = importedCharacters.map(charList => {
+    return JSON.parse(charList.value).filter(char => char.name !== 'Name' && char.id && char.key !== `characters-${slug}`)
+  }).flat();
 
   return (
     <>
@@ -149,19 +183,34 @@ export const FourAgainstDarknessApp = () => {
         onCharacterUpdate={handleCharacterPosition}
       />
       <h2 className="text-xl font-bold mt-6 mb-2">Characters</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+      <Tabs selectedTabClassName="after:hidden dark:bg-gray-800 bg-gray-100 rounded-t font-bold">
+        <TabList className='p0'>
+          {characters.map((character, index) => (
+            <Tab key={index}>
+              <div>{character.name}</div>
+              <div className='text-sm dark:text-slate-400 text-gray-500'>{character.class}</div>
+            </Tab>
+          ))}
+        </TabList>
         {characters.map((character, index) => (
-          <CharacterCard
-            key={index}
-            character={character}
-            setCharacter={(newCharacter) => {
-              const updatedCharacters = [...characters];
-              updatedCharacters[index] = newCharacter;
-              setCharacters(updatedCharacters);
-            }}
-          />
+          <TabPanel key={index}>
+            <CharacterCard
+              character={character}
+              setCharacter={(newCharacter) => {
+                const updatedCharacters = [...characters];
+                updatedCharacters[index] = {
+                  ...newCharacter,
+                  id: newCharacter.id ? newCharacter.id : ulid(),
+                  key: newCharacter.key ? newCharacter.key : `characters-${slug}`
+                }; // to support legacy characters created without ID and key
+                setCharacters(updatedCharacters);
+              }}
+              importedCharacters={filteredCharactersToImport}
+              onImport={handleImport}
+            />
+          </TabPanel>
         ))}
-      </div>
+      </Tabs>
       <h2 className="text-xl font-bold mt-6 mb-2">Encounters</h2>
       <button
         className="mb-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"

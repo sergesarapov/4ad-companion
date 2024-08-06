@@ -91,7 +91,7 @@ export const EncounterCard = ({ counter, encounter, setEncounter }) => {
                   Type
                 </label>
                 <div className="mt-1 space-x-4">
-                  {["Minion", "Vermin", "Boss"].map((type) => (
+                  {["Minion", "Vermin", "Boss", "Weird Monster"].map((type) => (
                     <label key={type} className="inline-flex items-center">
                       <input
                         type="radio"
