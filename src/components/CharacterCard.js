@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Dice6 } from "lucide-react";
+import { Dice6, X } from "lucide-react";
 import { ConfirmModal } from './ConfirmModal';
 
 export const CharacterCard = ({ character, setCharacter, importedCharacters = [], onImport }) => {
@@ -344,13 +344,15 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
               />
             </div>
           </div>
-          <div>
+          <div className='mt-4'>
             <h3 className="text-lg font-semibold">Equipment</h3>
             <ul>
               {localCharacter.equipment.map((item, index) => (
-                <li key={index} className='flex m-2'>
+                <li key={index} className='flex my-2'>
                   <div>{item}</div>
-                  <button className='ml-2 pr-2 pl-2 inline border bg-red-500 rounded' onClick={() => deleteEquipment(item)}>del</button>
+                  <button className='ml-2 px-1 inline border bg-red-500 rounded' onClick={() => deleteEquipment(item)}>
+                    <X className="text-white" size={16} />
+                  </button>
                 </li>
               ))}
             </ul>
@@ -370,7 +372,7 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
               </button>
             </div>
           </div>
-          <div>
+          <div className='mt-4'>
             <h3 className="text-lg font-semibold">Spells</h3>
             {localCharacter.spells.map((spell, index) => (
               <div key={index} className="flex space-x-2 mt-2">
@@ -424,13 +426,8 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
               </button>
             </div>
           </div>
-          <div>
-            <label
-              htmlFor="notes"
-              className="block text-sm dark:text-slate-400 font-medium text-gray-700"
-            >
-              Notes
-            </label>
+          <div className='mt-4'>
+            <h3 className="text-lg font-semibold">Notes</h3>
             <textarea
               id="notes"
               name="notes"
