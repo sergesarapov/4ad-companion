@@ -134,7 +134,6 @@ export const FourAgainstDarknessApp = () => {
   const handleImport = (key, id) => {
     const characters = localStorage.getItem(key);
     if (characters) {
-      // const parsed = JSON.parse(characters).filter(c => c.id !== id);
       const parsed = JSON.parse(characters).map(c => c.id === id ? {
         name: "Name",
         class: "Class",
