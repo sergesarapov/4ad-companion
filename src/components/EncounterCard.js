@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { MdExpandMore, MdExpandLess } from "react-icons/md";
 
-export const EncounterCard = ({ counter, encounter, setEncounter, initialEditMode = false }) => {
-  const [isEditMode, setIsEditMode] = useState(() => initialEditMode);
-  const [isCollapsed, setIsCollapsed] = useState(() => !initialEditMode);
-  const [localEncounter, setLocalEncounter] = useState(encounter);
+export const EncounterCard = ({ counter, encounter, setEncounter, isExpanded, onExpand }) => {
+  const isCollapsed = !isExpanded;
+  const [localEncounter, setLocalEncounter] = React.useState(encounter);
 
-  useEffect(() => {
+  React.useEffect(() => {
     setEncounter(localEncounter);
   }, [localEncounter]);
 
@@ -20,38 +19,18 @@ export const EncounterCard = ({ counter, encounter, setEncounter, initialEditMod
     setLocalEncounter((prev) => ({ ...prev, [name]: value }));
   };
 
-  const toggleCount = (index) => {
-    setLocalEncounter((prev) => {
-      const newCount = [...prev.count];
-      newCount[index] = !newCount[index];
-      return { ...prev, count: newCount };
-    });
-  };
-
-  const toggleEditMode = () => {
-    setIsEditMode(!isEditMode);
-  };
-
-  const toggleCollapsed = () => {
-    setIsCollapsed((prev) => {
-      const next = !prev;
-      setIsEditMode(!next);
-      return next;
-    });
-  };
-
   return (
     <div className="dark:bg-gray-800 dark:text-white p-4 bg-gray-100 rounded-lg shadow mt-2 mb-2">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold">{localEncounter.name}</h2>
+          <h2 className="text-2xl font-bold"><span >{counter}.{' '}</span>{localEncounter.name}</h2>
           <p className="text-sm dark:text-slate-400 text-gray-500">{localEncounter.type}</p>
           <p className="text-sm dark:text-slate-400 text-gray-500">
             Status: {localEncounter.status}
           </p>
         </div>
         <button
-          onClick={toggleCollapsed}
+          onClick={onExpand}
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
         >
           {isCollapsed ? <MdExpandMore /> : <MdExpandLess />}
@@ -111,115 +90,102 @@ export const EncounterCard = ({ counter, encounter, setEncounter, initialEditMod
       )}
       {!isCollapsed && (
         <div className="mt-4">
-          {isEditMode ? (
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm dark:text-slate-400 font-medium text-gray-700">
-                  Type
-                </label>
-                <div className="mt-1 space-x-4">
-                  {["Minion", "Vermin", "Boss", "Weird Monster"].map((type) => (
-                    <label key={type} className="inline-flex items-center">
-                      <input
-                        type="radio"
-                        name="type"
-                        value={type}
-                        checked={localEncounter.type === type}
-                        onChange={handleRadioChange}
-                        className="form-radio h-4 w-4 text-blue-600"
-                      />
-                      <span className="ml-2">{type}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <label
-                  htmlFor="level"
-                  className="block text-sm dark:text-slate-400 font-medium text-gray-700"
-                >
-                  Level
-                </label>
-                <select
-                  id="level"
-                  name="level"
-                  value={localEncounter.level}
-                  onChange={handleInputChange}
-                  className="dark:bg-gray-800 mt-1 block w-full p-2 border border-gray-300 rounded"
-                >
-                  {[...Array(10)].map((_, i) => (
-                    <option key={i + 1} value={i + 1}>{i + 1}</option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label
-                  htmlFor="attacksPerRound"
-                  className="block text-sm dark:text-slate-400 font-medium text-gray-700"
-                >
-                  Attacks per Round
-                </label>
-                <select
-                  id="attacksPerRound"
-                  name="attacksPerRound"
-                  value={localEncounter.attacksPerRound}
-                  onChange={handleInputChange}
-                  className="dark:bg-gray-800 mt-1 block w-full p-2 border border-gray-300 rounded"
-                >
-                  {[...Array(10)].map((_, i) => (
-                    <option key={i + 1} value={i + 1}>{i + 1}</option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm dark:text-slate-400 font-medium text-gray-700">
-                  Status
-                </label>
-                <div className="mt-1 space-x-4">
-                  {["Alive", "Fled", "Bribed", "Defeated"].map((status) => (
-                    <label key={status} className="inline-flex items-center">
-                      <input
-                        type="radio"
-                        name="status"
-                        value={status}
-                        checked={localEncounter.status === status}
-                        onChange={handleRadioChange}
-                        className="dark:bg-gray-800 form-radio h-4 w-4 text-blue-600"
-                      />
-                      <span className="ml-2">{status}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <label
-                  htmlFor="notes"
-                  className="block text-sm dark:text-slate-400 font-medium text-gray-700"
-                >
-                  Notes
-                </label>
-                <textarea
-                  id="notes"
-                  name="notes"
-                  value={localEncounter.notes}
-                  onChange={handleInputChange}
-                  className="dark:bg-gray-800 mt-1 block w-full p-2 border border-gray-300 rounded"
-                  rows="3"
-                />
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm dark:text-slate-400 font-medium text-gray-700">
+                Type
+              </label>
+              <div className="mt-1 space-x-4">
+                {["Minion", "Vermin", "Boss", "Weird Monster"].map((type) => (
+                  <label key={type} className="inline-flex items-center">
+                    <input
+                      type="radio"
+                      name="type"
+                      value={type}
+                      checked={localEncounter.type === type}
+                      onChange={handleRadioChange}
+                      className="form-radio h-4 w-4 text-blue-600"
+                    />
+                    <span className="ml-2">{type}</span>
+                  </label>
+                ))}
               </div>
             </div>
-          ) : (
-            <>
-              <p className="mt-2">Level: {localEncounter.level}</p>
-              <p className="mt-2">
-                Attacks per Round: {localEncounter.attacksPerRound}
-              </p>
-              <div className="mt-4">
-                <strong>Notes:</strong>
-                <p className="whitespace-pre-wrap">{localEncounter.notes}</p>
+            <div>
+              <label
+                htmlFor="level"
+                className="block text-sm dark:text-slate-400 font-medium text-gray-700"
+              >
+                Level
+              </label>
+              <select
+                id="level"
+                name="level"
+                value={localEncounter.level}
+                onChange={handleInputChange}
+                className="dark:bg-gray-800 mt-1 block w-full p-2 border border-gray-300 rounded"
+              >
+                {[...Array(10)].map((_, i) => (
+                  <option key={i + 1} value={i + 1}>{i + 1}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label
+                htmlFor="attacksPerRound"
+                className="block text-sm dark:text-slate-400 font-medium text-gray-700"
+              >
+                Attacks per Round
+              </label>
+              <select
+                id="attacksPerRound"
+                name="attacksPerRound"
+                value={localEncounter.attacksPerRound}
+                onChange={handleInputChange}
+                className="dark:bg-gray-800 mt-1 block w-full p-2 border border-gray-300 rounded"
+              >
+                {[...Array(10)].map((_, i) => (
+                  <option key={i + 1} value={i + 1}>{i + 1}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm dark:text-slate-400 font-medium text-gray-700">
+                Status
+              </label>
+              <div className="mt-1 space-x-4">
+                {["Alive", "Fled", "Bribed", "Defeated"].map((status) => (
+                  <label key={status} className="inline-flex items-center">
+                    <input
+                      type="radio"
+                      name="status"
+                      value={status}
+                      checked={localEncounter.status === status}
+                      onChange={handleRadioChange}
+                      className="dark:bg-gray-800 form-radio h-4 w-4 text-blue-600"
+                    />
+                    <span className="ml-2">{status}</span>
+                  </label>
+                ))}
               </div>
-            </>
-          )}
+            </div>
+            <div>
+              <label
+                htmlFor="notes"
+                className="block text-sm dark:text-slate-400 font-medium text-gray-700"
+              >
+                Notes
+              </label>
+              <textarea
+                id="notes"
+                name="notes"
+                value={localEncounter.notes}
+                onChange={handleInputChange}
+                className="dark:bg-gray-800 mt-1 block w-full p-2 border border-gray-300 rounded"
+                rows="3"
+              />
+            </div>
+          </div>
         </div>
       )}
     </div>

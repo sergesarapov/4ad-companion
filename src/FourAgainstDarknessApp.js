@@ -20,8 +20,7 @@ export const FourAgainstDarknessApp = () => {
   const savedLogEntries = localStorage.getItem(`log-entries-${slug}`);
 
   const [characterPosition, setCharacterPosition] = useState(
-    savedCharacterPosition ?
-      JSON.parse(savedCharacterPosition) : null
+    savedCharacterPosition ? JSON.parse(savedCharacterPosition) : null
   );
   const [grid, setGrid] = useState(
     savedGrid
@@ -53,6 +52,8 @@ export const FourAgainstDarknessApp = () => {
   const [encounters, setEncounters] = useState(
     savedEncounters ? JSON.parse(savedEncounters) : []
   );
+
+  const [expandedEncounterIndex, setExpandedEncounterIndex] = useState(null);
 
   const [logEntries, setLogEntries] = useState(
     savedLogEntries ? JSON.parse(savedLogEntries) : []
@@ -98,9 +99,10 @@ export const FourAgainstDarknessApp = () => {
       attacksPerRound: 1,
       status: "Alive",
       notes: "",
-      _new: true,
     };
-    setEncounters([...encounters, newEncounter]);
+    const updated = [...encounters, newEncounter];
+    setEncounters(updated);
+    setExpandedEncounterIndex(updated.length - 1);
   };
 
   const addLogEntry = () => {
@@ -203,7 +205,7 @@ export const FourAgainstDarknessApp = () => {
                   ...newCharacter,
                   id: newCharacter.id ? newCharacter.id : ulid(),
                   key: newCharacter.key ? newCharacter.key : `characters-${slug}`
-                }; // to support legacy characters created without ID and key
+                };
                 setCharacters(updatedCharacters);
               }}
               importedCharacters={filteredCharactersToImport}
@@ -225,11 +227,14 @@ export const FourAgainstDarknessApp = () => {
             key={index}
             counter={index + 1}
             encounter={encounter}
-            initialEditMode={encounter._new === true}
+            isExpanded={expandedEncounterIndex === index}
+            onExpand={() =>
+              setExpandedEncounterIndex((prev) => (prev === index ? null : index))
+            }
             setEncounter={(newEncounter) => {
-              const updatedEncounters = [...encounters];
-              updatedEncounters[index] = { ...newEncounter, _new: false };
-              setEncounters(updatedEncounters);
+              const updated = [...encounters];
+              updated[index] = newEncounter;
+              setEncounters(updated);
             }}
           />
         ))}
