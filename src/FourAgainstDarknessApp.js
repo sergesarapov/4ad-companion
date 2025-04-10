@@ -89,14 +89,16 @@ export const FourAgainstDarknessApp = () => {
   }, [characterPosition, slug]);
 
   const addNewEncounter = () => {
+    const nextNumber = encounters.length + 1;
     const newEncounter = {
-      name: "New Encounter",
+      name: `Encounter #${nextNumber}`,
       type: "Minion",
       level: 1,
-      count: Array(21).fill(false),
+      count: 1,
       attacksPerRound: 1,
       status: "Alive",
       notes: "",
+      _new: true,
     };
     setEncounters([...encounters, newEncounter]);
   };
@@ -223,9 +225,10 @@ export const FourAgainstDarknessApp = () => {
             key={index}
             counter={index + 1}
             encounter={encounter}
+            initialEditMode={encounter._new === true}
             setEncounter={(newEncounter) => {
               const updatedEncounters = [...encounters];
-              updatedEncounters[index] = newEncounter;
+              updatedEncounters[index] = { ...newEncounter, _new: false };
               setEncounters(updatedEncounters);
             }}
           />
