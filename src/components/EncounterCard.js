@@ -23,11 +23,7 @@ export const EncounterCard = ({ counter, encounter, setEncounter, isExpanded, on
     <div className="dark:bg-gray-800 dark:text-white p-4 bg-gray-100 rounded-lg shadow mt-2 mb-2">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold"><span >{counter}.{' '}</span>{localEncounter.name}</h2>
-          <p className="text-sm dark:text-slate-400 text-gray-500">{localEncounter.type}</p>
-          <p className="text-sm dark:text-slate-400 text-gray-500">
-            Status: {localEncounter.status}
-          </p>
+          <h2 className="text-2xl font-bold">{localEncounter.name}</h2>
         </div>
         <button
           onClick={onExpand}
@@ -186,6 +182,23 @@ export const EncounterCard = ({ counter, encounter, setEncounter, isExpanded, on
               />
             </div>
           </div>
+        </div>
+      )}
+      {isCollapsed && (
+        <div className="mt-4 space-y-1">
+          <p className="text-sm dark:text-slate-400 text-gray-500">
+            <strong>Type:</strong> {localEncounter.type}
+          </p>
+          <p className="text-sm dark:text-slate-400 text-gray-500">
+            <strong>Status:</strong> {localEncounter.status}
+          </p>
+          {localEncounter.notes && (
+            <div>
+              <p className="text-sm dark:text-slate-400 text-gray-500">
+                <strong>Notes:</strong> {localEncounter.notes}
+              </p>
+            </div>
+          )}
         </div>
       )}
     </div>
