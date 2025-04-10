@@ -530,10 +530,10 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
             </div>
           </div>
 
-          <div className="flex flex-col md:flex-row md:space-x-6 mb-4">
+          <div className="mt-4 space-y-6">
             <div className="md:w-1/2">
               <h3 className="text-sm dark:text-slate-400 text-gray-500 font-semibold mb-1">Equipment</h3>
-              <ul className="text-sm dark:text-slate-300 text-gray-700 list-disc list-inside">
+              <ul className="text-sm dark:text-slate-300 text-gray-700 list-none">
                 {localCharacter.equipment.map((item, index) => (
                   <li key={index}>{item}</li>
                 ))}
@@ -541,7 +541,7 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
             </div>
             <div className="md:w-1/2 mt-4 md:mt-0">
               <h3 className="text-sm dark:text-slate-400 text-gray-500 font-semibold mb-1">Spells</h3>
-              <ul className="text-sm dark:text-slate-300 text-gray-700 list-disc list-inside">
+              <ul className="text-sm dark:text-slate-300 text-gray-700 list-none">
                 {localCharacter.spells.map((spell, index) => (
                   <li key={index} className="flex items-center">
                     {spell.name}
@@ -560,7 +560,7 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
             </div>
           </div>
 
-          <div className="text-sm dark:text-slate-400 text-gray-500">
+          <div className="mt-4 text-sm dark:text-slate-400 text-gray-500">
             <strong>Notes:</strong>
             <p className="whitespace-pre-wrap text-sm dark:text-slate-300 text-gray-700 mt-1">
               {localCharacter.notes}
