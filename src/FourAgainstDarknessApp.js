@@ -167,12 +167,58 @@ export const FourAgainstDarknessApp = () => {
   return (
     <>
       <p className='mb-4'>To avoid losing your progress in the current dungeon, make sure to save your dungeon address: /dungeon/<b>{slug}</b></p>
-      <button
-        className="mb-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
-        onClick={() => navigate("/")}
-      >
-        Home
-      </button>
+      <p className='mb-4'>Move your current progress between different browsers by Saving/Loading a backup file. Use the same dungeon url when doing so.</p>
+      <div className="flex flex-wrap gap-4 mb-4">
+        <button
+          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
+          onClick={() => navigate("/")}
+        >
+          Home
+        </button>
+        <button
+          className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition-colors"
+          onClick={() => {
+            const keys = Object.keys(localStorage).filter(key => key.includes(slug));
+            const data = {};
+            keys.forEach(key => {
+              data[key] = localStorage.getItem(key);
+            });
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `4ad-${slug}-backup.json`;
+            link.click();
+          }}
+        >
+          Save Progress
+        </button>
+        <label className="cursor-pointer bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition-colors">
+          Load Progress
+          <input
+            type="file"
+            accept=".json"
+            onChange={(e) => {
+              const file = e.target.files[0];
+              if (!file) return;
+              const reader = new FileReader();
+              reader.onload = (event) => {
+                try {
+                  const data = JSON.parse(event.target.result);
+                  Object.entries(data).forEach(([key, value]) => {
+                    localStorage.setItem(key, value);
+                  });
+                  window.location.reload();
+                } catch (err) {
+                  alert("Invalid file format");
+                }
+              };
+              reader.readAsText(file);
+            }}
+            className="hidden"
+          />
+        </label>
+      </div>
       <div className='dark:bg-gray-800 bg-gray-100  p-4 space-y-2 rounded'>
         <DiceRoller title="Roll for room" d="d66" />
         <DiceRoller title="Roll for contents" d="2d6" />
