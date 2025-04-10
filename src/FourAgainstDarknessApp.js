@@ -16,7 +16,33 @@ export const FourAgainstDarknessApp = () => {
   const savedGrid = localStorage.getItem(`dungeon-${slug}`);
   const savedCharacterPosition = localStorage.getItem(`character-position-${slug}`);
   const savedCharacters = localStorage.getItem(`characters-${slug}`);
-  const savedEncounters = localStorage.getItem(`encounters-${slug}`);
+  const savedEncounters = (() => {
+    const raw = localStorage.getItem(`encounters-${slug}`);
+    if (!raw) return null;
+    try {
+      const parsed = JSON.parse(raw);
+      const normalized = parsed.map((enc, i) => {
+        if (typeof enc.count === "number") {
+          return enc; // already new format
+        }
+        // Backward compatibility: convert from legacy format
+        return {
+          name: enc.name || `Encounter #${i + 1}`,
+          type: enc.type || "Minion",
+          level: parseInt(enc.level, 10) || 1,
+          count: Array.isArray(enc.count) ? enc.count.filter(Boolean).length + 1 : 0,
+          attacksPerRound: parseInt(enc.attacksPerRound, 10) || 1,
+          status: enc.status || "Alive",
+          notes: enc.notes || "",
+          _new: false
+        };
+      });
+      return JSON.stringify(normalized);
+    } catch (err) {
+      console.error("Failed to parse encounters from localStorage", err);
+      return null;
+    }
+  })();
   const savedLogEntries = localStorage.getItem(`log-entries-${slug}`);
 
   const [characterPosition, setCharacterPosition] = useState(
