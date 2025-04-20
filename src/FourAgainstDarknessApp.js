@@ -16,12 +16,37 @@ export const FourAgainstDarknessApp = () => {
   const savedGrid = localStorage.getItem(`dungeon-${slug}`);
   const savedCharacterPosition = localStorage.getItem(`character-position-${slug}`);
   const savedCharacters = localStorage.getItem(`characters-${slug}`);
-  const savedEncounters = localStorage.getItem(`encounters-${slug}`);
+  const savedEncounters = (() => {
+    const raw = localStorage.getItem(`encounters-${slug}`);
+    if (!raw) return null;
+    try {
+      const parsed = JSON.parse(raw);
+      const normalized = parsed.map((enc, i) => {
+        if (typeof enc.count === "number") {
+          return enc; // already new format
+        }
+        // Backward compatibility: convert from legacy format
+        return {
+          name: enc.name || `Encounter #${i + 1}`,
+          type: enc.type || "Minion",
+          level: parseInt(enc.level, 10) || 1,
+          count: Array.isArray(enc.count) ? enc.count.filter(Boolean).length + 1 : 0,
+          attacksPerRound: parseInt(enc.attacksPerRound, 10) || 1,
+          status: enc.status || "Alive",
+          notes: enc.notes || "",
+          _new: false
+        };
+      });
+      return JSON.stringify(normalized);
+    } catch (err) {
+      console.error("Failed to parse encounters from localStorage", err);
+      return null;
+    }
+  })();
   const savedLogEntries = localStorage.getItem(`log-entries-${slug}`);
 
   const [characterPosition, setCharacterPosition] = useState(
-    savedCharacterPosition ?
-      JSON.parse(savedCharacterPosition) : null
+    savedCharacterPosition ? JSON.parse(savedCharacterPosition) : null
   );
   const [grid, setGrid] = useState(
     savedGrid
@@ -53,6 +78,8 @@ export const FourAgainstDarknessApp = () => {
   const [encounters, setEncounters] = useState(
     savedEncounters ? JSON.parse(savedEncounters) : []
   );
+
+  const [expandedEncounterIndex, setExpandedEncounterIndex] = useState(null);
 
   const [logEntries, setLogEntries] = useState(
     savedLogEntries ? JSON.parse(savedLogEntries) : []
@@ -89,16 +116,19 @@ export const FourAgainstDarknessApp = () => {
   }, [characterPosition, slug]);
 
   const addNewEncounter = () => {
+    const nextNumber = encounters.length + 1;
     const newEncounter = {
-      name: "New Encounter",
+      name: `Encounter #${nextNumber}`,
       type: "Minion",
       level: 1,
-      count: Array(21).fill(false),
+      count: 1,
       attacksPerRound: 1,
       status: "Alive",
       notes: "",
     };
-    setEncounters([...encounters, newEncounter]);
+    const updated = [...encounters, newEncounter];
+    setEncounters(updated);
+    setExpandedEncounterIndex(updated.length - 1);
   };
 
   const addLogEntry = () => {
@@ -162,13 +192,38 @@ export const FourAgainstDarknessApp = () => {
 
   return (
     <>
-      <p className='mb-4'>To avoid losing your progress in the current dungeon, make sure to save your dungeon address: /dungeon/<b>{slug}</b></p>
-      <button
-        className="mb-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
-        onClick={() => navigate("/")}
-      >
-        Home
-      </button>
+      <p className='mb-4'>
+        Bookmark this address to return to your dungeon later: <code>/dungeon/<b>{slug}</b></code>
+      </p>
+      <p className='mb-4'>
+        You can also save your progress to a file and load it later—even on another browser.
+      </p>
+      <div className="flex flex-wrap gap-4 mb-4">
+        <button
+          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
+          onClick={() => navigate("/")}
+        >
+          Home
+        </button>
+        <button
+          className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition-colors"
+          onClick={() => {
+            const keys = Object.keys(localStorage).filter(key => key.includes(slug));
+            const data = {};
+            keys.forEach(key => {
+              data[key] = localStorage.getItem(key);
+            });
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `4ad-${slug}-backup.json`;
+            link.click();
+          }}
+        >
+          Save Progress
+        </button>
+      </div>
       <div className='dark:bg-gray-800 bg-gray-100  p-4 space-y-2 rounded'>
         <DiceRoller title="Roll for room" d="d66" />
         <DiceRoller title="Roll for contents" d="2d6" />
@@ -201,7 +256,7 @@ export const FourAgainstDarknessApp = () => {
                   ...newCharacter,
                   id: newCharacter.id ? newCharacter.id : ulid(),
                   key: newCharacter.key ? newCharacter.key : `characters-${slug}`
-                }; // to support legacy characters created without ID and key
+                };
                 setCharacters(updatedCharacters);
               }}
               importedCharacters={filteredCharactersToImport}
@@ -223,10 +278,14 @@ export const FourAgainstDarknessApp = () => {
             key={index}
             counter={index + 1}
             encounter={encounter}
+            isExpanded={expandedEncounterIndex === index}
+            onExpand={() =>
+              setExpandedEncounterIndex((prev) => (prev === index ? null : index))
+            }
             setEncounter={(newEncounter) => {
-              const updatedEncounters = [...encounters];
-              updatedEncounters[index] = newEncounter;
-              setEncounters(updatedEncounters);
+              const updated = [...encounters];
+              updated[index] = newEncounter;
+              setEncounters(updated);
             }}
           />
         ))}

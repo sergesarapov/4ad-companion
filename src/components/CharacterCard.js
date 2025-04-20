@@ -80,6 +80,13 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
     }
   };
 
+  const deleteSpell = (indexToDelete) => {
+    setLocalCharacter((prev) => ({
+      ...prev,
+      spells: prev.spells.filter((_, i) => i !== indexToDelete),
+    }));
+  };
+
   const toggleSlotChecked = (spellIndex, slotIndex) => {
     setLocalCharacter((prev) => {
       const spells = prev.spells.map((spell, index) => {
@@ -375,7 +382,7 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
           <div className='mt-4'>
             <h3 className="text-lg font-semibold">Spells</h3>
             {localCharacter.spells.map((spell, index) => (
-              <div key={index} className="flex space-x-2 mt-2">
+              <div key={index} className="flex space-x-2 mt-2 items-center">
                 <input
                   type="text"
                   name="name"
@@ -393,6 +400,13 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
                   className="dark:bg-gray-800 w-[60px] p-2 border border-gray-300 rounded"
                   min="0"
                 />
+                <button
+                  onClick={() => deleteSpell(index)}
+                  className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                  title="Delete Spell"
+                >
+                  <X size={16} />
+                </button>
               </div>
             ))}
             <div className="flex space-x-2 mt-2">
@@ -451,10 +465,31 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
         </div>
       ) : (
         <div>
-          <div className="flex justify-between items-center">
-            <div>
-              <h2 className="text-2xl font-bold">{localCharacter.name}</h2>
-              <p className="text-sm dark:text-slate-400 text-gray-500">{localCharacter.class}</p>
+          <div className="flex justify-between items-center mb-4">
+            <div className="flex items-center space-x-6">
+              <p className="text-sm dark:text-slate-400 text-gray-500 mb-0">
+                <strong>Level:</strong> {localCharacter.level}
+              </p>
+              <div className="flex items-center space-x-2">
+                <p className="text-sm dark:text-slate-400 text-gray-500 mb-0">
+                  <strong>Life:</strong> {localCharacter.currentLife}/{localCharacter.fullLife}
+                </p>
+                <button
+                  onClick={incrementLife}
+                  className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 transition-colors"
+                >
+                  +1
+                </button>
+                <button
+                  onClick={decrementLife}
+                  className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition-colors"
+                >
+                  -1
+                </button>
+              </div>
+              <p className="text-sm dark:text-slate-400 text-gray-500 mb-0">
+                <strong>Gold:</strong> {localCharacter.gold}
+              </p>
             </div>
             <button
               onClick={toggleEditMode}
@@ -463,76 +498,50 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
               Edit
             </button>
           </div>
-          <div>
-            <p className="text-sm dark:text-slate-400">Level: {localCharacter.level}</p>
-            <div className="flex-col">
-              <div className="mt-2">
-                <p className="text-l">Gold: {localCharacter.gold}</p>
-              </div>
-              <div>
-                Attack: {character.attack}
-                <button
-                  onClick={rollAttack}
-                  className="inline-flex m-2 bg-green-500 text-white px-2 py-2 rounded hover:bg-green-600 transition-colors"
-                >
-                  Roll <div className={`ml-2 inline-flex transition-all duration-200 ease-in-out
-          ${isAttackRolling ? 'animate-spin' : ''}
-        `}><Dice6 className="text-white" /></div>
-                </button>
-                {attackRoll && (
-                  <p className="inline dark:text-white text-gray-700">
-                    Result: {attackRoll} ({localCharacter.attack >= 0 ? '+' : ''}{localCharacter.attack})
-                  </p>
-                )}
-              </div>
-              <div>
-                Defense: {character.defense}
-                <button
-                  onClick={rollDefense}
-                  className="inline-flex m-2 bg-yellow-500 text-white px-2 py-2 rounded hover:bg-yellow-600 transition-colors"
-                >
-                  Roll <div className={`ml-2 inline-flex transition-all duration-200 ease-in-out
-          ${isDefenseRolling ? 'animate-spin' : ''}
-        `}><Dice6 className="text-white" /></div>
-                </button>
-                {defenseRoll && (
-                  <p className="inline dark:text-white text-gray-700">
-                    Result: {defenseRoll} ({localCharacter.defense >= 0 ? '+' : ''}{localCharacter.defense})
-                  </p>
-                )}
-              </div>
-            </div>
-            <p className="mt-2">
-              Life:
-              <span>
-                {localCharacter.currentLife}/{localCharacter.fullLife}
-              </span>
-            </p>
-            <div className="flex space-x-2 mt-2">
+
+          <div className="flex flex-col gap-4 mb-4">
+            <div className="text-sm dark:text-slate-400 text-gray-500 mb-0">
+              <strong>Attack:</strong> {character.attack}
               <button
-                onClick={incrementLife}
-                className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 transition-colors"
+                onClick={rollAttack}
+                className="inline-flex ml-2 bg-green-500 text-white px-2 py-2 rounded hover:bg-green-600 transition-colors"
               >
-                +1 Life
+                Roll <div className={`ml-2 inline-flex transition-all duration-200 ease-in-out ${isAttackRolling ? 'animate-spin' : ''}`}><Dice6 className="text-white" /></div>
               </button>
-              <button
-                onClick={decrementLife}
-                className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition-colors"
-              >
-                -1 Life
-              </button>
+              {attackRoll && (
+                <p className="inline dark:text-white text-gray-700 ml-2">
+                  Result: {attackRoll} ({localCharacter.attack >= 0 ? '+' : ''}{localCharacter.attack})
+                </p>
+              )}
             </div>
-            <div className="mt-4">
-              <h3 className="text-lg font-semibold">Equipment</h3>
-              <ul>
+            <div className="text-sm dark:text-slate-400 text-gray-500 mb-0">
+              <strong>Defense:</strong> {character.defense}
+              <button
+                onClick={rollDefense}
+                className="inline-flex ml-2 bg-yellow-500 text-white px-2 py-2 rounded hover:bg-yellow-600 transition-colors"
+              >
+                Roll <div className={`ml-2 inline-flex transition-all duration-200 ease-in-out ${isDefenseRolling ? 'animate-spin' : ''}`}><Dice6 className="text-white" /></div>
+              </button>
+              {defenseRoll && (
+                <p className="inline dark:text-white text-gray-700 ml-2">
+                  Result: {defenseRoll} ({localCharacter.defense >= 0 ? '+' : ''}{localCharacter.defense})
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div className="mt-4 space-y-6">
+            <div className="md:w-1/2">
+              <h3 className="text-sm dark:text-slate-400 text-gray-500 font-semibold mb-1">Equipment</h3>
+              <ul className="text-sm dark:text-slate-300 text-gray-700 list-none">
                 {localCharacter.equipment.map((item, index) => (
                   <li key={index}>{item}</li>
                 ))}
               </ul>
             </div>
-            <div className="mt-4">
-              <h3 className="text-lg font-semibold">Spells</h3>
-              <ul>
+            <div className="md:w-1/2 mt-4 md:mt-0">
+              <h3 className="text-sm dark:text-slate-400 text-gray-500 font-semibold mb-1">Spells</h3>
+              <ul className="text-sm dark:text-slate-300 text-gray-700 list-none">
                 {localCharacter.spells.map((spell, index) => (
                   <li key={index} className="flex items-center">
                     {spell.name}
@@ -540,8 +549,7 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
                       {spell.checkedSlots.map((checked, i) => (
                         <button
                           key={i}
-                          className={`w-4 h-4 border rounded ${checked ? "bg-green-500" : "bg-red-500"
-                            }`}
+                          className={`w-4 h-4 border rounded ${checked ? "bg-green-500" : "bg-red-500"}`}
                           onClick={() => toggleSlotChecked(index, i)}
                         />
                       ))}
@@ -550,8 +558,12 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
                 ))}
               </ul>
             </div>
-            <p className="mt-4">
-              <strong>Notes:</strong> {localCharacter.notes}
+          </div>
+
+          <div className="mt-4 text-sm dark:text-slate-400 text-gray-500">
+            <strong>Notes:</strong>
+            <p className="whitespace-pre-wrap text-sm dark:text-slate-300 text-gray-700 mt-1">
+              {localCharacter.notes}
             </p>
           </div>
         </div>
