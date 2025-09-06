@@ -1,11 +1,12 @@
 import React, { useState, useCallback, useRef } from "react";
-import { Users, Pencil, DoorClosed, RotateCw, Eraser, Swords } from "lucide-react";
+import { Users, Pencil, DoorClosed, RotateCw, Eraser, Swords, TreePine, Mountain, Waves } from "lucide-react";
+import { FaBridge } from "react-icons/fa6";
 
 const orientations = ['top', 'right', 'bottom', 'left'];
 
 export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUpdate, encounterCount = 0 }) => {
   const [isDrawing, setIsDrawing] = useState(false);
-  const [mode, setMode] = useState('draw'); // 'draw', 'character', 'door', 'erase', 'encounter'
+  const [mode, setMode] = useState('draw'); // 'draw', 'character', 'door', 'erase', 'encounter', 'forest', 'mountain', 'water', 'bridge'
   const [doorOrientation, setDoorOrientation] = useState('top');
   const [selectedEncounter, setSelectedEncounter] = useState(1);
   const drawingValue = useRef(false);
@@ -61,6 +62,82 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
     });
   };
 
+  const toggleForest = (rowIndex, colIndex) => {
+    onGridUpdate((prevGrid) => {
+      const newGrid = prevGrid.map((row, rIndex) =>
+        row.map((cell, cIndex) => {
+          if (rIndex === rowIndex && cIndex === colIndex) {
+            // Toggle forest state
+            if (cell.terrain === 'forest') {
+              return { ...cell, terrain: null };
+            } else {
+              return { ...cell, terrain: 'forest' };
+            }
+          }
+          return cell;
+        })
+      );
+      return newGrid;
+    });
+  };
+
+  const toggleMountain = (rowIndex, colIndex) => {
+    onGridUpdate((prevGrid) => {
+      const newGrid = prevGrid.map((row, rIndex) =>
+        row.map((cell, cIndex) => {
+          if (rIndex === rowIndex && cIndex === colIndex) {
+            // Toggle mountain state
+            if (cell.terrain === 'mountain') {
+              return { ...cell, terrain: null };
+            } else {
+              return { ...cell, terrain: 'mountain' };
+            }
+          }
+          return cell;
+        })
+      );
+      return newGrid;
+    });
+  };
+
+  const toggleWater = (rowIndex, colIndex) => {
+    onGridUpdate((prevGrid) => {
+      const newGrid = prevGrid.map((row, rIndex) =>
+        row.map((cell, cIndex) => {
+          if (rIndex === rowIndex && cIndex === colIndex) {
+            // Toggle water state
+            if (cell.terrain === 'water') {
+              return { ...cell, terrain: null };
+            } else {
+              return { ...cell, terrain: 'water' };
+            }
+          }
+          return cell;
+        })
+      );
+      return newGrid;
+    });
+  };
+
+  const toggleBridge = (rowIndex, colIndex) => {
+    onGridUpdate((prevGrid) => {
+      const newGrid = prevGrid.map((row, rIndex) =>
+        row.map((cell, cIndex) => {
+          if (rIndex === rowIndex && cIndex === colIndex) {
+            // Toggle bridge state
+            if (cell.terrain === 'bridge') {
+              return { ...cell, terrain: null };
+            } else {
+              return { ...cell, terrain: 'bridge' };
+            }
+          }
+          return cell;
+        })
+      );
+      return newGrid;
+    });
+  };
+
   const handleMouseDown = useCallback(
     (rowIndex, colIndex) => {
       if (mode === 'draw') {
@@ -75,6 +152,14 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
         toggleCell(rowIndex, colIndex);
       } else if (mode === 'encounter') {
         toggleEncounter(rowIndex, colIndex);
+      } else if (mode === 'forest') {
+        toggleForest(rowIndex, colIndex);
+      } else if (mode === 'mountain') {
+        toggleMountain(rowIndex, colIndex);
+      } else if (mode === 'water') {
+        toggleWater(rowIndex, colIndex);
+      } else if (mode === 'bridge') {
+        toggleBridge(rowIndex, colIndex);
       }
     },
     [grid, mode, doorOrientation, selectedEncounter]
@@ -104,6 +189,10 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
   const toggleCharacterMode = () => setMode('character');
   const toggleDoorMode = () => setMode('door');
   const toggleEncounterMode = () => setMode('encounter');
+  const toggleForestMode = () => setMode('forest');
+  const toggleMountainMode = () => setMode('mountain');
+  const toggleWaterMode = () => setMode('water');
+  const toggleBridgeMode = () => setMode('bridge');
 
   const rotateDoorOrientation = () => {
     setDoorOrientation((prev) => {
@@ -136,6 +225,44 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
             : 'bg-red-300 text-gray-700'
             }`}>
             <Eraser className="inline-block" size={16} />
+          </button>
+        </div>
+        <div className="flex mb-2 space-x-2">
+          <button
+            className={`font-bold py-2 px-4 rounded ${mode === 'forest'
+              ? 'bg-green-500 text-white'
+              : 'bg-gray-300 text-gray-700'
+              }`}
+            onClick={toggleForestMode}
+          >
+            <TreePine className="inline-block" size={16} fill="currentColor" />
+          </button>
+          <button
+            className={`font-bold py-2 px-4 rounded ${mode === 'mountain'
+              ? 'bg-gray-600 text-white'
+              : 'bg-gray-300 text-gray-700'
+              }`}
+            onClick={toggleMountainMode}
+          >
+            <Mountain className="inline-block" size={16} fill="currentColor" />
+          </button>
+          <button
+            className={`font-bold py-2 px-4 rounded ${mode === 'water'
+              ? 'bg-blue-500 text-white'
+              : 'bg-gray-300 text-gray-700'
+              }`}
+            onClick={toggleWaterMode}
+          >
+            <Waves className="inline-block" size={16} fill="white" />
+          </button>
+          <button
+            className={`font-bold py-2 px-4 rounded ${mode === 'bridge'
+              ? 'bg-amber-600 text-white'
+              : 'bg-gray-300 text-gray-700'
+              }`}
+            onClick={toggleBridgeMode}
+          >
+            <FaBridge className="inline-block" size={16} color="currentColor" />
           </button>
         </div>
         <div className="flex align-center mb-2 space-x-2">
@@ -231,6 +358,39 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
                 <div className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white dark:text-red-500">
                   {cell.encounter}
                 </div>
+              )}
+              {cell.terrain === 'forest' && (
+                <TreePine
+                  size={16}
+                  fill="currentColor"
+                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-green-600 dark:text-green-400"
+                />
+              )}
+              {cell.terrain === 'mountain' && (
+                <Mountain
+                  size={16}
+                  fill="currentColor"
+                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white dark:text-gray-400"
+                />
+              )}
+              {cell.terrain === 'water' && (
+                <>
+                  <div className="absolute inset-0 bg-blue-500 dark:bg-blue-400"></div>
+                  <Waves
+                    size={16}
+                    fill="white"
+                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white"
+                  />
+                </>
+              )}
+              {cell.terrain === 'bridge' && (
+                <>
+                  <div className="absolute inset-0 bg-blue-500 dark:bg-blue-400"></div>
+                  <FaBridge
+                    size={20}
+                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-black"
+                  />
+                </>
               )}
               {position &&
                 position.row === rowIndex &&
