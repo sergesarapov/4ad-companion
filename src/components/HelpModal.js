@@ -66,19 +66,11 @@ export const HelpModal = ({ isOpen, onClose }) => {
                         <ul className="space-y-2">
                             <li className="flex items-start">
                                 <span className="mr-2">🌙</span>
-                                <span>Toggle between light and dark mode using the theme button</span>
-                            </li>
-                            <li className="flex items-start">
-                                <span className="mr-2">📖</span>
-                                <span>All your progress is automatically saved to your browser&apos;s local storage</span>
-                            </li>
-                            <li className="flex items-start">
-                                <span className="mr-2">🪽</span>
-                                <span>Export your dungeon data to backup or share with friends</span>
+                                <span>Toggle between light and dark mode using the theme button in the top right corner</span>
                             </li>
                             <li className="flex items-start">
                                 <span className="mr-2">🧙</span>
-                                <span>Characters can be migrated from existing dungeons to new adventures - look for the migration button in edit mode when creating a new character</span>
+                                <span>Characters can be migrated from previous dungeons to new adventures - look for the migration button in edit mode when creating a new character</span>
                             </li>
                         </ul>
                     </div>
