@@ -9,10 +9,11 @@ This companion app is not part of the official Four Against Darkness game and is
 ## Features
 
 - **Dungeon Grid**: A digital representation of your dungeon layout.
-- **Character Management**: Keep track of up to four characters, including their stats, equipment, and spells.
+- **Character Management**: Keep track of up to four characters, including their stats, equipment, and spells. Migrate characters from existing dungeons to new adventures.
 - **Encounter Tracking**: Manage and track various encounters throughout your adventure.
 - **Adventure Logging**: Keep track of your adventures by leaving short log entries.
 - **Persistent Storage**: Your dungeon, characters, and encounters are saved in the browser's local storage.
+- **Save/Load Functionality**: Export your dungeon to a JSON file and load it on different browsers or devices.
 
 ## Getting Started
 

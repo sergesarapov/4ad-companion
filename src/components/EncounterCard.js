@@ -1,11 +1,13 @@
-import React from "react";
-import { MdExpandMore, MdExpandLess } from "react-icons/md";
+import React, { useEffect, useState } from "react";
+import { MdExpandMore, MdExpandLess, MdEdit, MdCheck, MdClose } from "react-icons/md";
 
 export const EncounterCard = ({ counter, encounter, setEncounter, isExpanded, onExpand }) => {
   const isCollapsed = !isExpanded;
-  const [localEncounter, setLocalEncounter] = React.useState(encounter);
+  const [localEncounter, setLocalEncounter] = useState(encounter);
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [tempName, setTempName] = useState(encounter.name);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setEncounter(localEncounter);
   }, [localEncounter]);
 
@@ -19,15 +21,71 @@ export const EncounterCard = ({ counter, encounter, setEncounter, isExpanded, on
     setLocalEncounter((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleEditName = () => {
+    setTempName(localEncounter.name);
+    setIsEditingName(true);
+  };
+
+  const handleSaveName = () => {
+    setLocalEncounter((prev) => ({ ...prev, name: tempName }));
+    setIsEditingName(false);
+  };
+
+  const handleCancelEdit = () => {
+    setTempName(localEncounter.name);
+    setIsEditingName(false);
+  };
+
+  const handleNameInputChange = (e) => {
+    setTempName(e.target.value);
+  };
+
+  const getDisplayName = (name) => /^Encounter #\d+$/.test(name) ? name : `${counter}. ${name}`;
+
   return (
     <div className="dark:bg-gray-800 dark:text-white p-4 bg-gray-100 rounded-lg shadow mt-2 mb-2">
       <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-2xl font-bold">{localEncounter.name}</h2>
+        <div className="flex items-center space-x-2 flex-1 min-w-0">
+          {isEditingName ? (
+            <div className="flex items-center space-x-2 flex-1 min-w-0">
+              <input
+                type="text"
+                value={tempName}
+                onChange={handleNameInputChange}
+                className="text-2xl font-bold bg-transparent border-b-2 border-blue-500 focus:outline-none focus:border-blue-600 w-[180px]"
+                autoFocus
+              />
+              <button
+                onClick={handleSaveName}
+                className="text-green-600 hover:text-green-700 transition-colors flex-shrink-0"
+                title="Save"
+              >
+                <MdCheck size={20} />
+              </button>
+              <button
+                onClick={handleCancelEdit}
+                className="text-red-600 hover:text-red-700 transition-colors flex-shrink-0"
+                title="Cancel"
+              >
+                <MdClose size={20} />
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center space-x-2 flex-1 min-w-0">
+              <h2 className="text-2xl font-bold truncate">{getDisplayName(localEncounter.name)}</h2>
+              <button
+                onClick={handleEditName}
+                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors flex-shrink-0"
+                title="Edit name"
+              >
+                <MdEdit size={20} />
+              </button>
+            </div>
+          )}
         </div>
         <button
           onClick={onExpand}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors flex-shrink-0 ml-2"
         >
           {isCollapsed ? <MdExpandMore /> : <MdExpandLess />}
         </button>

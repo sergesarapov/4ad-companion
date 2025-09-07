@@ -19,16 +19,14 @@ export const DarkModeToggle = () => {
     };
 
     return (
-        <div className="absolute right-4 top-4 flex items-center">
-            <button
-                onClick={toggleDarkMode}
-                className={`p-2 rounded ${isDarkMode ? "bg-gray-800 text-white" : "bg-gray-200 text-black"
-                    }`}
-            >
-                <span className="mr-2 text-sm text-gray-700 dark:text-gray-300">
-                    {isDarkMode ? "Dark Mode" : "Light Mode"}
-                </span>{isDarkMode ? "🌙" : "☀️"}
-            </button>
-        </div>
+        <button
+            onClick={toggleDarkMode}
+            className={`p-2 rounded ${isDarkMode ? "bg-gray-800 text-white" : "bg-gray-200 text-black"
+                }`}
+        >
+            <span className="mr-2 text-sm text-gray-700 dark:text-gray-300">
+                {isDarkMode ? "Dark Mode" : "Light Mode"}
+            </span>{isDarkMode ? "🌙" : "☀️"}
+        </button>
     );
 };

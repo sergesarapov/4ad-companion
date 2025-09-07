@@ -1,16 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { FourAgainstDarknessApp } from "./FourAgainstDarknessApp";
 import { Home } from "./Home";
 import { DarkModeToggle } from "./components/DarkModeToggle";
+import { HelpModal } from "./components/HelpModal";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { Analytics } from "@vercel/analytics/react";
 
 const App = () => {
+  const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
+
   return (
     <div className="relative dark:bg-black dark:text-white max-w-screen-lg mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-4">4AD Companion</h1>
-      <DarkModeToggle />
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-3xl font-bold place-self-start">4AD Companion</h1>
+        <div className="flex flex-col items-end gap-2">
+          <DarkModeToggle />
+          <button
+            onClick={() => setIsHelpModalOpen(true)}
+            className="bg-blue-100 hover:bg-blue-200 text-blue-800 dark:bg-blue-900/30 dark:hover:bg-blue-800/40 dark:text-blue-300 px-3 py-1 rounded text-sm transition-colors"
+          >
+            Help 🔮
+          </button>
+        </div>
+      </div>
       <Routes>
         <Route path="/dungeon/:slug" element={<FourAgainstDarknessApp />} />
         <Route path="/" element={<Home />} />
@@ -25,6 +38,10 @@ const App = () => {
           Disclaimer: This companion app is not part of the official Four Against Darkness game and is not affiliated with or endorsed by Ganesha Games.
         </p>
       </footer>
+      <HelpModal
+        isOpen={isHelpModalOpen}
+        onClose={() => setIsHelpModalOpen(false)}
+      />
     </div>
   );
 };
