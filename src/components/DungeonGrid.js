@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useRef } from "react";
-import { Users, Pencil, DoorClosed, RotateCw, Eraser, Swords, TreePine, Mountain, Waves } from "lucide-react";
+import { Users, Pencil, DoorClosed, RotateCw, Eraser, Swords, TreePine, Mountain, Waves, Shuffle } from "lucide-react";
 import { FaBridge } from "react-icons/fa6";
+import { generateDungeon } from "../utils/dungeonGenerator";
 
 const orientations = ['top', 'right', 'bottom', 'left'];
 
@@ -201,13 +202,27 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
     });
   };
 
+  const handleGenerateDungeon = () => {
+    const newGrid = generateDungeon();
+    onGridUpdate(newGrid);
+  };
+
   return (
     <div
       className="dark:bg-gray-800 p-4 bg-gray-100 rounded-md mt-4 overflow-x-auto"
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
     >
-      <h2 className="text-xl font-bold mb-2">Dungeon Map</h2>
+      <div className="flex justify-between">
+        <h2 className="text-xl font-bold mb-2">Dungeon Map</h2>
+        <button
+          className="font-bold py-2 px-4 rounded bg-purple-500 hover:bg-purple-700 text-white"
+          onClick={handleGenerateDungeon}
+        >
+          <Shuffle className="inline-block mr-2 mb-1" size={16} />
+          Generate
+        </button>
+      </div>
       <div className="mb-2">
         <div className="flex mb-2 space-x-2">
           <button
