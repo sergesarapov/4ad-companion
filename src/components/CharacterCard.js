@@ -111,12 +111,10 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
   };
 
   const deleteEquipment = (itemIndex) => {
-    setLocalCharacter((prev) => {
-      return {
-        ...prev,
-        equipment: prev.equipment.filter((_, i) => i !== itemIndex),
-      };
-    });
+    setLocalCharacter((prev) => ({
+      ...prev,
+      equipment: prev.equipment.filter((_, i) => i !== itemIndex),
+    }));
   };
 
   const toggleEditMode = () => {
