@@ -110,11 +110,13 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
     }
   };
 
-  const deleteEquipment = (itemToDelete) => {
-    setLocalCharacter((prev) => ({
-      ...prev,
-      equipment: prev.equipment.filter((item) => item !== itemToDelete),
-    }));
+  const deleteEquipment = (itemIndex) => {
+    setLocalCharacter((prev) => {
+      return {
+        ...prev,
+        equipment: prev.equipment.filter((_, i) => i !== itemIndex),
+      };
+    });
   };
 
   const toggleEditMode = () => {
@@ -357,7 +359,7 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
               {localCharacter.equipment.map((item, index) => (
                 <li key={index} className='flex my-2'>
                   <div>{item}</div>
-                  <button className='ml-2 px-1 inline border bg-red-500 rounded' onClick={() => deleteEquipment(item)}>
+                  <button className='ml-2 px-1 inline border bg-red-500 rounded' onClick={() => deleteEquipment(index)}>
                     <X className="text-white" size={16} />
                   </button>
                 </li>

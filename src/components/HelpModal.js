@@ -1,4 +1,5 @@
 import React from "react";
+import { X } from "lucide-react";
 
 export const HelpModal = ({ isOpen, onClose }) => {
     if (!isOpen) return null;
@@ -18,14 +19,14 @@ export const HelpModal = ({ isOpen, onClose }) => {
                         className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl"
                         onClick={onClose}
                     >
-                        ×
+                        <X size={16} />
                     </button>
                 </div>
 
                 <div className="space-y-4 dark:text-white">
                     <p className="text-lg">
                         Welcome, brave adventurer! This companion app will help you navigate the dark dungeons of Four Against Darkness.
-                        Here&apos;s everything you need to know to get started on your epic journey:
+                        Here's everything you need to know to get started on your epic journey:
                     </p>
 
                     <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
@@ -38,6 +39,10 @@ export const HelpModal = ({ isOpen, onClose }) => {
                             <li className="flex items-start">
                                 <span className="mr-2">🗺️</span>
                                 <span><strong>Dungeon Grid:</strong> A digital representation of your dungeon layout to track your exploration</span>
+                            </li>
+                            <li className="flex items-start">
+                                <span className="mr-2">✨</span>
+                                <span><strong>Dungeon Generation:</strong> Use the "Generate" button in the Dungeon Map section to automatically create a random dungeon layout with rooms and corridors</span>
                             </li>
                             <li className="flex items-start">
                                 <span className="mr-2">🏹</span>

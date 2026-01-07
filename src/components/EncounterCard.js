@@ -121,23 +121,23 @@ export const EncounterCard = ({ counter, encounter, setEncounter, isExpanded, on
               onClick={() =>
                 setLocalEncounter((prev) => ({
                   ...prev,
-                  count: Math.max(1, (prev.count || 1) - 1),
-                }))
-              }
-              className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition-colors"
-            >
-              -1
-            </button>
-            <button
-              onClick={() =>
-                setLocalEncounter((prev) => ({
-                  ...prev,
                   count: Math.min(21, (prev.count || 1) + 1),
                 }))
               }
               className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 transition-colors"
             >
               +1
+            </button>
+            <button
+              onClick={() =>
+                setLocalEncounter((prev) => ({
+                  ...prev,
+                  count: Math.max(1, (prev.count || 1) - 1),
+                }))
+              }
+              className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition-colors"
+            >
+              -1
             </button>
           </div>
         </div>
