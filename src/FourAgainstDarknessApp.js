@@ -88,6 +88,8 @@ export const FourAgainstDarknessApp = () => {
 
   const [activeCharacterId, setActiveCharacterId] = useState(characters[0].id);
 
+  const [draggingId, setDraggingId] = useState(null);
+
   useEffect(() => {
     if (savedGrid) setGrid(JSON.parse(savedGrid));
     if (savedCharacters) setCharacters(JSON.parse(savedCharacters));
@@ -256,11 +258,22 @@ export const FourAgainstDarknessApp = () => {
       >
         {characters.map((character) => (
           <Tab
+            onDragStart={() => {
+              if (draggingId !== character.id) {
+                setDraggingId(character.id);
+              }
+            }}
+            onDragEnd={() => {
+              setDraggingId(null);
+            }}
             key={character.id}
             id={character.id}
-            className={`rounded-t px-3 py-2 cursor-pointer transition-colors ${activeCharacterId === character.id
-              ? 'dark:bg-gray-800 bg-gray-100 font-bold'
-              : 'hover:border-gray-300'
+            className={`rounded-t px-3 py-2 cursor-pointer ${draggingId === character.id ?
+              'dark:bg-gray-600 bg-gray-50' :
+              ''
+              } ${activeCharacterId === character.id
+                ? 'dark:bg-gray-800 bg-gray-100 font-bold'
+                : 'hover:border-gray-300'
               }`}
           >
             <div>{character.name}</div>
