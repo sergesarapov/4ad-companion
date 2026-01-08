@@ -77,6 +77,10 @@ export const HelpModal = ({ isOpen, onClose }) => {
                                 <span className="mr-2">🧙</span>
                                 <span>Characters can be migrated from previous dungeons to new adventures - look for the migration button in edit mode when creating a new character</span>
                             </li>
+                            <li className="flex items-start">
+                                <span className="mr-2">🔄</span>
+                                <span>You can drag and drop character tabs to change their order. On mobile devices, tap and hold a character tab, then drag it to the desired position.</span>
+                            </li>
                         </ul>
                     </div>
                 </div>

@@ -2,7 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Dice6, X } from "lucide-react";
 import { ConfirmModal } from './ConfirmModal';
 
-export const CharacterCard = ({ character, setCharacter, importedCharacters = [], onImport }) => {
+export const CharacterCard = ({
+  character,
+  setCharacter,
+  importedCharacters = [],
+  onImport,
+  setActiveCharacterId,
+}) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [localCharacter, setLocalCharacter] = useState(character);
   const [selectedImportedCharacter, setSelectedImportedCharacter] = useState(importedCharacters?.[0]?.id ?? null);
@@ -13,7 +19,6 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
   const [isAttackRolling, setIsAttackRolling] = useState(false);
   const [isDefenseRolling, setIsDefenseRolling] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const rollDuration = 500; // 0.3 seconds of rolling animation
 
   useEffect(() => {
@@ -163,8 +168,10 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
     setIsModalOpen(false);
     const foundCharacter = importedCharacters.find(c => c.id === selectedImportedCharacter);
     if (foundCharacter) {
-      setLocalCharacter((prev) => ({ ...foundCharacter, key: prev.key }));
-      onImport(foundCharacter.key, foundCharacter.id);
+      const updatedCharacter = { ...foundCharacter, key: localCharacter.key };
+      setCharacter(updatedCharacter);
+      setActiveCharacterId(updatedCharacter.id);
+      onImport(foundCharacter.key, foundCharacter.id); // Clear the character from the original dungeon
       toggleEditMode();
     }
   };

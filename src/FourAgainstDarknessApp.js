@@ -6,8 +6,7 @@ import { EncounterCard } from "./components/EncounterCard";
 import { LogEntry } from "./components/LogEntry";
 import { FloatingDice } from "./components/FloatingDice";
 import { DiceRoller } from "./components/DiceRoller";
-import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import "react-tabs/style/react-tabs.css";
+import Tabs, { Tab } from "@uiw/react-tabs-draggable";
 import { getValuesByRegex } from './utils/getLocalStorageValues';
 import { ulid } from 'ulid';
 
@@ -86,6 +85,8 @@ export const FourAgainstDarknessApp = () => {
   );
 
   const [newLogEntry, setNewLogEntry] = useState("");
+
+  const [activeCharacterId, setActiveCharacterId] = useState(characters[0].id);
 
   useEffect(() => {
     if (savedGrid) setGrid(JSON.parse(savedGrid));
@@ -185,6 +186,8 @@ export const FourAgainstDarknessApp = () => {
 
   const navigate = useNavigate();
 
+  const activeCharacterIndex = characters.findIndex((c) => c.id === activeCharacterId);
+  const activeCharacter = characters[activeCharacterIndex];
   const importedCharacters = getValuesByRegex(/characters-.*/);
   const filteredCharactersToImport = importedCharacters.map(charList => {
     return JSON.parse(charList.value).filter(char => char.name !== 'Name' && char.id && char.key !== `characters-${slug}`)
@@ -237,34 +240,50 @@ export const FourAgainstDarknessApp = () => {
         onCharacterUpdate={handleCharacterPosition}
       />
       <h2 className="text-xl font-bold mt-6 mb-2">Characters</h2>
-      <Tabs selectedTabClassName="after:hidden dark:bg-gray-800 bg-gray-100 rounded-t font-bold">
-        <TabList className='p0'>
-          {characters.map((character, index) => (
-            <Tab key={index}>
-              <div>{character.name}</div>
-              <div className='text-sm dark:text-slate-400 text-gray-500'>{character.class}</div>
-            </Tab>
-          ))}
-        </TabList>
-        {characters.map((character, index) => (
-          <TabPanel key={index}>
-            <CharacterCard
-              character={character}
-              setCharacter={(newCharacter) => {
-                const updatedCharacters = [...characters];
-                updatedCharacters[index] = {
-                  ...newCharacter,
-                  id: newCharacter.id ? newCharacter.id : ulid(),
-                  key: newCharacter.key ? newCharacter.key : `characters-${slug}`
-                };
-                setCharacters(updatedCharacters);
-              }}
-              importedCharacters={filteredCharactersToImport}
-              onImport={handleImport}
-            />
-          </TabPanel>
+      <Tabs
+        activeKey={activeCharacterId}
+        onTabClick={(id) => setActiveCharacterId(id)}
+        onTabDrop={(id, index) => {
+          const oldIndex = characters.findIndex((c) => c.id === id);
+          if (oldIndex === -1 || oldIndex === index) return;
+
+          const newCharacters = [...characters];
+          const [movedCharacter] = newCharacters.splice(oldIndex, 1);
+          newCharacters.splice(index, 0, movedCharacter);
+
+          setCharacters(newCharacters);
+        }}
+      >
+        {characters.map((character) => (
+          <Tab
+            key={character.id}
+            id={character.id}
+            className={`rounded-t px-3 py-2 cursor-pointer transition-colors ${activeCharacterId === character.id
+              ? 'dark:bg-gray-800 bg-gray-100 font-bold'
+              : 'hover:border-gray-300'
+              }`}
+          >
+            <div>{character.name}</div>
+            <div className='text-sm dark:text-slate-400 text-gray-500'>{character.class}</div>
+          </Tab>
         ))}
       </Tabs>
+      <CharacterCard
+        key={activeCharacterId}
+        character={activeCharacter}
+        setCharacter={(newCharacter) => {
+          const updatedCharacters = [...characters];
+          updatedCharacters[activeCharacterIndex] = {
+            ...newCharacter,
+            id: newCharacter.id ? newCharacter.id : ulid(),
+            key: newCharacter.key ? newCharacter.key : `characters-${slug}`
+          };
+          setCharacters(updatedCharacters);
+        }}
+        importedCharacters={filteredCharactersToImport}
+        onImport={handleImport}
+        setActiveCharacterId={setActiveCharacterId}
+      />
       <h2 className="text-xl font-bold mt-6 mb-2">Encounters</h2>
       <button
         className="mb-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
