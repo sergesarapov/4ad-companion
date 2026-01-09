@@ -207,6 +207,13 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
     onGridUpdate(newGrid);
   };
 
+  const COL_COUNT = 20;
+  const ROW_COUNT = grid.length;
+
+  const columnLabels = Array.from({ length: COL_COUNT }, (_, i) =>
+    String.fromCharCode(65 + i) // A–T
+  );
+
   return (
     <div
       className="dark:bg-gray-800 p-4 bg-gray-100 rounded mt-4 overflow-x-auto"
@@ -344,80 +351,100 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
         </div>
       </div>
       <div
-        className="inline-grid"
-        style={{ gridTemplateColumns: "repeat(20, 24px)" }}
+        className="inline-grid select-none"
+        style={{
+          gridTemplateColumns: `24px repeat(${COL_COUNT}, 24px)`,
+          gridTemplateRows: `repeat(${ROW_COUNT}, 24px) 24px`,
+        }}
       >
-        {grid.map((row, rowIndex) =>
-          row.map((cell, colIndex) => (
-            <div
-              key={`${rowIndex}-${colIndex}`}
-              className={`w-6 h-6 border border-gray-300 cursor-pointer ${cell ? "dark:bg-white bg-gray-700" : "dark:bg-gray-800 bg-white"
-                } relative`}
-              onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
-              onMouseEnter={() => handleMouseEnter(rowIndex, colIndex)}
-              onClick={() => handleCellClick(rowIndex, colIndex)}
-              data-coord={`${rowIndex}-${colIndex}`}
-            >
-              {cell.door && (
-                <i
-                  className='absolute bg-amber-500 dark:bg-amber-800'
-                  style={{
-                    width: cell.door === 'top' || cell.door === 'bottom' ? '100%' : '4px',
-                    height: cell.door === 'left' || cell.door === 'right' ? '100%' : '4px',
-                    top: cell.door === 'top' ? 0 : cell.door === 'bottom' ? 'calc(100% - 4px)' : 0,
-                    left: cell.door === 'left' ? 0 : cell.door === 'right' ? 'calc(100% - 4px)' : 0,
-                  }}
-                ></i>
-              )}
-              {cell.encounter && (
-                <div className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white dark:text-red-500">
-                  {cell.encounter}
-                </div>
-              )}
-              {cell.terrain === 'forest' && (
-                <TreePine
-                  size={16}
-                  fill="currentColor"
-                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-green-600 dark:text-green-400"
-                />
-              )}
-              {cell.terrain === 'mountain' && (
-                <Mountain
-                  size={16}
-                  fill="currentColor"
-                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white dark:text-gray-400"
-                />
-              )}
-              {cell.terrain === 'water' && (
-                <>
-                  <div className="absolute inset-0 bg-blue-500 dark:bg-blue-400"></div>
-                  <Waves
+        {grid.map((row, rowIndex) => (
+          <>
+            {/* Row number */}
+            <div className="flex items-center justify-center text-xs font-bold text-gray-500 dark:text-gray-400">
+              {ROW_COUNT - rowIndex}
+            </div>
+            {row.map((cell, colIndex) => (
+              <div
+                key={`${rowIndex}-${colIndex}`}
+                className={`w-6 h-6 border border-gray-300 cursor-pointer ${cell ? "dark:bg-white bg-gray-700" : "dark:bg-gray-800 bg-white"
+                  } relative`}
+                onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
+                onMouseEnter={() => handleMouseEnter(rowIndex, colIndex)}
+                onClick={() => handleCellClick(rowIndex, colIndex)}
+              >
+                {cell.door && (
+                  <i
+                    className='absolute bg-amber-500 dark:bg-amber-800'
+                    style={{
+                      width: cell.door === 'top' || cell.door === 'bottom' ? '100%' : '4px',
+                      height: cell.door === 'left' || cell.door === 'right' ? '100%' : '4px',
+                      top: cell.door === 'top' ? 0 : cell.door === 'bottom' ? 'calc(100% - 4px)' : 0,
+                      left: cell.door === 'left' ? 0 : cell.door === 'right' ? 'calc(100% - 4px)' : 0,
+                    }}
+                  ></i>
+                )}
+                {cell.encounter && (
+                  <div className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white dark:text-red-500">
+                    {cell.encounter}
+                  </div>
+                )}
+                {cell.terrain === 'forest' && (
+                  <TreePine
                     size={16}
-                    fill="white"
-                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white"
-                  />
-                </>
-              )}
-              {cell.terrain === 'bridge' && (
-                <>
-                  <div className="absolute inset-0 bg-blue-500 dark:bg-blue-400"></div>
-                  <FaBridge
-                    size={20}
-                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-black"
-                  />
-                </>
-              )}
-              {position &&
-                position.row === rowIndex &&
-                position.col === colIndex && (
-                  <Users
-                    size={20}
-                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-amber-500 dark:text-red-500"
+                    fill="currentColor"
+                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-green-600 dark:text-green-400"
                   />
                 )}
-            </div>
-          ))
-        )}
+                {cell.terrain === 'mountain' && (
+                  <Mountain
+                    size={16}
+                    fill="currentColor"
+                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white dark:text-gray-400"
+                  />
+                )}
+                {cell.terrain === 'water' && (
+                  <>
+                    <div className="absolute inset-0 bg-blue-500 dark:bg-blue-400"></div>
+                    <Waves
+                      size={16}
+                      fill="white"
+                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white"
+                    />
+                  </>
+                )}
+                {cell.terrain === 'bridge' && (
+                  <>
+                    <div className="absolute inset-0 bg-blue-500 dark:bg-blue-400"></div>
+                    <FaBridge
+                      size={20}
+                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-black"
+                    />
+                  </>
+                )}
+                {position &&
+                  position.row === rowIndex &&
+                  position.col === colIndex && (
+                    <Users
+                      size={20}
+                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-amber-500 dark:text-red-500"
+                    />
+                  )}
+              </div>
+            ))}
+          </>
+        ))}
+        {/* Empty corner cell */}
+        <div
+          className="flex items-center justify-center text-xs font-bold text-gray-500 dark:text-gray-400"
+        ></div>
+        {columnLabels.map((label) => (
+          <div
+            key={label}
+            className="flex items-center justify-center text-xs font-bold text-gray-500 dark:text-gray-400"
+          >
+            {label}
+          </div>
+        ))}
       </div>
     </div>
   );
