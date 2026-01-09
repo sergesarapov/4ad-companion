@@ -209,7 +209,7 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
 
   return (
     <div
-      className="dark:bg-gray-800 p-4 bg-gray-100 rounded-md mt-4 overflow-x-auto"
+      className="dark:bg-gray-800 p-4 bg-gray-100 rounded mt-4 overflow-x-auto"
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
     >

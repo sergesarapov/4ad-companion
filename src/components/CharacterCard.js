@@ -181,7 +181,7 @@ export const CharacterCard = ({
   };
 
   return (
-    <div className='dark:bg-gray-800 dark:text-white p-4 bg-gray-100 rounded-b rounded-tr shadow'>
+    <div className='dark:bg-gray-800 dark:text-white p-4 bg-gray-100 rounded-b rounded-tr'>
       {isEditMode ? (
         <div className="flex flex-col flex-wrap">
           {importedCharacters.length > 0 && <div className='mb-6'>

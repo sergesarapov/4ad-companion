@@ -43,7 +43,7 @@ export const EncounterCard = ({ counter, encounter, setEncounter, isExpanded, on
   const getDisplayName = (name) => /^Encounter #\d+$/.test(name) ? name : `${counter}. ${name}`;
 
   return (
-    <div className="dark:bg-gray-800 dark:text-white p-4 bg-gray-100 rounded-lg shadow mt-2 mb-2">
+    <div className="dark:bg-gray-800 dark:text-white p-4 bg-gray-100 rounded mt-2 mb-2">
       <div className="flex justify-between items-center">
         <div className="flex items-center space-x-2 flex-1 min-w-0">
           {isEditingName ? (
