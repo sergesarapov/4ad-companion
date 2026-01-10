@@ -1,6 +1,6 @@
 const isWithinBounds = (x, y, gridWidth, gridHeight) => {
     return x >= 0 && x < gridWidth && y >= 0 && y < gridHeight;
-}
+};
 
 const generateRandomRoom = () => {
     const width = Math.floor(Math.random() * 6) + 2;
@@ -14,7 +14,7 @@ const generateRandomRoom = () => {
     }
 
     return { width, height, cells };
-}
+};
 
 const canPlaceRoom = (room, startX, startY, grid, gridWidth, gridHeight) => {
     // Check room cells and buffer zone (1 cell padding around room)
@@ -23,15 +23,16 @@ const canPlaceRoom = (room, startX, startY, grid, gridWidth, gridHeight) => {
             const worldX = startX + x;
             const worldY = startY + y;
 
-            if (!isWithinBounds(worldX, worldY, gridWidth, gridHeight)) continue;
+            if (!isWithinBounds(worldX, worldY, gridWidth, gridHeight))
+                continue;
             if (grid[worldY][worldX]) return false;
         }
     }
     return true;
-}
+};
 
 const placeRoom = (room, startX, startY, grid) => {
-    const newGrid = grid.map(row => [...row]);
+    const newGrid = grid.map((row) => [...row]);
 
     for (const [cellX, cellY] of room.cells) {
         const worldX = startX + cellX;
@@ -40,31 +41,47 @@ const placeRoom = (room, startX, startY, grid) => {
     }
 
     return newGrid;
-}
+};
 
-const createCorridor = (startX, startY, endX, endY, grid, gridWidth, gridHeight) => {
-    const newGrid = grid.map(row => [...row]);
+const createCorridor = (
+    startX,
+    startY,
+    endX,
+    endY,
+    grid,
+    gridWidth,
+    gridHeight
+) => {
+    const newGrid = grid.map((row) => [...row]);
     const corridorCells = [];
     let currentX = startX;
     let currentY = startY;
 
     while (currentX !== endX) {
         if (isWithinBounds(currentX, currentY, gridWidth, gridHeight)) {
-            corridorCells.push({ x: currentX, y: currentY, isOccupied: grid[currentY][currentX] });
+            corridorCells.push({
+                x: currentX,
+                y: currentY,
+                isOccupied: grid[currentY][currentX],
+            });
         }
         currentX += currentX < endX ? 1 : -1;
     }
     while (currentY !== endY) {
         if (isWithinBounds(currentX, currentY, gridWidth, gridHeight)) {
-            corridorCells.push({ x: currentX, y: currentY, isOccupied: grid[currentY][currentX] });
+            corridorCells.push({
+                x: currentX,
+                y: currentY,
+                isOccupied: grid[currentY][currentX],
+            });
         }
         currentY += currentY < endY ? 1 : -1;
     }
 
-    const emptyCells = corridorCells.filter(cell => !cell.isOccupied);
+    const emptyCells = corridorCells.filter((cell) => !cell.isOccupied);
 
     for (const cell of emptyCells) {
-        if (!canPlaceCorridorCell(cell.x, cell.y, grid, gridWidth, gridHeight)) {
+        if (!canPlaceCorridorCell(cell.x, cell.y, gridWidth, gridHeight)) {
             return grid;
         }
     }
@@ -74,7 +91,9 @@ const createCorridor = (startX, startY, endX, endY, grid, gridWidth, gridHeight)
 
         if (cell.isOccupied) continue;
 
-        const emptyIndex = emptyCells.findIndex(c => c.x === cell.x && c.y === cell.y);
+        const emptyIndex = emptyCells.findIndex(
+            (c) => c.x === cell.x && c.y === cell.y
+        );
         const isFirstEmpty = emptyIndex === 0;
         const isLastEmpty = emptyIndex === emptyCells.length - 1;
 
@@ -102,9 +121,9 @@ const createCorridor = (startX, startY, endX, endY, grid, gridWidth, gridHeight)
     }
 
     return newGrid;
-}
+};
 
-const canPlaceCorridorCell = (x, y, grid, gridWidth, gridHeight) => {
+const canPlaceCorridorCell = (x, y, gridWidth, gridHeight) => {
     for (let dy = -1; dy <= 1; dy++) {
         for (let dx = -1; dx <= 1; dx++) {
             if (dx === 0 && dy === 0) continue;
@@ -112,26 +131,44 @@ const canPlaceCorridorCell = (x, y, grid, gridWidth, gridHeight) => {
             const checkX = x + dx;
             const checkY = y + dy;
 
-            if (!isWithinBounds(checkX, checkY, gridWidth, gridHeight)) continue;
+            if (!isWithinBounds(checkX, checkY, gridWidth, gridHeight))
+                continue;
         }
     }
 
     return true;
-}
+};
 
 export const generateDungeon = () => {
     const gridWidth = 20;
     const gridHeight = 28;
-    let grid = Array(gridHeight).fill().map(() => Array(gridWidth).fill(false));
+    let grid = Array(gridHeight)
+        .fill()
+        .map(() => Array(gridWidth).fill(false));
 
     const entranceRoom = {
         width: 6,
         height: 3,
         cells: [
-            [0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0],
-            [0, 1], [1, 1], [2, 1], [3, 1], [4, 1], [5, 1],
-            [0, 2], [1, 2], [2, 2], [3, 2], [4, 2], [5, 2],
-        ]
+            [0, 0],
+            [1, 0],
+            [2, 0],
+            [3, 0],
+            [4, 0],
+            [5, 0],
+            [0, 1],
+            [1, 1],
+            [2, 1],
+            [3, 1],
+            [4, 1],
+            [5, 1],
+            [0, 2],
+            [1, 2],
+            [2, 2],
+            [3, 2],
+            [4, 2],
+            [5, 2],
+        ],
     };
 
     const entranceStartX = Math.floor((gridWidth - entranceRoom.width) / 2);
@@ -140,7 +177,9 @@ export const generateDungeon = () => {
 
     const minRooms = 10;
     const targetRooms = minRooms + Math.floor(Math.random() * 10);
-    const placedRooms = [{ x: entranceStartX, y: entranceStartY, room: entranceRoom }];
+    const placedRooms = [
+        { x: entranceStartX, y: entranceStartY, room: entranceRoom },
+    ];
     let attempts = 0;
     const maxAttempts = 400;
 
@@ -154,7 +193,8 @@ export const generateDungeon = () => {
         if (canPlaceRoom(room, startX, startY, grid, gridWidth, gridHeight)) {
             grid = placeRoom(room, startX, startY, grid);
 
-            const existing = placedRooms[Math.floor(Math.random() * placedRooms.length)];
+            const existing =
+                placedRooms[Math.floor(Math.random() * placedRooms.length)];
             const ex = existing.x + Math.floor(existing.room.width / 2);
             const ey = existing.y + Math.floor(existing.room.height / 2);
             const nx = startX + Math.floor(room.width / 2);
@@ -166,4 +206,4 @@ export const generateDungeon = () => {
     }
 
     return grid;
-}
+};

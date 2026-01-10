@@ -41,8 +41,12 @@ export const LogEntry = ({ entry, updateEntry, deleteEntry }) => {
                 </>
             ) : (
                 <>
-                    <p className="dark:text-white text-gray-700 text-base">{entry.text}</p>
-                    <p className="dark:text-slate-400 text-gray-500 text-sm mt-2">{new Date(entry.timestamp).toLocaleString()}</p>
+                    <p className="dark:text-white text-gray-700 text-base">
+                        {entry.text}
+                    </p>
+                    <p className="dark:text-slate-400 text-gray-500 text-sm mt-2">
+                        {new Date(entry.timestamp).toLocaleString()}
+                    </p>
                     <div className="flex justify-end mt-4">
                         <button
                             className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mr-2"
