@@ -21,7 +21,7 @@ export const CharacterCard = ({
   const [isAttackRolling, setIsAttackRolling] = useState(false);
   const [isDefenseRolling, setIsDefenseRolling] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const rollDuration = 500; // 0.3 seconds of rolling animation
+  const rollDuration = 300;
 
   useEffect(() => {
     setCharacter(localCharacter);
@@ -520,49 +520,73 @@ export const CharacterCard = ({
             </button>
           </div>
 
-          <div className="flex flex-col gap-4 mb-4">
-            <div className="text-sm dark:text-slate-400 text-gray-500 mb-0">
-              <strong>Attack:</strong> {character.attack}
+          <div className="flex flex-col gap-3 mb-4">
+            <div className="flex items-center gap-3 flex-wrap">
+              <span className="text-sm dark:text-slate-400 text-gray-500">
+                <strong>Attack:</strong> {character.attack}
+              </span>
               <button
                 onClick={rollAttack}
-                className="inline-flex ml-2 bg-green-500 text-white px-2 py-2 rounded hover:bg-green-600 transition-colors"
+                disabled={isAttackRolling}
+                className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-3 py-2 h-[40px] rounded
+                           hover:from-green-600 hover:to-emerald-700 transition-all duration-300
+                           shadow-lg hover:shadow-xl
+                           disabled:opacity-50 disabled:cursor-not-allowed
+                           font-medium flex items-center gap-2"
               >
-                Roll{' '}
-                <div
-                  className={`ml-2 inline-flex transition-all duration-200 ease-in-out ${
-                    isAttackRolling ? 'animate-spin' : ''
-                  }`}
-                >
-                  <Dice6 className="text-white" />
+                <div className={`flex ${isAttackRolling ? 'animate-bounce' : ''}`}>
+                  <Dice6
+                    className={`inline-block ${isAttackRolling ? 'animate-spin' : ''}`}
+                    size={20}
+                  />
                 </div>
               </button>
-              {attackRoll && (
-                <p className="inline dark:text-white text-gray-700 ml-2">
-                  Result: {attackRoll} ({localCharacter.attack >= 0 ? '+' : ''}
+              {attackRoll !== null && (
+                <div className="animate-bounce-in">
+                  <div className="bg-gradient-to-br from-green-500 to-emerald-600 text-white px-2 py-1 rounded shadow-lg flex items-center justify-center min-w-[40px] h-[40px]">
+                    <p className="text-2xl font-bold">{attackRoll}</p>
+                  </div>
+                </div>
+              )}
+              {attackRoll !== null && (
+                <span className="text-sm dark:text-white text-gray-700">
+                  ({localCharacter.attack >= 0 ? '+' : ''}
                   {localCharacter.attack})
-                </p>
+                </span>
               )}
             </div>
-            <div className="text-sm dark:text-slate-400 text-gray-500 mb-0">
-              <strong>Defense:</strong> {character.defense}
+            <div className="flex items-center gap-3 flex-wrap">
+              <span className="text-sm dark:text-slate-400 text-gray-500">
+                <strong>Defense:</strong> {character.defense}
+              </span>
               <button
                 onClick={rollDefense}
-                className="inline-flex ml-2 bg-yellow-500 text-white px-2 py-2 rounded hover:bg-yellow-600 transition-colors"
+                disabled={isDefenseRolling}
+                className="bg-gradient-to-r from-yellow-500 to-amber-600 text-white px-3 py-2 h-[40px] rounded
+                           hover:from-yellow-600 hover:to-amber-700 transition-all duration-300
+                           shadow-lg hover:shadow-xl
+                           disabled:opacity-50 disabled:cursor-not-allowed
+                           font-medium flex items-center gap-2"
               >
-                Roll{' '}
-                <div
-                  className={`ml-2 inline-flex transition-all duration-200 ease-in-out ${
-                    isDefenseRolling ? 'animate-spin' : ''
-                  }`}
-                >
-                  <Dice6 className="text-white" />
+                <div className={`flex ${isDefenseRolling ? 'animate-bounce' : ''}`}>
+                  <Dice6
+                    className={`inline-block ${isDefenseRolling ? 'animate-spin' : ''}`}
+                    size={20}
+                  />
                 </div>
               </button>
-              {defenseRoll && (
-                <p className="inline dark:text-white text-gray-700 ml-2">
-                  Result: {defenseRoll} ({localCharacter.defense >= 0 ? '+' : ''}
+              {defenseRoll !== null && (
+                <div className="animate-bounce-in">
+                  <div className="bg-gradient-to-br from-amber-400 to-orange-500 text-white px-2 py-1 rounded shadow-lg flex items-center justify-center min-w-[40px] h-[40px]">
+                    <p className="text-2xl font-bold">{defenseRoll}</p>
+                  </div>
+                </div>
+              )}
+              {defenseRoll !== null && (
+                <span className="text-sm dark:text-white text-gray-700">
+                  ({localCharacter.defense >= 0 ? '+' : ''}
                   {localCharacter.defense})
-                </p>
+                </span>
               )}
             </div>
           </div>
