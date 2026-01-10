@@ -206,7 +206,7 @@ export const FourAgainstDarknessApp = () => {
         </code>
       </p>
       <p className="mb-4">
-        You can also save your progress to a file and load it later—even on another browser.
+        You can also save your progress to a file and load it later - even on another browser.
       </p>
       <div className="flex flex-wrap gap-4 mb-4">
         <button
@@ -237,7 +237,10 @@ export const FourAgainstDarknessApp = () => {
         </button>
       </div>
       <div className="dark:bg-gray-800 bg-gray-100  p-4 space-y-2 rounded">
-        <DiceRoller title="Roll for room" d="d66" />
+        <h2 className="text-lg font-bold mb-4 dark:text-white text-gray-800">
+          Dungeon Exploration
+        </h2>
+        <DiceRoller title="Roll for tile" d="d66" />
         <DiceRoller title="Roll for contents" d="2d6" />
         <DiceRoller title="Define the outcome" d="d6" />
       </div>
