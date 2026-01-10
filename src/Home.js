@@ -1,5 +1,5 @@
-import { useNavigate } from "react-router-dom";
-import { useRef } from "react";
+import { useNavigate } from 'react-router-dom';
+import React, { useRef } from 'react';
 
 export const Home = () => {
   const navigate = useNavigate();
@@ -16,8 +16,10 @@ export const Home = () => {
 
     const slugMatch = file.name.match(/^4ad-(.+?)-backup/);
     if (!slugMatch) {
-      alert("Could not determine dungeon slug from file name.\n" +
-            "Please make sure the file is named like: 4ad-<slug>-backup.json");
+      alert(
+        'Could not determine dungeon slug from file name.\n' +
+          'Please make sure the file is named like: 4ad-<slug>-backup.json',
+      );
       return;
     }
     const slug = slugMatch[1];
@@ -30,15 +32,15 @@ export const Home = () => {
           localStorage.setItem(key, value);
         });
         navigate(`/dungeon/${slug}`);
-      } catch (err) {
-        alert("Invalid file format.");
+      } catch {
+        alert('Invalid file format.');
       }
     };
     reader.readAsText(file);
   };
 
   return (
-    <div className='h-[80vh] grid place-items-center'>
+    <div className="h-[80vh] grid place-items-center">
       <div className="flex flex-col items-center gap-4">
         <button
           onClick={createNewDungeon}

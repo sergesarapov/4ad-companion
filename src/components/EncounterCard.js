@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { MdExpandMore, MdExpandLess, MdEdit, MdCheck, MdClose } from "react-icons/md";
+import React, { useEffect, useState } from 'react';
+import { MdExpandMore, MdExpandLess, MdEdit, MdCheck, MdClose } from 'react-icons/md';
 
 export const EncounterCard = ({ counter, encounter, setEncounter, isExpanded, onExpand }) => {
   const isCollapsed = !isExpanded;
@@ -40,10 +40,10 @@ export const EncounterCard = ({ counter, encounter, setEncounter, isExpanded, on
     setTempName(e.target.value);
   };
 
-  const getDisplayName = (name) => /^Encounter #\d+$/.test(name) ? name : `${counter}. ${name}`;
+  const getDisplayName = (name) => (/^Encounter #\d+$/.test(name) ? name : `${counter}. ${name}`);
 
   return (
-    <div className="dark:bg-gray-800 dark:text-white p-4 bg-gray-100 rounded-lg shadow mt-2 mb-2">
+    <div className="dark:bg-gray-800 dark:text-white p-4 bg-gray-100 rounded mt-2 mb-2">
       <div className="flex justify-between items-center">
         <div className="flex items-center space-x-2 flex-1 min-w-0">
           {isEditingName ? (
@@ -150,7 +150,7 @@ export const EncounterCard = ({ counter, encounter, setEncounter, isExpanded, on
                 Type
               </label>
               <div className="mt-1 space-x-4">
-                {["Minion", "Vermin", "Boss", "Weird Monster"].map((type) => (
+                {['Minion', 'Vermin', 'Boss', 'Weird Monster'].map((type) => (
                   <label key={type} className="inline-flex items-center">
                     <input
                       type="radio"
@@ -180,7 +180,9 @@ export const EncounterCard = ({ counter, encounter, setEncounter, isExpanded, on
                 className="dark:bg-gray-800 mt-1 block w-full p-2 border border-gray-300 rounded"
               >
                 {[...Array(10)].map((_, i) => (
-                  <option key={i + 1} value={i + 1}>{i + 1}</option>
+                  <option key={i + 1} value={i + 1}>
+                    {i + 1}
+                  </option>
                 ))}
               </select>
             </div>
@@ -199,7 +201,9 @@ export const EncounterCard = ({ counter, encounter, setEncounter, isExpanded, on
                 className="dark:bg-gray-800 mt-1 block w-full p-2 border border-gray-300 rounded"
               >
                 {[...Array(10)].map((_, i) => (
-                  <option key={i + 1} value={i + 1}>{i + 1}</option>
+                  <option key={i + 1} value={i + 1}>
+                    {i + 1}
+                  </option>
                 ))}
               </select>
             </div>
@@ -208,7 +212,7 @@ export const EncounterCard = ({ counter, encounter, setEncounter, isExpanded, on
                 Status
               </label>
               <div className="mt-1 space-x-4">
-                {["Alive", "Fled", "Bribed", "Defeated"].map((status) => (
+                {['Alive', 'Fled', 'Bribed', 'Defeated'].map((status) => (
                   <label key={status} className="inline-flex items-center">
                     <input
                       type="radio"

@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { FourAgainstDarknessApp } from "./FourAgainstDarknessApp";
-import { Home } from "./Home";
-import { DarkModeToggle } from "./components/DarkModeToggle";
-import { HelpModal } from "./components/HelpModal";
-import { SpeedInsights } from "@vercel/speed-insights/react";
-import { Analytics } from "@vercel/analytics/react";
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { FourAgainstDarknessApp } from './FourAgainstDarknessApp';
+import { Home } from './Home';
+import { DarkModeToggle } from './components/DarkModeToggle';
+import { HelpModal } from './components/HelpModal';
+import { SpeedInsights } from '@vercel/speed-insights/react';
+import { Analytics } from '@vercel/analytics/react';
 
 const App = () => {
   const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
@@ -32,16 +32,22 @@ const App = () => {
         <p className="text-sm dark:text-slate-400 text-gray-600">
           Four Against Darkness is a game by Andrea Sfiligoi, published by Ganesha Games.
           <br />
-          Official website: <a href="https://www.ganeshagames.net/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">www.ganeshagames.net</a>
+          Official website:{' '}
+          <a
+            href="https://www.ganeshagames.net/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline"
+          >
+            www.ganeshagames.net
+          </a>
         </p>
         <p className="text-sm dark:text-slate-400 text-gray-600 mt-2">
-          Disclaimer: This companion app is not part of the official Four Against Darkness game and is not affiliated with or endorsed by Ganesha Games.
+          Disclaimer: This companion app is not part of the official Four Against Darkness game and
+          is not affiliated with or endorsed by Ganesha Games.
         </p>
       </footer>
-      <HelpModal
-        isOpen={isHelpModalOpen}
-        onClose={() => setIsHelpModalOpen(false)}
-      />
+      <HelpModal isOpen={isHelpModalOpen} onClose={() => setIsHelpModalOpen(false)} />
     </div>
   );
 };

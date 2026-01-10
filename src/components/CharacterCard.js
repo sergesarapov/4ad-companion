@@ -1,20 +1,27 @@
-import React, { useState, useEffect } from "react";
-import { Dice6, X } from "lucide-react";
+import React, { useState, useEffect } from 'react';
+import { Dice6, X } from 'lucide-react';
 import { ConfirmModal } from './ConfirmModal';
 
-export const CharacterCard = ({ character, setCharacter, importedCharacters = [], onImport }) => {
+export const CharacterCard = ({
+  character,
+  setCharacter,
+  importedCharacters = [],
+  onImport,
+  setActiveCharacterId,
+}) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [localCharacter, setLocalCharacter] = useState(character);
-  const [selectedImportedCharacter, setSelectedImportedCharacter] = useState(importedCharacters?.[0]?.id ?? null);
+  const [selectedImportedCharacter, setSelectedImportedCharacter] = useState(
+    importedCharacters?.[0]?.id ?? null,
+  );
   const [attackRoll, setAttackRoll] = useState(null);
   const [defenseRoll, setDefenseRoll] = useState(null);
-  const [newSpell, setNewSpell] = useState({ name: "", slots: 0 });
-  const [newEquipment, setNewEquipment] = useState("");
+  const [newSpell, setNewSpell] = useState({ name: '', slots: 0 });
+  const [newEquipment, setNewEquipment] = useState('');
   const [isAttackRolling, setIsAttackRolling] = useState(false);
   const [isDefenseRolling, setIsDefenseRolling] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const rollDuration = 500; // 0.3 seconds of rolling animation
+  const rollDuration = 300;
 
   useEffect(() => {
     setCharacter(localCharacter);
@@ -32,7 +39,7 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
       const spells = [...prev.spells];
       let newSlotsValue = [];
 
-      if (name === "slots") {
+      if (name === 'slots') {
         const newValue = value ? parseInt(value, 10) : 0;
         const currentSlots = spells[index].checkedSlots;
 
@@ -41,10 +48,7 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
           newSlotsValue = currentSlots.slice(0, newValue);
         } else if (currentSlots.length < newValue) {
           // Increase the number of checked slots if the new value is more
-          newSlotsValue = [
-            ...currentSlots,
-            ...Array(newValue - currentSlots.length).fill(true),
-          ];
+          newSlotsValue = [...currentSlots, ...Array(newValue - currentSlots.length).fill(true)];
         } else {
           // If the number of slots remains the same, keep the current slots
           newSlotsValue = [...currentSlots];
@@ -54,9 +58,8 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
       // Update the spell at the specific index
       spells[index] = {
         ...spells[index],
-        [name]: name === "slots" ? parseInt(value, 10) : value,
-        checkedSlots:
-          name === "slots" ? newSlotsValue : spells[index].checkedSlots,
+        [name]: name === 'slots' ? parseInt(value, 10) : value,
+        checkedSlots: name === 'slots' ? newSlotsValue : spells[index].checkedSlots,
       };
 
       return { ...prev, spells };
@@ -65,18 +68,20 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
 
   const addSpell = () => {
     if (newSpell.name.trim()) {
+      const newSpellSlots = Number.isNaN(+newSpell.slots) ? 0 : newSpell.slots;
+
       setLocalCharacter((prev) => ({
         ...prev,
         spells: [
           ...prev.spells,
           {
             ...newSpell,
-            slots: parseInt(newSpell.slots, 10),
-            checkedSlots: Array(parseInt(newSpell.slots, 10)).fill(true),
+            slots: parseInt(newSpellSlots, 10),
+            checkedSlots: Array(parseInt(newSpellSlots, 10)).fill(true),
           },
         ],
       }));
-      setNewSpell({ name: "", slots: 0 });
+      setNewSpell({ name: '', slots: 0 });
     }
   };
 
@@ -91,9 +96,7 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
     setLocalCharacter((prev) => {
       const spells = prev.spells.map((spell, index) => {
         if (index !== spellIndex) return spell;
-        const checkedSlots = spell.checkedSlots.map((slot, i) =>
-          i === slotIndex ? !slot : slot
-        );
+        const checkedSlots = spell.checkedSlots.map((slot, i) => (i === slotIndex ? !slot : slot));
         return { ...spell, checkedSlots };
       });
       return { ...prev, spells };
@@ -106,7 +109,7 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
         ...prev,
         equipment: [...prev.equipment, newEquipment.trim()],
       }));
-      setNewEquipment("");
+      setNewEquipment('');
     }
   };
 
@@ -161,10 +164,15 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
 
   const confirmImportCharacter = () => {
     setIsModalOpen(false);
-    const foundCharacter = importedCharacters.find(c => c.id === selectedImportedCharacter);
+    const foundCharacter = importedCharacters.find((c) => c.id === selectedImportedCharacter);
     if (foundCharacter) {
-      setLocalCharacter((prev) => ({ ...foundCharacter, key: prev.key }));
-      onImport(foundCharacter.key, foundCharacter.id);
+      const updatedCharacter = {
+        ...foundCharacter,
+        key: localCharacter.key,
+      };
+      setCharacter(updatedCharacter);
+      setActiveCharacterId(updatedCharacter.id);
+      onImport(foundCharacter.key, foundCharacter.id); // Clear the character from the original dungeon
       toggleEditMode();
     }
   };
@@ -174,33 +182,40 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
   };
 
   return (
-    <div className='dark:bg-gray-800 dark:text-white p-4 bg-gray-100 rounded-b rounded-tr shadow'>
+    <div className="dark:bg-gray-800 dark:text-white p-4 bg-gray-100 rounded-b rounded-tr">
       {isEditMode ? (
         <div className="flex flex-col flex-wrap">
-          {importedCharacters.length > 0 && <div className='mb-6'>
-            <select
-              value={selectedImportedCharacter}
-              onChange={(e) => setSelectedImportedCharacter(e.target.value)}
-              className="dark:bg-gray-800 bg-white border border-gray-300 rounded-md py-1 px-1 text-ellipsis"
-            >
-              {importedCharacters.map((char, i) => (
-                <option className='text-ellipsis' key={i + 1} value={char.id}>
-                  {char.name}{' '}
-                  {char.class}{' '}
-                  Level:{' '}{char.level}
-                </option>
-              ))}
-            </select>
-            <button className='ml-2 bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 transition-colors' onClick={handleImportCharacter}>Migrate</button>
-            {isModalOpen && <ConfirmModal
-              title="Confirm Migration"
-              text="The character will be removed from the original dungeon and the current slot will be entirely rewritten. Are you sure you want to migrate the character?"
-              isOpen={isModalOpen}
-              onClose={cancelImportCharacter}
-              onConfirm={confirmImportCharacter}
-            />}
-          </div>}
-          <div className='flex space-x-4'>
+          {importedCharacters.length > 0 && (
+            <div className="mb-6">
+              <select
+                value={selectedImportedCharacter}
+                onChange={(e) => setSelectedImportedCharacter(e.target.value)}
+                className="dark:bg-gray-800 bg-white border border-gray-300 rounded-md py-1 px-1 text-ellipsis"
+              >
+                {importedCharacters.map((char, i) => (
+                  <option className="text-ellipsis" key={i + 1} value={char.id}>
+                    {char.name} {char.class} Level: {char.level}
+                  </option>
+                ))}
+              </select>
+              <button
+                className="ml-2 bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 transition-colors"
+                onClick={handleImportCharacter}
+              >
+                Migrate
+              </button>
+              {isModalOpen && (
+                <ConfirmModal
+                  title="Confirm Migration"
+                  text="The character will be removed from the original dungeon and the current slot will be entirely rewritten. Are you sure you want to migrate the character?"
+                  isOpen={isModalOpen}
+                  onClose={cancelImportCharacter}
+                  onConfirm={confirmImportCharacter}
+                />
+              )}
+            </div>
+          )}
+          <div className="flex space-x-4">
             <div>
               <div>
                 <label
@@ -312,7 +327,7 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
               </div>
             </div>
           </div>
-          <div className='flex space-x-4'>
+          <div className="flex space-x-4">
             <div>
               <label
                 htmlFor="fullLife"
@@ -351,13 +366,16 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
               />
             </div>
           </div>
-          <div className='mt-4'>
+          <div className="mt-4">
             <h3 className="text-lg font-semibold">Equipment</h3>
             <ul>
               {localCharacter.equipment.map((item, index) => (
-                <li key={index} className='flex my-2'>
+                <li key={index} className="flex my-2">
                   <div>{item}</div>
-                  <button className='ml-2 px-1 inline border bg-red-500 rounded' onClick={() => deleteEquipment(index)}>
+                  <button
+                    className="ml-2 px-1 inline border bg-red-500 rounded"
+                    onClick={() => deleteEquipment(index)}
+                  >
                     <X className="text-white" size={16} />
                   </button>
                 </li>
@@ -379,7 +397,7 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
               </button>
             </div>
           </div>
-          <div className='mt-4'>
+          <div className="mt-4">
             <h3 className="text-lg font-semibold">Spells</h3>
             {localCharacter.spells.map((spell, index) => (
               <div key={index} className="flex space-x-2 mt-2 items-center">
@@ -414,7 +432,10 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
                 type="text"
                 value={newSpell.name}
                 onChange={(e) =>
-                  setNewSpell({ ...newSpell, name: e.target.value })
+                  setNewSpell({
+                    ...newSpell,
+                    name: e.target.value,
+                  })
                 }
                 placeholder="Spell Name"
                 className="max-w-[148px] dark:bg-gray-800 p-2 border border-gray-300 rounded"
@@ -440,7 +461,7 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
               </button>
             </div>
           </div>
-          <div className='mt-4'>
+          <div className="mt-4">
             <h3 className="text-lg font-semibold">Notes</h3>
             <textarea
               id="notes"
@@ -499,40 +520,82 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
             </button>
           </div>
 
-          <div className="flex flex-col gap-4 mb-4">
-            <div className="text-sm dark:text-slate-400 text-gray-500 mb-0">
-              <strong>Attack:</strong> {character.attack}
+          <div className="flex flex-col gap-3 mb-4">
+            <div className="flex items-center gap-3 flex-wrap">
+              <span className="text-sm dark:text-slate-400 text-gray-500">
+                <strong>Attack:</strong> {character.attack}
+              </span>
               <button
                 onClick={rollAttack}
-                className="inline-flex ml-2 bg-green-500 text-white px-2 py-2 rounded hover:bg-green-600 transition-colors"
+                disabled={isAttackRolling}
+                className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-3 py-2 h-[40px] rounded
+                           hover:from-green-600 hover:to-emerald-700 transition-all duration-300
+                           shadow-lg hover:shadow-xl
+                           disabled:opacity-50 disabled:cursor-not-allowed
+                           font-medium flex items-center gap-2"
               >
-                Roll <div className={`ml-2 inline-flex transition-all duration-200 ease-in-out ${isAttackRolling ? 'animate-spin' : ''}`}><Dice6 className="text-white" /></div>
+                <div className={`flex ${isAttackRolling ? 'animate-bounce' : ''}`}>
+                  <Dice6
+                    className={`inline-block ${isAttackRolling ? 'animate-spin' : ''}`}
+                    size={20}
+                  />
+                </div>
               </button>
-              {attackRoll && (
-                <p className="inline dark:text-white text-gray-700 ml-2">
-                  Result: {attackRoll} ({localCharacter.attack >= 0 ? '+' : ''}{localCharacter.attack})
-                </p>
+              {attackRoll !== null && (
+                <div className="animate-bounce-in">
+                  <div className="bg-gradient-to-br from-green-500 to-emerald-600 text-white px-2 py-1 rounded shadow-lg flex items-center justify-center min-w-[40px] h-[40px]">
+                    <p className="text-2xl font-bold">{attackRoll}</p>
+                  </div>
+                </div>
+              )}
+              {attackRoll !== null && (
+                <span className="text-sm dark:text-white text-gray-700">
+                  ({localCharacter.attack >= 0 ? '+' : ''}
+                  {localCharacter.attack})
+                </span>
               )}
             </div>
-            <div className="text-sm dark:text-slate-400 text-gray-500 mb-0">
-              <strong>Defense:</strong> {character.defense}
+            <div className="flex items-center gap-3 flex-wrap">
+              <span className="text-sm dark:text-slate-400 text-gray-500">
+                <strong>Defense:</strong> {character.defense}
+              </span>
               <button
                 onClick={rollDefense}
-                className="inline-flex ml-2 bg-yellow-500 text-white px-2 py-2 rounded hover:bg-yellow-600 transition-colors"
+                disabled={isDefenseRolling}
+                className="bg-gradient-to-r from-yellow-500 to-amber-600 text-white px-3 py-2 h-[40px] rounded
+                           hover:from-yellow-600 hover:to-amber-700 transition-all duration-300
+                           shadow-lg hover:shadow-xl
+                           disabled:opacity-50 disabled:cursor-not-allowed
+                           font-medium flex items-center gap-2"
               >
-                Roll <div className={`ml-2 inline-flex transition-all duration-200 ease-in-out ${isDefenseRolling ? 'animate-spin' : ''}`}><Dice6 className="text-white" /></div>
+                <div className={`flex ${isDefenseRolling ? 'animate-bounce' : ''}`}>
+                  <Dice6
+                    className={`inline-block ${isDefenseRolling ? 'animate-spin' : ''}`}
+                    size={20}
+                  />
+                </div>
               </button>
-              {defenseRoll && (
-                <p className="inline dark:text-white text-gray-700 ml-2">
-                  Result: {defenseRoll} ({localCharacter.defense >= 0 ? '+' : ''}{localCharacter.defense})
-                </p>
+              {defenseRoll !== null && (
+                <div className="animate-bounce-in">
+                  <div className="bg-gradient-to-br from-amber-400 to-orange-500 text-white px-2 py-1 rounded shadow-lg flex items-center justify-center min-w-[40px] h-[40px]">
+                    <p className="text-2xl font-bold">{defenseRoll}</p>
+                  </div>
+                </div>
+              )}
+              {defenseRoll !== null && (
+                <span className="text-sm dark:text-white text-gray-700">
+                  ({localCharacter.defense >= 0 ? '+' : ''}
+                  {localCharacter.defense})
+                </span>
               )}
             </div>
           </div>
 
           <div className="mt-4 space-y-6">
             <div className="md:w-1/2">
-              <h3 className="text-sm dark:text-slate-400 text-gray-500 font-semibold mb-1">Equipment</h3>
+              <h3 className="text-sm dark:text-slate-400 text-gray-500 font-semibold mb-1">
+                Equipment
+              </h3>
               <ul className="text-sm dark:text-slate-300 text-gray-700 list-none">
                 {localCharacter.equipment.map((item, index) => (
                   <li key={index}>{item}</li>
@@ -540,7 +603,9 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
               </ul>
             </div>
             <div className="md:w-1/2 mt-4 md:mt-0">
-              <h3 className="text-sm dark:text-slate-400 text-gray-500 font-semibold mb-1">Spells</h3>
+              <h3 className="text-sm dark:text-slate-400 text-gray-500 font-semibold mb-1">
+                Spells
+              </h3>
               <ul className="text-sm dark:text-slate-300 text-gray-700 list-none">
                 {localCharacter.spells.map((spell, index) => (
                   <li key={index} className="flex items-center">
@@ -549,7 +614,9 @@ export const CharacterCard = ({ character, setCharacter, importedCharacters = []
                       {spell.checkedSlots.map((checked, i) => (
                         <button
                           key={i}
-                          className={`w-4 h-4 border rounded ${checked ? "bg-green-500" : "bg-red-500"}`}
+                          className={`w-4 h-4 border rounded ${
+                            checked ? 'bg-green-500' : 'bg-red-500'
+                          }`}
                           onClick={() => toggleSlotChecked(index, i)}
                         />
                       ))}

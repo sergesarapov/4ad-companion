@@ -1,11 +1,28 @@
-import React, { useState, useCallback, useRef } from "react";
-import { Users, Pencil, DoorClosed, RotateCw, Eraser, Swords, TreePine, Mountain, Waves, Shuffle } from "lucide-react";
-import { FaBridge } from "react-icons/fa6";
-import { generateDungeon } from "../utils/dungeonGenerator";
+import React, { useState, useCallback, useRef } from 'react';
+import {
+  Users,
+  Pencil,
+  DoorClosed,
+  RotateCw,
+  Eraser,
+  Swords,
+  TreePine,
+  Mountain,
+  Waves,
+  Shuffle,
+} from 'lucide-react';
+import { FaBridge } from 'react-icons/fa6';
+import { generateDungeon } from '../utils/dungeonGenerator';
 
 const orientations = ['top', 'right', 'bottom', 'left'];
 
-export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUpdate, encounterCount = 0 }) => {
+export const DungeonGrid = ({
+  grid,
+  position = null,
+  onGridUpdate,
+  onCharacterUpdate,
+  encounterCount = 0,
+}) => {
   const [isDrawing, setIsDrawing] = useState(false);
   const [mode, setMode] = useState('draw'); // 'draw', 'character', 'door', 'erase', 'encounter', 'forest', 'mountain', 'water', 'bridge'
   const [doorOrientation, setDoorOrientation] = useState('top');
@@ -16,10 +33,8 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
     onGridUpdate((prevGrid) => {
       const newGrid = prevGrid.map((row, rIndex) =>
         row.map((cell, cIndex) =>
-          rIndex === rowIndex && cIndex === colIndex
-            ? drawingValue.current
-            : cell
-        )
+          rIndex === rowIndex && cIndex === colIndex ? drawingValue.current : cell,
+        ),
       );
       return newGrid;
     });
@@ -38,7 +53,7 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
             }
           }
           return cell;
-        })
+        }),
       );
       return newGrid;
     });
@@ -57,7 +72,7 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
             }
           }
           return cell;
-        })
+        }),
       );
       return newGrid;
     });
@@ -76,7 +91,7 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
             }
           }
           return cell;
-        })
+        }),
       );
       return newGrid;
     });
@@ -95,7 +110,7 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
             }
           }
           return cell;
-        })
+        }),
       );
       return newGrid;
     });
@@ -114,7 +129,7 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
             }
           }
           return cell;
-        })
+        }),
       );
       return newGrid;
     });
@@ -133,7 +148,7 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
             }
           }
           return cell;
-        })
+        }),
       );
       return newGrid;
     });
@@ -163,7 +178,7 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
         toggleBridge(rowIndex, colIndex);
       }
     },
-    [grid, mode, doorOrientation, selectedEncounter]
+    [grid, mode, doorOrientation, selectedEncounter],
   );
 
   const handleMouseEnter = useCallback(
@@ -172,18 +187,21 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
         toggleCell(rowIndex, colIndex);
       }
     },
-    [isDrawing, mode]
+    [isDrawing, mode],
   );
 
   const handleMouseUp = useCallback(() => {
     setIsDrawing(false);
   }, []);
 
-  const handleCellClick = useCallback((rowIndex, colIndex) => {
-    if (mode === 'character') {
-      onCharacterUpdate({ row: rowIndex, col: colIndex });
-    }
-  }, [mode]);
+  const handleCellClick = useCallback(
+    (rowIndex, colIndex) => {
+      if (mode === 'character') {
+        onCharacterUpdate({ row: rowIndex, col: colIndex });
+      }
+    },
+    [mode],
+  );
 
   const toggleDrawMode = () => setMode('draw');
   const toggleEraseMode = () => setMode('erase');
@@ -207,9 +225,17 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
     onGridUpdate(newGrid);
   };
 
+  const COL_COUNT = 20;
+  const ROW_COUNT = grid.length;
+
+  const columnLabels = Array.from(
+    { length: COL_COUNT },
+    (_, i) => String.fromCharCode(65 + i), // A–T
+  );
+
   return (
     <div
-      className="dark:bg-gray-800 p-4 bg-gray-100 rounded-md mt-4 overflow-x-auto"
+      className="dark:bg-gray-800 p-4 bg-gray-100 rounded mt-4 overflow-x-auto"
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
     >
@@ -226,55 +252,52 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
       <div className="mb-2">
         <div className="flex mb-2 space-x-2">
           <button
-            className={`font-bold py-2 px-4 rounded ${mode === 'draw'
-              ? 'bg-blue-500 text-white'
-              : 'bg-gray-300 text-gray-700'
-              }`}
+            className={`font-bold py-2 px-4 rounded ${
+              mode === 'draw' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700'
+            }`}
             onClick={toggleDrawMode}
           >
             <Pencil className="inline-block mr-2 mb-1" size={16} />
             Draw
           </button>
-          <button onClick={toggleEraseMode} className={`inline-flex place-center place-self-center font-bold py-3 px-3 rounded ${mode === 'erase'
-            ? 'bg-red-500 text-white'
-            : 'bg-red-300 text-gray-700'
-            }`}>
+          <button
+            onClick={toggleEraseMode}
+            className={`inline-flex place-center place-self-center font-bold py-3 px-3 rounded ${
+              mode === 'erase' ? 'bg-red-500 text-white' : 'bg-red-300 text-gray-700'
+            }`}
+          >
             <Eraser className="inline-block" size={16} />
           </button>
         </div>
         <div className="flex mb-2 space-x-2">
           <button
-            className={`font-bold py-2 px-4 rounded ${mode === 'forest'
-              ? 'bg-green-500 text-white'
-              : 'bg-gray-300 text-gray-700'
-              }`}
+            className={`font-bold py-2 px-4 rounded ${
+              mode === 'forest' ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-700'
+            }`}
             onClick={toggleForestMode}
           >
             <TreePine className="inline-block" size={16} fill="currentColor" />
           </button>
           <button
-            className={`font-bold py-2 px-4 rounded ${mode === 'mountain'
-              ? 'bg-gray-600 text-white'
-              : 'bg-gray-300 text-gray-700'
-              }`}
+            className={`font-bold py-2 px-4 rounded ${
+              mode === 'mountain' ? 'bg-gray-600 text-white' : 'bg-gray-300 text-gray-700'
+            }`}
             onClick={toggleMountainMode}
           >
             <Mountain className="inline-block" size={16} fill="currentColor" />
           </button>
           <button
-            className={`font-bold py-2 px-4 rounded ${mode === 'water'
-              ? 'bg-blue-500 text-white'
-              : 'bg-gray-300 text-gray-700'
-              }`}
+            className={`font-bold py-2 px-4 rounded ${
+              mode === 'water' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700'
+            }`}
             onClick={toggleWaterMode}
           >
             <Waves className="inline-block" size={16} fill="white" />
           </button>
           <button
-            className={`font-bold py-2 px-4 rounded ${mode === 'bridge'
-              ? 'bg-amber-600 text-white'
-              : 'bg-gray-300 text-gray-700'
-              }`}
+            className={`font-bold py-2 px-4 rounded ${
+              mode === 'bridge' ? 'bg-amber-600 text-white' : 'bg-gray-300 text-gray-700'
+            }`}
             onClick={toggleBridgeMode}
           >
             <FaBridge className="inline-block" size={16} color="currentColor" />
@@ -282,10 +305,9 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
         </div>
         <div className="flex align-center mb-2 space-x-2">
           <button
-            className={`font-bold py-2 px-4 rounded ${mode === 'door'
-              ? 'bg-blue-500 text-white'
-              : 'bg-gray-300 text-gray-700'
-              }`}
+            className={`font-bold py-2 px-4 rounded ${
+              mode === 'door' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700'
+            }`}
             onClick={toggleDoorMode}
           >
             <DoorClosed className="inline-block mr-2 mb-1" size={16} />
@@ -298,21 +320,34 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
             <RotateCw className="mr-2 place-self-center" size={16} />
             Rotate Door
             <div className="ml-2 inline-block dark:bg-white bg-gray-700 relative justify-center w-6 h-6 border border-gray-400">
-              <i className="absolute w-full h-1 bg-amber-500 dark:bg-amber-800" style={{
-                width: doorOrientation === 'top' || doorOrientation === 'bottom' ? '100%' : '4px',
-                height: doorOrientation === 'left' || doorOrientation === 'right' ? '100%' : '4px',
-                top: doorOrientation === 'top' ? 0 : doorOrientation === 'bottom' ? 'calc(100% - 4px)' : 0,
-                left: doorOrientation === 'left' ? 0 : doorOrientation === 'right' ? 'calc(100% - 4px)' : 0,
-              }}></i>
+              <i
+                className="absolute w-full h-1 bg-amber-500 dark:bg-amber-800"
+                style={{
+                  width: doorOrientation === 'top' || doorOrientation === 'bottom' ? '100%' : '4px',
+                  height:
+                    doorOrientation === 'left' || doorOrientation === 'right' ? '100%' : '4px',
+                  top:
+                    doorOrientation === 'top'
+                      ? 0
+                      : doorOrientation === 'bottom'
+                        ? 'calc(100% - 4px)'
+                        : 0,
+                  left:
+                    doorOrientation === 'left'
+                      ? 0
+                      : doorOrientation === 'right'
+                        ? 'calc(100% - 4px)'
+                        : 0,
+                }}
+              ></i>
             </div>
           </button>
         </div>
         <div className="inline-flex align-center mb-2 space-x-2">
           <button
-            className={`font-bold py-2 px-4 rounded ${mode === 'character'
-              ? 'bg-blue-500 text-white'
-              : 'bg-gray-300 text-gray-700'
-              }`}
+            className={`font-bold py-2 px-4 rounded ${
+              mode === 'character' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700'
+            }`}
             onClick={toggleCharacterMode}
           >
             <Users className="inline-block mr-2 mb-1" size={16} />
@@ -320,10 +355,9 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
           </button>
           <button
             disabled={encounterCount <= 0}
-            className={`font-bold px-4 rounded ${mode === 'encounter'
-              ? 'bg-blue-500 text-white'
-              : 'bg-gray-300 text-gray-700'
-              }`}
+            className={`font-bold px-4 rounded ${
+              mode === 'encounter' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700'
+            }`}
             onClick={toggleEncounterMode}
           >
             <Swords className="inline-block mr-2 mb-1" size={16} />
@@ -344,80 +378,99 @@ export const DungeonGrid = ({ grid, position = null, onGridUpdate, onCharacterUp
         </div>
       </div>
       <div
-        className="inline-grid"
-        style={{ gridTemplateColumns: "repeat(20, 24px)" }}
+        className="inline-grid select-none"
+        style={{
+          gridTemplateColumns: `24px repeat(${COL_COUNT}, 24px)`,
+          gridTemplateRows: `repeat(${ROW_COUNT}, 24px) 24px`,
+        }}
       >
-        {grid.map((row, rowIndex) =>
-          row.map((cell, colIndex) => (
-            <div
-              key={`${rowIndex}-${colIndex}`}
-              className={`w-6 h-6 border border-gray-300 cursor-pointer ${cell ? "dark:bg-white bg-gray-700" : "dark:bg-gray-800 bg-white"
+        {grid.map((row, rowIndex) => (
+          <React.Fragment key={rowIndex}>
+            {/* Row number */}
+            <div className="flex items-center justify-center text-xs font-bold text-gray-500 dark:text-gray-400">
+              {ROW_COUNT - rowIndex}
+            </div>
+            {row.map((cell, colIndex) => (
+              <div
+                key={`${rowIndex}-${colIndex}`}
+                className={`w-6 h-6 border border-gray-300 cursor-pointer ${
+                  cell ? 'dark:bg-white bg-gray-700' : 'dark:bg-gray-800 bg-white'
                 } relative`}
-              onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
-              onMouseEnter={() => handleMouseEnter(rowIndex, colIndex)}
-              onClick={() => handleCellClick(rowIndex, colIndex)}
-              data-coord={`${rowIndex}-${colIndex}`}
-            >
-              {cell.door && (
-                <i
-                  className='absolute bg-amber-500 dark:bg-amber-800'
-                  style={{
-                    width: cell.door === 'top' || cell.door === 'bottom' ? '100%' : '4px',
-                    height: cell.door === 'left' || cell.door === 'right' ? '100%' : '4px',
-                    top: cell.door === 'top' ? 0 : cell.door === 'bottom' ? 'calc(100% - 4px)' : 0,
-                    left: cell.door === 'left' ? 0 : cell.door === 'right' ? 'calc(100% - 4px)' : 0,
-                  }}
-                ></i>
-              )}
-              {cell.encounter && (
-                <div className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white dark:text-red-500">
-                  {cell.encounter}
-                </div>
-              )}
-              {cell.terrain === 'forest' && (
-                <TreePine
-                  size={16}
-                  fill="currentColor"
-                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-green-600 dark:text-green-400"
-                />
-              )}
-              {cell.terrain === 'mountain' && (
-                <Mountain
-                  size={16}
-                  fill="currentColor"
-                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white dark:text-gray-400"
-                />
-              )}
-              {cell.terrain === 'water' && (
-                <>
-                  <div className="absolute inset-0 bg-blue-500 dark:bg-blue-400"></div>
-                  <Waves
+                onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
+                onMouseEnter={() => handleMouseEnter(rowIndex, colIndex)}
+                onClick={() => handleCellClick(rowIndex, colIndex)}
+              >
+                {cell.door && (
+                  <i
+                    className="absolute bg-amber-500 dark:bg-amber-800"
+                    style={{
+                      width: cell.door === 'top' || cell.door === 'bottom' ? '100%' : '4px',
+                      height: cell.door === 'left' || cell.door === 'right' ? '100%' : '4px',
+                      top:
+                        cell.door === 'top' ? 0 : cell.door === 'bottom' ? 'calc(100% - 4px)' : 0,
+                      left:
+                        cell.door === 'left' ? 0 : cell.door === 'right' ? 'calc(100% - 4px)' : 0,
+                    }}
+                  ></i>
+                )}
+                {cell.encounter && (
+                  <div className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white dark:text-red-500">
+                    {cell.encounter}
+                  </div>
+                )}
+                {cell.terrain === 'forest' && (
+                  <TreePine
                     size={16}
-                    fill="white"
-                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white"
+                    fill="currentColor"
+                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-green-600 dark:text-green-400"
                   />
-                </>
-              )}
-              {cell.terrain === 'bridge' && (
-                <>
-                  <div className="absolute inset-0 bg-blue-500 dark:bg-blue-400"></div>
-                  <FaBridge
-                    size={20}
-                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-black"
+                )}
+                {cell.terrain === 'mountain' && (
+                  <Mountain
+                    size={16}
+                    fill="currentColor"
+                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white dark:text-gray-400"
                   />
-                </>
-              )}
-              {position &&
-                position.row === rowIndex &&
-                position.col === colIndex && (
+                )}
+                {cell.terrain === 'water' && (
+                  <>
+                    <div className="absolute inset-0 bg-blue-500 dark:bg-blue-400"></div>
+                    <Waves
+                      size={16}
+                      fill="white"
+                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white"
+                    />
+                  </>
+                )}
+                {cell.terrain === 'bridge' && (
+                  <>
+                    <div className="absolute inset-0 bg-blue-500 dark:bg-blue-400"></div>
+                    <FaBridge
+                      size={20}
+                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-black"
+                    />
+                  </>
+                )}
+                {position && position.row === rowIndex && position.col === colIndex && (
                   <Users
                     size={20}
                     className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-amber-500 dark:text-red-500"
                   />
                 )}
-            </div>
-          ))
-        )}
+              </div>
+            ))}
+          </React.Fragment>
+        ))}
+        {/* Empty corner cell */}
+        <div className="flex items-center justify-center text-xs font-bold text-gray-500 dark:text-gray-400"></div>
+        {columnLabels.map((label) => (
+          <div
+            key={label}
+            className="flex items-center justify-center text-xs font-bold text-gray-500 dark:text-gray-400"
+          >
+            {label}
+          </div>
+        ))}
       </div>
     </div>
   );

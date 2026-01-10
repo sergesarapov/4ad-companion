@@ -6,3 +6,21 @@
   font-family: sans-serif;
   text-align: center;
 }
+
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-bounce-in {
+  animation: bounce-in 0.15s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}

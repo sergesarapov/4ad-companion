@@ -11,6 +11,7 @@ export default [
   {
     rules: {
       "react/prop-types": "off", // or "warn" depending on your preference
+      "react/no-unescaped-entities": "off",
     },
   },
 ];
