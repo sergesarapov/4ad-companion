@@ -269,6 +269,7 @@ export const DungeonGrid = ({
           >
             <Eraser size={16} />
           </button>
+          <div className="h-8 w-[1px] bg-gray-400 dark:bg-gray-500"></div>
           <button
             className={`inline-flex items-center justify-center font-bold py-3 px-3 rounded ${
               mode === 'door' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700'
@@ -307,6 +308,7 @@ export const DungeonGrid = ({
               ></i>
             </div>
           </button>
+          <div className="h-8 w-[1px] bg-gray-400 dark:bg-gray-500"></div>
           <button
             className={`inline-flex items-center justify-center font-bold py-3 px-3 rounded ${
               mode === 'character' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700'
@@ -316,6 +318,7 @@ export const DungeonGrid = ({
           >
             <Users size={16} />
           </button>
+          <div className="h-8 w-[1px] bg-gray-400 dark:bg-gray-500"></div>
           <div className="inline-flex items-stretch">
             <button
               disabled={encounterCount <= 0}
@@ -343,42 +346,45 @@ export const DungeonGrid = ({
               </select>
             </button>
           </div>
-          <button
-            className={`inline-flex items-center justify-center font-bold py-3 px-3 rounded ${
-              mode === 'forest' ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-700'
-            }`}
-            onClick={toggleForestMode}
-            title="Forest"
-          >
-            <TreePine size={16} fill="currentColor" />
-          </button>
-          <button
-            className={`inline-flex items-center justify-center font-bold py-3 px-3 rounded ${
-              mode === 'mountain' ? 'bg-gray-600 text-white' : 'bg-gray-300 text-gray-700'
-            }`}
-            onClick={toggleMountainMode}
-            title="Mountain"
-          >
-            <Mountain size={16} fill="currentColor" />
-          </button>
-          <button
-            className={`inline-flex items-center justify-center font-bold py-3 px-3 rounded ${
-              mode === 'water' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700'
-            }`}
-            onClick={toggleWaterMode}
-            title="Water"
-          >
-            <Waves size={16} fill="currentColor" />
-          </button>
-          <button
-            className={`inline-flex items-center justify-center font-bold py-3 px-3 rounded ${
-              mode === 'bridge' ? 'bg-amber-600 text-white' : 'bg-gray-300 text-gray-700'
-            }`}
-            onClick={toggleBridgeMode}
-            title="Bridge"
-          >
-            <FaBridge size={16} />
-          </button>
+          <div className="h-8 w-[1px] bg-gray-400 dark:bg-gray-500"></div>
+          <div className="flex gap-2">
+            <button
+              className={`inline-flex items-center justify-center font-bold py-3 px-3 rounded ${
+                mode === 'forest' ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-700'
+              }`}
+              onClick={toggleForestMode}
+              title="Forest"
+            >
+              <TreePine size={16} fill="currentColor" />
+            </button>
+            <button
+              className={`inline-flex items-center justify-center font-bold py-3 px-3 rounded ${
+                mode === 'mountain' ? 'bg-gray-600 text-white' : 'bg-gray-300 text-gray-700'
+              }`}
+              onClick={toggleMountainMode}
+              title="Mountain"
+            >
+              <Mountain size={16} fill="currentColor" />
+            </button>
+            <button
+              className={`inline-flex items-center justify-center font-bold py-3 px-3 rounded ${
+                mode === 'water' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700'
+              }`}
+              onClick={toggleWaterMode}
+              title="Water"
+            >
+              <Waves size={16} fill="currentColor" />
+            </button>
+            <button
+              className={`inline-flex items-center justify-center font-bold py-3 px-3 rounded ${
+                mode === 'bridge' ? 'bg-amber-600 text-white' : 'bg-gray-300 text-gray-700'
+              }`}
+              onClick={toggleBridgeMode}
+              title="Bridge"
+            >
+              <FaBridge size={16} />
+            </button>
+          </div>
         </div>
       </div>
       <div
