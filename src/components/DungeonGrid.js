@@ -347,7 +347,7 @@ export const DungeonGrid = ({
             </button>
           </div>
           <div className="h-8 w-[1px] bg-gray-400 dark:bg-gray-500"></div>
-          <div className="flex gap-2">
+          <div className="flex flex-nowrap gap-2">
             <button
               className={`inline-flex items-center justify-center font-bold py-3 px-3 rounded ${
                 mode === 'forest' ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-700'
