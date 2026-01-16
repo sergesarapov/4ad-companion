@@ -249,77 +249,43 @@ export const DungeonGrid = ({
           Generate
         </button>
       </div>
-      <div className="mb-2">
-        <div className="flex mb-2 space-x-2">
+      <div className="mb-4 mt-4">
+        <div className="flex flex-wrap items-center gap-2">
           <button
-            className={`font-bold py-2 px-4 rounded ${
+            className={`inline-flex items-center justify-center font-bold py-3 px-3 rounded ${
               mode === 'draw' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700'
             }`}
             onClick={toggleDrawMode}
+            title="Draw"
           >
-            <Pencil className="inline-block mr-2 mb-1" size={16} />
-            Draw
+            <Pencil size={16} />
           </button>
           <button
             onClick={toggleEraseMode}
-            className={`inline-flex place-center place-self-center font-bold py-3 px-3 rounded ${
+            className={`inline-flex items-center justify-center font-bold py-3 px-3 rounded ${
               mode === 'erase' ? 'bg-red-500 text-white' : 'bg-red-300 text-gray-700'
             }`}
+            title="Erase"
           >
-            <Eraser className="inline-block" size={16} />
+            <Eraser size={16} />
           </button>
-        </div>
-        <div className="flex mb-2 space-x-2">
+          <div className="h-8 w-[1px] bg-gray-400 dark:bg-gray-500"></div>
           <button
-            className={`font-bold py-2 px-4 rounded ${
-              mode === 'forest' ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-700'
-            }`}
-            onClick={toggleForestMode}
-          >
-            <TreePine className="inline-block" size={16} fill="currentColor" />
-          </button>
-          <button
-            className={`font-bold py-2 px-4 rounded ${
-              mode === 'mountain' ? 'bg-gray-600 text-white' : 'bg-gray-300 text-gray-700'
-            }`}
-            onClick={toggleMountainMode}
-          >
-            <Mountain className="inline-block" size={16} fill="currentColor" />
-          </button>
-          <button
-            className={`font-bold py-2 px-4 rounded ${
-              mode === 'water' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700'
-            }`}
-            onClick={toggleWaterMode}
-          >
-            <Waves className="inline-block" size={16} fill="white" />
-          </button>
-          <button
-            className={`font-bold py-2 px-4 rounded ${
-              mode === 'bridge' ? 'bg-amber-600 text-white' : 'bg-gray-300 text-gray-700'
-            }`}
-            onClick={toggleBridgeMode}
-          >
-            <FaBridge className="inline-block" size={16} color="currentColor" />
-          </button>
-        </div>
-        <div className="flex align-center mb-2 space-x-2">
-          <button
-            className={`font-bold py-2 px-4 rounded ${
+            className={`inline-flex items-center justify-center font-bold py-3 px-3 rounded ${
               mode === 'door' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700'
             }`}
             onClick={toggleDoorMode}
+            title="Door"
           >
-            <DoorClosed className="inline-block mr-2 mb-1" size={16} />
-            Door
+            <DoorClosed size={16} />
           </button>
           <button
-            className="inline-flex align-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+            className="inline-flex items-center justify-center bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-3 rounded space-x-1"
             onClick={rotateDoorOrientation}
+            title="Rotate Door"
           >
-            <RotateCw className="mr-2 place-self-center" size={16} />
-            Rotate Door
-            <div className="ml-2 inline-block dark:bg-white bg-gray-700 relative justify-center w-6 h-6 border border-gray-400">
+            <RotateCw size={16} />
+            <div className="inline-block dark:bg-white bg-gray-700 relative justify-center w-4 h-4 border border-gray-400">
               <i
                 className="absolute w-full h-1 bg-amber-500 dark:bg-amber-800"
                 style={{
@@ -330,51 +296,95 @@ export const DungeonGrid = ({
                     doorOrientation === 'top'
                       ? 0
                       : doorOrientation === 'bottom'
-                        ? 'calc(100% - 4px)'
-                        : 0,
+                      ? 'calc(100% - 4px)'
+                      : 0,
                   left:
                     doorOrientation === 'left'
                       ? 0
                       : doorOrientation === 'right'
-                        ? 'calc(100% - 4px)'
-                        : 0,
+                      ? 'calc(100% - 4px)'
+                      : 0,
                 }}
               ></i>
             </div>
           </button>
-        </div>
-        <div className="inline-flex align-center mb-2 space-x-2">
+          <div className="h-8 w-[1px] bg-gray-400 dark:bg-gray-500"></div>
           <button
-            className={`font-bold py-2 px-4 rounded ${
+            className={`inline-flex items-center justify-center font-bold py-3 px-3 rounded ${
               mode === 'character' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700'
             }`}
             onClick={toggleCharacterMode}
+            title="Party"
           >
-            <Users className="inline-block mr-2 mb-1" size={16} />
-            Party
+            <Users size={16} />
           </button>
-          <button
-            disabled={encounterCount <= 0}
-            className={`font-bold px-4 rounded ${
-              mode === 'encounter' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700'
-            }`}
-            onClick={toggleEncounterMode}
-          >
-            <Swords className="inline-block mr-2 mb-1" size={16} />
-            Encounter
-            <select
+          <div className="h-8 w-[1px] bg-gray-400 dark:bg-gray-500"></div>
+          <div className="inline-flex items-stretch">
+            <button
               disabled={encounterCount <= 0}
-              value={selectedEncounter}
-              onChange={(e) => setSelectedEncounter(Number(e.target.value))}
-              className="bg-white border border-gray-300 rounded-md text-gray-700 py-1 px-2 ml-2"
+              className={`inline-flex items-center justify-center font-bold rounded ${
+                mode === 'encounter' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700'
+              }`}
+              onClick={toggleEncounterMode}
+              title="Encounter"
             >
-              {[...Array(encounterCount)].map((_, i) => (
-                <option key={i + 1} value={i + 1}>
-                  {i + 1}
-                </option>
-              ))}
-            </select>
-          </button>
+              <div className="py-3 px-3 ">
+                <Swords size={16} />
+              </div>
+              <select
+                disabled={encounterCount <= 0}
+                value={selectedEncounter}
+                onChange={(e) => setSelectedEncounter(Number(e.target.value))}
+                className="h-[100%] bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-r text-gray-700 dark:text-white px-2"
+                title="Select encounter number"
+              >
+                {[...Array(encounterCount)].map((_, i) => (
+                  <option key={i + 1} value={i + 1}>
+                    {i + 1}
+                  </option>
+                ))}
+              </select>
+            </button>
+          </div>
+          <div className="h-8 w-[1px] bg-gray-400 dark:bg-gray-500"></div>
+          <div className="flex flex-nowrap gap-2">
+            <button
+              className={`inline-flex items-center justify-center font-bold py-3 px-3 rounded ${
+                mode === 'forest' ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-700'
+              }`}
+              onClick={toggleForestMode}
+              title="Forest"
+            >
+              <TreePine size={16} fill="currentColor" />
+            </button>
+            <button
+              className={`inline-flex items-center justify-center font-bold py-3 px-3 rounded ${
+                mode === 'mountain' ? 'bg-gray-600 text-white' : 'bg-gray-300 text-gray-700'
+              }`}
+              onClick={toggleMountainMode}
+              title="Mountain"
+            >
+              <Mountain size={16} fill="currentColor" />
+            </button>
+            <button
+              className={`inline-flex items-center justify-center font-bold py-3 px-3 rounded ${
+                mode === 'water' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700'
+              }`}
+              onClick={toggleWaterMode}
+              title="Water"
+            >
+              <Waves size={16} fill="currentColor" />
+            </button>
+            <button
+              className={`inline-flex items-center justify-center font-bold py-3 px-3 rounded ${
+                mode === 'bridge' ? 'bg-amber-600 text-white' : 'bg-gray-300 text-gray-700'
+              }`}
+              onClick={toggleBridgeMode}
+              title="Bridge"
+            >
+              <FaBridge size={16} />
+            </button>
+          </div>
         </div>
       </div>
       <div
