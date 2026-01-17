@@ -3,11 +3,6 @@ import { Dice6, X } from 'lucide-react';
 import { ConfirmModal } from './ConfirmModal';
 import { Character } from '../types';
 
-interface NewSpell {
-  name: string;
-  slots: number;
-}
-
 interface CharacterCardProps {
   character: Character;
   setCharacter: (character: Character) => void;
@@ -30,7 +25,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
   );
   const [attackRoll, setAttackRoll] = useState<number | null>(null);
   const [defenseRoll, setDefenseRoll] = useState<number | null>(null);
-  const [newSpell, setNewSpell] = useState<NewSpell>({ name: '', slots: 0 });
+  const [newSpell, setNewSpell] = useState<{ name: string; slots: number }>({ name: '', slots: 0 });
   const [newEquipment, setNewEquipment] = useState<string>('');
   const [isAttackRolling, setIsAttackRolling] = useState<boolean>(false);
   const [isDefenseRolling, setIsDefenseRolling] = useState<boolean>(false);
@@ -41,7 +36,9 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
     setCharacter(localCharacter);
   }, [localCharacter]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ): void => {
     const { name, value } = e.target;
     setLocalCharacter((prev) => ({ ...prev, [name]: value }));
   };

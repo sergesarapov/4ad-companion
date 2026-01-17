@@ -1,10 +1,3 @@
-// Character types
-export interface Spell {
-  name: string;
-  slots: number;
-  checkedSlots: boolean[];
-}
-
 export interface Character {
   name: string;
   class: string;
@@ -15,40 +8,37 @@ export interface Character {
   fullLife: number;
   currentLife: number;
   equipment: string[];
-  spells: Spell[];
+  spells: {
+    name: string;
+    slots: number;
+    checkedSlots: boolean[];
+  }[];
   notes: string;
   id: string;
   key: string;
 }
 
-// Encounter types
-export type EncounterStatus = 'Alive' | 'Defeated' | 'Fled' | 'Bribed';
-export type EncounterType = 'Minion' | 'Vermin' | 'Boss' | 'Weird Monster';
-
 export interface Encounter {
   name: string;
-  type: EncounterType;
+  type: 'Minion' | 'Vermin' | 'Boss' | 'Weird Monster';
   level: number;
   count: number;
   attacksPerRound: number;
-  status: EncounterStatus;
+  status: 'Alive' | 'Defeated' | 'Fled' | 'Bribed';
   notes: string;
 }
 
-// Log entry types
-export interface LogEntry {
+export interface LogEntryType {
   id: number;
   text: string;
   timestamp: string;
 }
 
-// Position types
 export interface Position {
   row: number;
   col: number;
 }
 
-// Grid types
 export type DoorOrientation = 'top' | 'bottom' | 'left' | 'right';
 export type TerrainValue = 'forest' | 'mountain' | 'water' | 'bridge';
 
@@ -61,7 +51,6 @@ export interface CellObject {
 export type CellValue = boolean | CellObject;
 export type Grid = CellValue[][];
 
-// Room types
 export interface Room {
   width: number;
   height: number;
@@ -74,23 +63,9 @@ export interface PlacedRoom {
   room: Room;
 }
 
-// Local storage value types
 export interface LocalStorageValue {
   key: string;
   value: string;
 }
 
-// Dice types
 export type DiceType = 'd6' | 'd66' | '2d6' | '3d6';
-
-// Terrain types
-export type TerrainType =
-  | 'empty'
-  | 'wall'
-  | 'door'
-  | 'treasure'
-  | 'trap'
-  | 'stairs'
-  | 'altar'
-  | 'fountain'
-  | 'statue';

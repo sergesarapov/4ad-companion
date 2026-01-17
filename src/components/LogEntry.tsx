@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { LogEntry as LogEntryType } from '../types';
+import { LogEntryType } from '../types';
 
 interface LogEntryProps {
   entry: LogEntryType;

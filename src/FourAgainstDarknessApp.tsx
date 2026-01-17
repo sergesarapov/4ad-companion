@@ -9,7 +9,7 @@ import { DiceRoller } from './components/DiceRoller';
 import Tabs, { Tab } from '@uiw/react-tabs-draggable';
 import { getValuesByRegex } from './utils/getLocalStorageValues';
 import { ulid } from 'ulid';
-import { Character, Encounter, LogEntry as LogEntryType, Position, Grid } from './types';
+import { Character, Encounter, LogEntryType, Position, Grid } from './types';
 
 interface LegacyEncounter {
   name?: string;
@@ -69,7 +69,15 @@ export const FourAgainstDarknessApp: React.FC = () => {
   );
   const [characters, setCharacters] = useState<Character[]>(
     savedCharacters
-      ? JSON.parse(savedCharacters)
+      ? (JSON.parse(savedCharacters) as Character[]).map((char) => ({
+          ...char,
+          level: +char.level,
+          gold: +char.gold,
+          attack: +char.attack,
+          defense: +char.defense,
+          fullLife: +char.fullLife,
+          currentLife: +char.currentLife,
+        }))
       : Array(4)
           .fill(null)
           .map(() => ({

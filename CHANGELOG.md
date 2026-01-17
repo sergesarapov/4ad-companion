@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added TypeScript configuration (`tsconfig.json`)
 - Added type definitions for all components and utilities
 
+### Added
+- Set up Jest testing framework with TypeScript support
+- Added initial test suite for components
+- Configured Jest with `jest.config.ts`
+
 ## [0.1.0] - Previous Release
 
 ### Added
