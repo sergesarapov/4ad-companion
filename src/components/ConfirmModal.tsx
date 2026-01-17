@@ -1,6 +1,14 @@
 import React from 'react';
 
-export const ConfirmModal = ({ title, text, isOpen, onClose, onConfirm }) => {
+interface ConfirmModalProps {
+  title: string;
+  text: string;
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+}
+
+export const ConfirmModal: React.FC<ConfirmModalProps> = ({ title, text, isOpen, onClose, onConfirm }) => {
   if (!isOpen) return null;
 
   return (

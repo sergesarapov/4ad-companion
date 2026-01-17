@@ -9,29 +9,42 @@ import { DiceRoller } from './components/DiceRoller';
 import Tabs, { Tab } from '@uiw/react-tabs-draggable';
 import { getValuesByRegex } from './utils/getLocalStorageValues';
 import { ulid } from 'ulid';
+import { Character, Encounter, LogEntry as LogEntryType, Position, Grid } from './types';
 
-export const FourAgainstDarknessApp = () => {
-  const { slug } = useParams();
+interface LegacyEncounter {
+  name?: string;
+  type?: string;
+  level?: string | number;
+  count?: boolean[] | number;
+  attacksPerRound?: string | number;
+  status?: string;
+  notes?: string;
+}
+
+export const FourAgainstDarknessApp: React.FC = () => {
+  const { slug } = useParams<{ slug: string }>();
+  if (!slug) throw new Error('Slug parameter is required');
+
   const savedGrid = localStorage.getItem(`dungeon-${slug}`);
   const savedCharacterPosition = localStorage.getItem(`character-position-${slug}`);
   const savedCharacters = localStorage.getItem(`characters-${slug}`);
-  const savedEncounters = (() => {
+  const savedEncounters = ((): string | null => {
     const raw = localStorage.getItem(`encounters-${slug}`);
     if (!raw) return null;
     try {
-      const parsed = JSON.parse(raw);
-      const normalized = parsed.map((enc, i) => {
+      const parsed: LegacyEncounter[] = JSON.parse(raw);
+      const normalized: Encounter[] = parsed.map((enc, i) => {
         if (typeof enc.count === 'number') {
-          return enc; // already new format
+          return enc as Encounter; // already new format
         }
         // Backward compatibility: convert from legacy format
         return {
           name: enc.name || `Encounter #${i + 1}`,
-          type: enc.type || 'Minion',
-          level: parseInt(enc.level, 10) || 1,
+          type: (enc.type as Encounter['type']) || 'Minion',
+          level: parseInt(String(enc.level), 10) || 1,
           count: Array.isArray(enc.count) ? enc.count.filter(Boolean).length + 1 : 0,
-          attacksPerRound: parseInt(enc.attacksPerRound, 10) || 1,
-          status: enc.status || 'Alive',
+          attacksPerRound: parseInt(String(enc.attacksPerRound), 10) || 1,
+          status: (enc.status as Encounter['status']) || 'Alive',
           notes: enc.notes || '',
           _new: false,
         };
@@ -44,21 +57,21 @@ export const FourAgainstDarknessApp = () => {
   })();
   const savedLogEntries = localStorage.getItem(`log-entries-${slug}`);
 
-  const [characterPosition, setCharacterPosition] = useState(
+  const [characterPosition, setCharacterPosition] = useState<Position | null>(
     savedCharacterPosition ? JSON.parse(savedCharacterPosition) : null,
   );
-  const [grid, setGrid] = useState(
+  const [grid, setGrid] = useState<Grid>(
     savedGrid
       ? JSON.parse(savedGrid)
       : Array(28)
-          .fill()
+          .fill(null)
           .map(() => Array(20).fill(false)),
   );
-  const [characters, setCharacters] = useState(
+  const [characters, setCharacters] = useState<Character[]>(
     savedCharacters
       ? JSON.parse(savedCharacters)
       : Array(4)
-          .fill()
+          .fill(null)
           .map(() => ({
             name: 'Name',
             class: 'Class',
@@ -76,17 +89,21 @@ export const FourAgainstDarknessApp = () => {
           })),
   );
 
-  const [encounters, setEncounters] = useState(savedEncounters ? JSON.parse(savedEncounters) : []);
+  const [encounters, setEncounters] = useState<Encounter[]>(
+    savedEncounters ? JSON.parse(savedEncounters) : [],
+  );
 
-  const [expandedEncounterIndex, setExpandedEncounterIndex] = useState(null);
+  const [expandedEncounterIndex, setExpandedEncounterIndex] = useState<number | null>(null);
 
-  const [logEntries, setLogEntries] = useState(savedLogEntries ? JSON.parse(savedLogEntries) : []);
+  const [logEntries, setLogEntries] = useState<LogEntryType[]>(
+    savedLogEntries ? JSON.parse(savedLogEntries) : [],
+  );
 
-  const [newLogEntry, setNewLogEntry] = useState('');
+  const [newLogEntry, setNewLogEntry] = useState<string>('');
 
-  const [activeCharacterId, setActiveCharacterId] = useState(characters[0].id);
+  const [activeCharacterId, setActiveCharacterId] = useState<string>(characters[0].id);
 
-  const [draggingId, setDraggingId] = useState(null);
+  const [draggingId, setDraggingId] = useState<string | null>(null);
 
   useEffect(() => {
     if (savedGrid) setGrid(JSON.parse(savedGrid));
@@ -116,9 +133,9 @@ export const FourAgainstDarknessApp = () => {
     localStorage.setItem(`character-position-${slug}`, JSON.stringify(characterPosition));
   }, [characterPosition, slug]);
 
-  const addNewEncounter = () => {
+  const addNewEncounter = (): void => {
     const nextNumber = encounters.length + 1;
-    const newEncounter = {
+    const newEncounter: Encounter = {
       name: `Encounter #${nextNumber}`,
       type: 'Minion',
       level: 1,
@@ -132,9 +149,9 @@ export const FourAgainstDarknessApp = () => {
     setExpandedEncounterIndex(updated.length - 1);
   };
 
-  const addLogEntry = () => {
+  const addLogEntry = (): void => {
     if (newLogEntry.trim() !== '') {
-      const newEntry = {
+      const newEntry: LogEntryType = {
         id: Date.now(),
         text: newLogEntry,
         timestamp: new Date().toISOString(),
@@ -144,24 +161,24 @@ export const FourAgainstDarknessApp = () => {
     }
   };
 
-  const updateLogEntry = (updatedEntry) => {
+  const updateLogEntry = (updatedEntry: LogEntryType): void => {
     setLogEntries((prevEntries) =>
       prevEntries.map((entry) => (entry.id === updatedEntry.id ? updatedEntry : entry)),
     );
   };
 
-  const deleteLogEntry = (id) => {
+  const deleteLogEntry = (id: number): void => {
     setLogEntries((prevEntries) => prevEntries.filter((entry) => entry.id !== id));
   };
 
-  const handleCharacterPosition = (pos) => {
+  const handleCharacterPosition = (pos: Position): void => {
     setCharacterPosition(pos);
   };
 
-  const handleImport = (key, id) => {
+  const handleImport = (key: string, id: string): void => {
     const characters = localStorage.getItem(key);
     if (characters) {
-      const parsed = JSON.parse(characters).map((c) =>
+      const parsed: Character[] = JSON.parse(characters).map((c: Character) =>
         c.id === id
           ? {
               name: 'Name',
@@ -189,10 +206,10 @@ export const FourAgainstDarknessApp = () => {
   const activeCharacterIndex = characters.findIndex((c) => c.id === activeCharacterId);
   const activeCharacter = characters[activeCharacterIndex];
   const importedCharacters = getValuesByRegex(/characters-.*/);
-  const filteredCharactersToImport = importedCharacters
+  const filteredCharactersToImport: Character[] = importedCharacters
     .map((charList) => {
       return JSON.parse(charList.value).filter(
-        (char) => char.name !== 'Name' && char.id && char.key !== `characters-${slug}`,
+        (char: Character) => char.name !== 'Name' && char.id && char.key !== `characters-${slug}`,
       );
     })
     .flat();
@@ -219,7 +236,7 @@ export const FourAgainstDarknessApp = () => {
           className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition-colors"
           onClick={() => {
             const keys = Object.keys(localStorage).filter((key) => key.includes(slug));
-            const data = {};
+            const data: Record<string, string | null> = {};
             keys.forEach((key) => {
               data[key] = localStorage.getItem(key);
             });
@@ -255,7 +272,9 @@ export const FourAgainstDarknessApp = () => {
       <Tabs
         activeKey={activeCharacterId}
         onTabClick={(id) => setActiveCharacterId(id)}
-        onTabDrop={(id, index) => {
+        onTabDrop={(id: string, index?: number) => {
+          if (index === undefined) return;
+
           const oldIndex = characters.findIndex((c) => c.id === id);
           if (oldIndex === -1 || oldIndex === index) return;
 
@@ -294,7 +313,7 @@ export const FourAgainstDarknessApp = () => {
       <CharacterCard
         key={activeCharacterId}
         character={activeCharacter}
-        setCharacter={(newCharacter) => {
+        setCharacter={(newCharacter: Character) => {
           const updatedCharacters = [...characters];
           updatedCharacters[activeCharacterIndex] = {
             ...newCharacter,
@@ -322,7 +341,7 @@ export const FourAgainstDarknessApp = () => {
             encounter={encounter}
             isExpanded={expandedEncounterIndex === index}
             onExpand={() => setExpandedEncounterIndex((prev) => (prev === index ? null : index))}
-            setEncounter={(newEncounter) => {
+            setEncounter={(newEncounter: Encounter) => {
               const updated = [...encounters];
               updated[index] = newEncounter;
               setEncounters(updated);
@@ -334,7 +353,7 @@ export const FourAgainstDarknessApp = () => {
       <div className="mb-4">
         <textarea
           className="dark:bg-gray-800 dark:text-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          rows="3"
+          rows={3}
           placeholder="Enter a new log entry..."
           value={newLogEntry}
           onChange={(e) => setNewLogEntry(e.target.value)}

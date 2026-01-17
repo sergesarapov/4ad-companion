@@ -7,8 +7,8 @@ import { HelpModal } from './components/HelpModal';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Analytics } from '@vercel/analytics/react';
 
-const App = () => {
-  const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
+const App: React.FC = () => {
+  const [isHelpModalOpen, setIsHelpModalOpen] = useState<boolean>(false);
 
   return (
     <div className="relative dark:bg-black dark:text-white max-w-screen-lg mx-auto p-4">
@@ -52,7 +52,7 @@ const App = () => {
   );
 };
 
-const AppWrapper = () => (
+const AppWrapper: React.FC = () => (
   <Router>
     <App />
     <SpeedInsights />

@@ -1,7 +1,12 @@
 import React from 'react';
 import { X } from 'lucide-react';
 
-export const HelpModal = ({ isOpen, onClose }) => {
+interface HelpModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (

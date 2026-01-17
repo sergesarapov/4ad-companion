@@ -1,43 +1,57 @@
 import React, { useState, useEffect } from 'react';
 import { Dice6, X } from 'lucide-react';
 import { ConfirmModal } from './ConfirmModal';
+import { Character } from '../types';
 
-export const CharacterCard = ({
+interface NewSpell {
+  name: string;
+  slots: number;
+}
+
+interface CharacterCardProps {
+  character: Character;
+  setCharacter: (character: Character) => void;
+  importedCharacters?: Character[];
+  onImport: (key: string, id: string) => void;
+  setActiveCharacterId: (id: string) => void;
+}
+
+export const CharacterCard: React.FC<CharacterCardProps> = ({
   character,
   setCharacter,
   importedCharacters = [],
   onImport,
   setActiveCharacterId,
 }) => {
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [localCharacter, setLocalCharacter] = useState(character);
-  const [selectedImportedCharacter, setSelectedImportedCharacter] = useState(
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
+  const [localCharacter, setLocalCharacter] = useState<Character>(character);
+  const [selectedImportedCharacter, setSelectedImportedCharacter] = useState<string | null>(
     importedCharacters?.[0]?.id ?? null,
   );
-  const [attackRoll, setAttackRoll] = useState(null);
-  const [defenseRoll, setDefenseRoll] = useState(null);
-  const [newSpell, setNewSpell] = useState({ name: '', slots: 0 });
-  const [newEquipment, setNewEquipment] = useState('');
-  const [isAttackRolling, setIsAttackRolling] = useState(false);
-  const [isDefenseRolling, setIsDefenseRolling] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [attackRoll, setAttackRoll] = useState<number | null>(null);
+  const [defenseRoll, setDefenseRoll] = useState<number | null>(null);
+  const [newSpell, setNewSpell] = useState<NewSpell>({ name: '', slots: 0 });
+  const [newEquipment, setNewEquipment] = useState<string>('');
+  const [isAttackRolling, setIsAttackRolling] = useState<boolean>(false);
+  const [isDefenseRolling, setIsDefenseRolling] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const rollDuration = 300;
 
   useEffect(() => {
     setCharacter(localCharacter);
   }, [localCharacter]);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     const { name, value } = e.target;
     setLocalCharacter((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSpellChange = (index, e) => {
+  const handleSpellChange = (index: number, e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
 
     setLocalCharacter((prev) => {
       const spells = [...prev.spells];
-      let newSlotsValue = [];
+      let newSlotsValue: boolean[] = [];
 
       if (name === 'slots') {
         const newValue = value ? parseInt(value, 10) : 0;
@@ -66,7 +80,7 @@ export const CharacterCard = ({
     });
   };
 
-  const addSpell = () => {
+  const addSpell = (): void => {
     if (newSpell.name.trim()) {
       const newSpellSlots = Number.isNaN(+newSpell.slots) ? 0 : newSpell.slots;
 
@@ -76,8 +90,8 @@ export const CharacterCard = ({
           ...prev.spells,
           {
             ...newSpell,
-            slots: parseInt(newSpellSlots, 10),
-            checkedSlots: Array(parseInt(newSpellSlots, 10)).fill(true),
+            slots: parseInt(String(newSpellSlots), 10),
+            checkedSlots: Array(parseInt(String(newSpellSlots), 10)).fill(true),
           },
         ],
       }));
@@ -85,14 +99,14 @@ export const CharacterCard = ({
     }
   };
 
-  const deleteSpell = (indexToDelete) => {
+  const deleteSpell = (indexToDelete: number): void => {
     setLocalCharacter((prev) => ({
       ...prev,
       spells: prev.spells.filter((_, i) => i !== indexToDelete),
     }));
   };
 
-  const toggleSlotChecked = (spellIndex, slotIndex) => {
+  const toggleSlotChecked = (spellIndex: number, slotIndex: number): void => {
     setLocalCharacter((prev) => {
       const spells = prev.spells.map((spell, index) => {
         if (index !== spellIndex) return spell;
@@ -103,7 +117,7 @@ export const CharacterCard = ({
     });
   };
 
-  const addEquipment = () => {
+  const addEquipment = (): void => {
     if (newEquipment.trim()) {
       setLocalCharacter((prev) => ({
         ...prev,
@@ -113,18 +127,18 @@ export const CharacterCard = ({
     }
   };
 
-  const deleteEquipment = (itemIndex) => {
+  const deleteEquipment = (itemIndex: number): void => {
     setLocalCharacter((prev) => ({
       ...prev,
       equipment: prev.equipment.filter((_, i) => i !== itemIndex),
     }));
   };
 
-  const toggleEditMode = () => {
+  const toggleEditMode = (): void => {
     setIsEditMode(!isEditMode);
   };
 
-  const rollAttack = () => {
+  const rollAttack = (): void => {
     setIsAttackRolling(true);
     setAttackRoll(null);
 
@@ -134,7 +148,7 @@ export const CharacterCard = ({
     }, rollDuration);
   };
 
-  const rollDefense = () => {
+  const rollDefense = (): void => {
     setIsDefenseRolling(true);
     setDefenseRoll(null);
 
@@ -144,29 +158,29 @@ export const CharacterCard = ({
     }, rollDuration);
   };
 
-  const incrementLife = () => {
+  const incrementLife = (): void => {
     setLocalCharacter((prev) => ({
       ...prev,
       currentLife: Math.min(prev.currentLife + 1, prev.fullLife),
     }));
   };
 
-  const decrementLife = () => {
+  const decrementLife = (): void => {
     setLocalCharacter((prev) => ({
       ...prev,
       currentLife: Math.max(prev.currentLife - 1, 0),
     }));
   };
 
-  const handleImportCharacter = () => {
+  const handleImportCharacter = (): void => {
     setIsModalOpen(true);
   };
 
-  const confirmImportCharacter = () => {
+  const confirmImportCharacter = (): void => {
     setIsModalOpen(false);
     const foundCharacter = importedCharacters.find((c) => c.id === selectedImportedCharacter);
     if (foundCharacter) {
-      const updatedCharacter = {
+      const updatedCharacter: Character = {
         ...foundCharacter,
         key: localCharacter.key,
       };
@@ -177,7 +191,7 @@ export const CharacterCard = ({
     }
   };
 
-  const cancelImportCharacter = () => {
+  const cancelImportCharacter = (): void => {
     setIsModalOpen(false);
   };
 
@@ -188,7 +202,7 @@ export const CharacterCard = ({
           {importedCharacters.length > 0 && (
             <div className="mb-6">
               <select
-                value={selectedImportedCharacter}
+                value={selectedImportedCharacter ?? ''}
                 onChange={(e) => setSelectedImportedCharacter(e.target.value)}
                 className="dark:bg-gray-800 bg-white border border-gray-300 rounded-md py-1 px-1 text-ellipsis"
               >

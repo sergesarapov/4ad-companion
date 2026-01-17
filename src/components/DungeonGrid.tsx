@@ -13,24 +13,35 @@ import {
 } from 'lucide-react';
 import { FaBridge } from 'react-icons/fa6';
 import { generateDungeon } from '../utils/dungeonGenerator';
+import { Grid, Position, DoorOrientation, CellValue, CellObject } from '../types';
 
-const orientations = ['top', 'right', 'bottom', 'left'];
+const orientations: DoorOrientation[] = ['top', 'right', 'bottom', 'left'];
 
-export const DungeonGrid = ({
+type DrawMode = 'draw' | 'character' | 'door' | 'erase' | 'encounter' | 'forest' | 'mountain' | 'water' | 'bridge';
+
+interface DungeonGridProps {
+  grid: Grid;
+  position?: Position | null;
+  onGridUpdate: (gridOrUpdater: Grid | ((prevGrid: Grid) => Grid)) => void;
+  onCharacterUpdate: (position: Position) => void;
+  encounterCount?: number;
+}
+
+export const DungeonGrid: React.FC<DungeonGridProps> = ({
   grid,
   position = null,
   onGridUpdate,
   onCharacterUpdate,
   encounterCount = 0,
 }) => {
-  const [isDrawing, setIsDrawing] = useState(false);
-  const [mode, setMode] = useState('draw'); // 'draw', 'character', 'door', 'erase', 'encounter', 'forest', 'mountain', 'water', 'bridge'
-  const [doorOrientation, setDoorOrientation] = useState('top');
-  const [selectedEncounter, setSelectedEncounter] = useState(1);
-  const drawingValue = useRef(false);
+  const [isDrawing, setIsDrawing] = useState<boolean>(false);
+  const [mode, setMode] = useState<DrawMode>('draw');
+  const [doorOrientation, setDoorOrientation] = useState<DoorOrientation>('top');
+  const [selectedEncounter, setSelectedEncounter] = useState<number>(1);
+  const drawingValue = useRef<boolean>(false);
 
-  const toggleCell = (rowIndex, colIndex) => {
-    onGridUpdate((prevGrid) => {
+  const toggleCell = (rowIndex: number, colIndex: number): void => {
+    onGridUpdate((prevGrid: Grid) => {
       const newGrid = prevGrid.map((row, rIndex) =>
         row.map((cell, cIndex) =>
           rIndex === rowIndex && cIndex === colIndex ? drawingValue.current : cell,
@@ -40,16 +51,17 @@ export const DungeonGrid = ({
     });
   };
 
-  const toggleDoor = (rowIndex, colIndex) => {
-    onGridUpdate((prevGrid) => {
-      const newGrid = prevGrid.map((row, rIndex) =>
-        row.map((cell, cIndex) => {
+  const toggleDoor = (rowIndex: number, colIndex: number): void => {
+    onGridUpdate((prevGrid: Grid) => {
+      const newGrid: Grid = prevGrid.map((row, rIndex) =>
+        row.map((cell, cIndex): CellValue => {
           if (rIndex === rowIndex && cIndex === colIndex) {
+            const cellObj: CellObject = typeof cell === 'object' ? cell : {};
             // Toggle door state
-            if (cell.door) {
-              return { ...cell, door: null };
+            if (cellObj.door) {
+              return { ...cellObj, door: null } as CellObject;
             } else {
-              return { ...cell, door: doorOrientation };
+              return { ...cellObj, door: doorOrientation } as CellObject;
             }
           }
           return cell;
@@ -59,16 +71,17 @@ export const DungeonGrid = ({
     });
   };
 
-  const toggleEncounter = (rowIndex, colIndex) => {
-    onGridUpdate((prevGrid) => {
-      const newGrid = prevGrid.map((row, rIndex) =>
-        row.map((cell, cIndex) => {
+  const toggleEncounter = (rowIndex: number, colIndex: number): void => {
+    onGridUpdate((prevGrid: Grid) => {
+      const newGrid: Grid = prevGrid.map((row, rIndex) =>
+        row.map((cell, cIndex): CellValue => {
           if (rIndex === rowIndex && cIndex === colIndex) {
+            const cellObj: CellObject = typeof cell === 'object' ? cell : {};
             // Toggle encounter state
-            if (cell.encounter === selectedEncounter) {
-              return { ...cell, encounter: null };
+            if (cellObj.encounter === selectedEncounter) {
+              return { ...cellObj, encounter: null } as CellObject;
             } else {
-              return { ...cell, encounter: selectedEncounter };
+              return { ...cellObj, encounter: selectedEncounter } as CellObject;
             }
           }
           return cell;
@@ -78,16 +91,17 @@ export const DungeonGrid = ({
     });
   };
 
-  const toggleForest = (rowIndex, colIndex) => {
-    onGridUpdate((prevGrid) => {
-      const newGrid = prevGrid.map((row, rIndex) =>
-        row.map((cell, cIndex) => {
+  const toggleForest = (rowIndex: number, colIndex: number): void => {
+    onGridUpdate((prevGrid: Grid) => {
+      const newGrid: Grid = prevGrid.map((row, rIndex) =>
+        row.map((cell, cIndex): CellValue => {
           if (rIndex === rowIndex && cIndex === colIndex) {
+            const cellObj: CellObject = typeof cell === 'object' ? cell : {};
             // Toggle forest state
-            if (cell.terrain === 'forest') {
-              return { ...cell, terrain: null };
+            if (cellObj.terrain === 'forest') {
+              return { ...cellObj, terrain: null } as CellObject;
             } else {
-              return { ...cell, terrain: 'forest' };
+              return { ...cellObj, terrain: 'forest' } as CellObject;
             }
           }
           return cell;
@@ -97,16 +111,17 @@ export const DungeonGrid = ({
     });
   };
 
-  const toggleMountain = (rowIndex, colIndex) => {
-    onGridUpdate((prevGrid) => {
-      const newGrid = prevGrid.map((row, rIndex) =>
-        row.map((cell, cIndex) => {
+  const toggleMountain = (rowIndex: number, colIndex: number): void => {
+    onGridUpdate((prevGrid: Grid) => {
+      const newGrid: Grid = prevGrid.map((row, rIndex) =>
+        row.map((cell, cIndex): CellValue => {
           if (rIndex === rowIndex && cIndex === colIndex) {
+            const cellObj: CellObject = typeof cell === 'object' ? cell : {};
             // Toggle mountain state
-            if (cell.terrain === 'mountain') {
-              return { ...cell, terrain: null };
+            if (cellObj.terrain === 'mountain') {
+              return { ...cellObj, terrain: null } as CellObject;
             } else {
-              return { ...cell, terrain: 'mountain' };
+              return { ...cellObj, terrain: 'mountain' } as CellObject;
             }
           }
           return cell;
@@ -116,16 +131,17 @@ export const DungeonGrid = ({
     });
   };
 
-  const toggleWater = (rowIndex, colIndex) => {
-    onGridUpdate((prevGrid) => {
-      const newGrid = prevGrid.map((row, rIndex) =>
-        row.map((cell, cIndex) => {
+  const toggleWater = (rowIndex: number, colIndex: number): void => {
+    onGridUpdate((prevGrid: Grid) => {
+      const newGrid: Grid = prevGrid.map((row, rIndex) =>
+        row.map((cell, cIndex): CellValue => {
           if (rIndex === rowIndex && cIndex === colIndex) {
+            const cellObj: CellObject = typeof cell === 'object' ? cell : {};
             // Toggle water state
-            if (cell.terrain === 'water') {
-              return { ...cell, terrain: null };
+            if (cellObj.terrain === 'water') {
+              return { ...cellObj, terrain: null } as CellObject;
             } else {
-              return { ...cell, terrain: 'water' };
+              return { ...cellObj, terrain: 'water' } as CellObject;
             }
           }
           return cell;
@@ -135,16 +151,17 @@ export const DungeonGrid = ({
     });
   };
 
-  const toggleBridge = (rowIndex, colIndex) => {
-    onGridUpdate((prevGrid) => {
-      const newGrid = prevGrid.map((row, rIndex) =>
-        row.map((cell, cIndex) => {
+  const toggleBridge = (rowIndex: number, colIndex: number): void => {
+    onGridUpdate((prevGrid: Grid) => {
+      const newGrid: Grid = prevGrid.map((row, rIndex) =>
+        row.map((cell, cIndex): CellValue => {
           if (rIndex === rowIndex && cIndex === colIndex) {
+            const cellObj: CellObject = typeof cell === 'object' ? cell : {};
             // Toggle bridge state
-            if (cell.terrain === 'bridge') {
-              return { ...cell, terrain: null };
+            if (cellObj.terrain === 'bridge') {
+              return { ...cellObj, terrain: null } as CellObject;
             } else {
-              return { ...cell, terrain: 'bridge' };
+              return { ...cellObj, terrain: 'bridge' } as CellObject;
             }
           }
           return cell;
@@ -155,7 +172,7 @@ export const DungeonGrid = ({
   };
 
   const handleMouseDown = useCallback(
-    (rowIndex, colIndex) => {
+    (rowIndex: number, colIndex: number): void => {
       if (mode === 'draw') {
         setIsDrawing(true);
         drawingValue.current = !grid[rowIndex][colIndex];
@@ -182,7 +199,7 @@ export const DungeonGrid = ({
   );
 
   const handleMouseEnter = useCallback(
-    (rowIndex, colIndex) => {
+    (rowIndex: number, colIndex: number): void => {
       if (isDrawing && (mode === 'draw' || mode === 'erase')) {
         toggleCell(rowIndex, colIndex);
       }
@@ -190,12 +207,12 @@ export const DungeonGrid = ({
     [isDrawing, mode],
   );
 
-  const handleMouseUp = useCallback(() => {
+  const handleMouseUp = useCallback((): void => {
     setIsDrawing(false);
   }, []);
 
   const handleCellClick = useCallback(
-    (rowIndex, colIndex) => {
+    (rowIndex: number, colIndex: number): void => {
       if (mode === 'character') {
         onCharacterUpdate({ row: rowIndex, col: colIndex });
       }
@@ -203,24 +220,24 @@ export const DungeonGrid = ({
     [mode],
   );
 
-  const toggleDrawMode = () => setMode('draw');
-  const toggleEraseMode = () => setMode('erase');
-  const toggleCharacterMode = () => setMode('character');
-  const toggleDoorMode = () => setMode('door');
-  const toggleEncounterMode = () => setMode('encounter');
-  const toggleForestMode = () => setMode('forest');
-  const toggleMountainMode = () => setMode('mountain');
-  const toggleWaterMode = () => setMode('water');
-  const toggleBridgeMode = () => setMode('bridge');
+  const toggleDrawMode = (): void => setMode('draw');
+  const toggleEraseMode = (): void => setMode('erase');
+  const toggleCharacterMode = (): void => setMode('character');
+  const toggleDoorMode = (): void => setMode('door');
+  const toggleEncounterMode = (): void => setMode('encounter');
+  const toggleForestMode = (): void => setMode('forest');
+  const toggleMountainMode = (): void => setMode('mountain');
+  const toggleWaterMode = (): void => setMode('water');
+  const toggleBridgeMode = (): void => setMode('bridge');
 
-  const rotateDoorOrientation = () => {
+  const rotateDoorOrientation = (): void => {
     setDoorOrientation((prev) => {
       const currentIndex = orientations.indexOf(prev);
       return orientations[(currentIndex + 1) % orientations.length];
     });
   };
 
-  const handleGenerateDungeon = () => {
+  const handleGenerateDungeon = (): void => {
     const newGrid = generateDungeon();
     onGridUpdate(newGrid);
   };
@@ -232,6 +249,10 @@ export const DungeonGrid = ({
     { length: COL_COUNT },
     (_, i) => String.fromCharCode(65 + i), // A–T
   );
+
+  const isCellObject = (cell: CellValue): cell is CellObject => {
+    return typeof cell === 'object' && cell !== null;
+  };
 
   return (
     <div
@@ -400,75 +421,78 @@ export const DungeonGrid = ({
             <div className="flex items-center justify-center text-xs font-bold text-gray-500 dark:text-gray-400">
               {ROW_COUNT - rowIndex}
             </div>
-            {row.map((cell, colIndex) => (
-              <div
-                key={`${rowIndex}-${colIndex}`}
-                className={`w-6 h-6 border border-gray-300 cursor-pointer ${
-                  cell ? 'dark:bg-white bg-gray-700' : 'dark:bg-gray-800 bg-white'
-                } relative`}
-                onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
-                onMouseEnter={() => handleMouseEnter(rowIndex, colIndex)}
-                onClick={() => handleCellClick(rowIndex, colIndex)}
-              >
-                {cell.door && (
-                  <i
-                    className="absolute bg-amber-500 dark:bg-amber-800"
-                    style={{
-                      width: cell.door === 'top' || cell.door === 'bottom' ? '100%' : '4px',
-                      height: cell.door === 'left' || cell.door === 'right' ? '100%' : '4px',
-                      top:
-                        cell.door === 'top' ? 0 : cell.door === 'bottom' ? 'calc(100% - 4px)' : 0,
-                      left:
-                        cell.door === 'left' ? 0 : cell.door === 'right' ? 'calc(100% - 4px)' : 0,
-                    }}
-                  ></i>
-                )}
-                {cell.encounter && (
-                  <div className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white dark:text-red-500">
-                    {cell.encounter}
-                  </div>
-                )}
-                {cell.terrain === 'forest' && (
-                  <TreePine
-                    size={16}
-                    fill="currentColor"
-                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-green-600 dark:text-green-400"
-                  />
-                )}
-                {cell.terrain === 'mountain' && (
-                  <Mountain
-                    size={16}
-                    fill="currentColor"
-                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white dark:text-gray-400"
-                  />
-                )}
-                {cell.terrain === 'water' && (
-                  <>
-                    <div className="absolute inset-0 bg-blue-500 dark:bg-blue-400"></div>
-                    <Waves
+            {row.map((cell, colIndex) => {
+              const cellObj = isCellObject(cell) ? cell : {};
+              return (
+                <div
+                  key={`${rowIndex}-${colIndex}`}
+                  className={`w-6 h-6 border border-gray-300 cursor-pointer ${
+                    cell ? 'dark:bg-white bg-gray-700' : 'dark:bg-gray-800 bg-white'
+                  } relative`}
+                  onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
+                  onMouseEnter={() => handleMouseEnter(rowIndex, colIndex)}
+                  onClick={() => handleCellClick(rowIndex, colIndex)}
+                >
+                  {cellObj.door && (
+                    <i
+                      className="absolute bg-amber-500 dark:bg-amber-800"
+                      style={{
+                        width: cellObj.door === 'top' || cellObj.door === 'bottom' ? '100%' : '4px',
+                        height: cellObj.door === 'left' || cellObj.door === 'right' ? '100%' : '4px',
+                        top:
+                          cellObj.door === 'top' ? 0 : cellObj.door === 'bottom' ? 'calc(100% - 4px)' : 0,
+                        left:
+                          cellObj.door === 'left' ? 0 : cellObj.door === 'right' ? 'calc(100% - 4px)' : 0,
+                      }}
+                    ></i>
+                  )}
+                  {cellObj.encounter && (
+                    <div className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white dark:text-red-500">
+                      {cellObj.encounter}
+                    </div>
+                  )}
+                  {cellObj.terrain === 'forest' && (
+                    <TreePine
                       size={16}
-                      fill="white"
-                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white"
+                      fill="currentColor"
+                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-green-600 dark:text-green-400"
                     />
-                  </>
-                )}
-                {cell.terrain === 'bridge' && (
-                  <>
-                    <div className="absolute inset-0 bg-blue-500 dark:bg-blue-400"></div>
-                    <FaBridge
+                  )}
+                  {cellObj.terrain === 'mountain' && (
+                    <Mountain
+                      size={16}
+                      fill="currentColor"
+                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white dark:text-gray-400"
+                    />
+                  )}
+                  {cellObj.terrain === 'water' && (
+                    <>
+                      <div className="absolute inset-0 bg-blue-500 dark:bg-blue-400"></div>
+                      <Waves
+                        size={16}
+                        fill="white"
+                        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white"
+                      />
+                    </>
+                  )}
+                  {cellObj.terrain === 'bridge' && (
+                    <>
+                      <div className="absolute inset-0 bg-blue-500 dark:bg-blue-400"></div>
+                      <FaBridge
+                        size={20}
+                        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-black"
+                      />
+                    </>
+                  )}
+                  {position && position.row === rowIndex && position.col === colIndex && (
+                    <Users
                       size={20}
-                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-black"
+                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-amber-500 dark:text-red-500"
                     />
-                  </>
-                )}
-                {position && position.row === rowIndex && position.col === colIndex && (
-                  <Users
-                    size={20}
-                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-amber-500 dark:text-red-500"
-                  />
-                )}
-              </div>
-            ))}
+                  )}
+                </div>
+              );
+            })}
           </React.Fragment>
         ))}
         {/* Empty corner cell */}

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Dice6 } from 'lucide-react';
 
-export const FloatingDice = () => {
-  const [diceResult, setDiceResult] = useState(null);
-  const [isRolling, setIsRolling] = useState(false);
+export const FloatingDice: React.FC = () => {
+  const [diceResult, setDiceResult] = useState<number | null>(null);
+  const [isRolling, setIsRolling] = useState<boolean>(false);
 
-  const rollDice = () => {
+  const rollDice = (): void => {
     setIsRolling(true);
     const rollDuration = 500; // 0.5 second of rolling animation
     const rollInterval = 50; // Update every 50ms during rolling

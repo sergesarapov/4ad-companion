@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
-export const DarkModeToggle = () => {
+export const DarkModeToggle: React.FC = () => {
   const savedTheme = localStorage.getItem('theme') === 'dark';
-  const [isDarkMode, setIsDarkMode] = useState(savedTheme);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(savedTheme);
 
   useEffect(() => {
     if (isDarkMode) {
@@ -14,7 +14,7 @@ export const DarkModeToggle = () => {
     }
   }, [isDarkMode]);
 
-  const toggleDarkMode = () => {
+  const toggleDarkMode = (): void => {
     setIsDarkMode(!isDarkMode);
   };
 

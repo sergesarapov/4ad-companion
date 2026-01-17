@@ -1,46 +1,62 @@
 import React, { useEffect, useState } from 'react';
 import { MdExpandMore, MdExpandLess, MdEdit, MdCheck, MdClose } from 'react-icons/md';
+import { Encounter } from '../types';
 
-export const EncounterCard = ({ counter, encounter, setEncounter, isExpanded, onExpand }) => {
+interface EncounterCardProps {
+  counter: number;
+  encounter: Encounter;
+  setEncounter: (encounter: Encounter) => void;
+  isExpanded: boolean;
+  onExpand: () => void;
+}
+
+export const EncounterCard: React.FC<EncounterCardProps> = ({
+  counter,
+  encounter,
+  setEncounter,
+  isExpanded,
+  onExpand,
+}) => {
   const isCollapsed = !isExpanded;
-  const [localEncounter, setLocalEncounter] = useState(encounter);
-  const [isEditingName, setIsEditingName] = useState(false);
-  const [tempName, setTempName] = useState(encounter.name);
+  const [localEncounter, setLocalEncounter] = useState<Encounter>(encounter);
+  const [isEditingName, setIsEditingName] = useState<boolean>(false);
+  const [tempName, setTempName] = useState<string>(encounter.name);
 
   useEffect(() => {
     setEncounter(localEncounter);
-  }, [localEncounter]);
+  }, [localEncounter, setEncounter]);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLTextAreaElement>): void => {
     const { name, value } = e.target;
     setLocalEncounter((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleRadioChange = (e) => {
+  const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
     setLocalEncounter((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleEditName = () => {
+  const handleEditName = (): void => {
     setTempName(localEncounter.name);
     setIsEditingName(true);
   };
 
-  const handleSaveName = () => {
+  const handleSaveName = (): void => {
     setLocalEncounter((prev) => ({ ...prev, name: tempName }));
     setIsEditingName(false);
   };
 
-  const handleCancelEdit = () => {
+  const handleCancelEdit = (): void => {
     setTempName(localEncounter.name);
     setIsEditingName(false);
   };
 
-  const handleNameInputChange = (e) => {
+  const handleNameInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setTempName(e.target.value);
   };
 
-  const getDisplayName = (name) => (/^Encounter #\d+$/.test(name) ? name : `${counter}. ${name}`);
+  const getDisplayName = (name: string): string =>
+    /^Encounter #\d+$/.test(name) ? name : `${counter}. ${name}`;
 
   return (
     <div className="dark:bg-gray-800 dark:text-white p-4 bg-gray-100 rounded mt-2 mb-2">
@@ -150,7 +166,7 @@ export const EncounterCard = ({ counter, encounter, setEncounter, isExpanded, on
                 Type
               </label>
               <div className="mt-1 space-x-4">
-                {['Minion', 'Vermin', 'Boss', 'Weird Monster'].map((type) => (
+                {(['Minion', 'Vermin', 'Boss', 'Weird Monster'] as const).map((type) => (
                   <label key={type} className="inline-flex items-center">
                     <input
                       type="radio"
@@ -212,7 +228,7 @@ export const EncounterCard = ({ counter, encounter, setEncounter, isExpanded, on
                 Status
               </label>
               <div className="mt-1 space-x-4">
-                {['Alive', 'Fled', 'Bribed', 'Defeated'].map((status) => (
+                {(['Alive', 'Fled', 'Bribed', 'Defeated'] as const).map((status) => (
                   <label key={status} className="inline-flex items-center">
                     <input
                       type="radio"
@@ -240,7 +256,7 @@ export const EncounterCard = ({ counter, encounter, setEncounter, isExpanded, on
                 value={localEncounter.notes}
                 onChange={handleInputChange}
                 className="dark:bg-gray-800 mt-1 block w-full p-2 border border-gray-300 rounded"
-                rows="3"
+                rows={3}
               />
             </div>
           </div>
