@@ -24,7 +24,7 @@ export const EncounterCard: React.FC<EncounterCardProps> = ({
 
   useEffect(() => {
     setEncounter(localEncounter);
-  }, [localEncounter, setEncounter]);
+  }, [localEncounter]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLTextAreaElement>): void => {
     const { name, value } = e.target;
