@@ -1,17 +1,17 @@
 import { useNavigate } from 'react-router-dom';
 import React, { useRef } from 'react';
 
-export const Home = () => {
+export const Home: React.FC = () => {
   const navigate = useNavigate();
-  const fileInputRef = useRef();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const createNewDungeon = () => {
+  const createNewDungeon = (): void => {
     const slug = Math.random().toString(36).substring(2, 10); // Generate a random slug
     navigate(`/dungeon/${slug}`);
   };
 
-  const handleLoadDungeon = (event) => {
-    const file = event.target.files[0];
+  const handleLoadDungeon = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const file = event.target.files?.[0];
     if (!file) return;
 
     const slugMatch = file.name.match(/^4ad-(.+?)-backup/);
@@ -25,9 +25,14 @@ export const Home = () => {
     const slug = slugMatch[1];
 
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = (e: ProgressEvent<FileReader>): void => {
       try {
-        const data = JSON.parse(e.target.result);
+        const result = e.target?.result;
+        if (typeof result !== 'string') {
+          alert('Invalid file format.');
+          return;
+        }
+        const data: Record<string, string> = JSON.parse(result);
         Object.entries(data).forEach(([key, value]) => {
           localStorage.setItem(key, value);
         });

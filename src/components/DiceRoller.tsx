@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
 import { Dice6 } from 'lucide-react';
+import { DiceType } from '../types';
 
-export const DiceRoller = ({ title, d }) => {
-  const [result, setResult] = useState(null);
-  const [isRolling, setIsRolling] = useState(false);
+interface DiceRollerProps {
+  title: string;
+  d: DiceType;
+}
 
-  const rollDice = () => {
-    const getResult = () => {
+export const DiceRoller: React.FC<DiceRollerProps> = ({ title, d }) => {
+  const [result, setResult] = useState<number | null>(null);
+  const [isRolling, setIsRolling] = useState<boolean>(false);
+
+  const rollDice = (): void => {
+    const getResult = (): void => {
       if (d === '2d6') {
         const firstRoll = Math.floor(Math.random() * 6) + 1;
         const secondRoll = Math.floor(Math.random() * 6) + 1;

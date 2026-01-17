@@ -1,12 +1,14 @@
-const isWithinBounds = (x, y, gridWidth, gridHeight) => {
+import { Grid, Room, PlacedRoom, CellValue } from '../types';
+
+const isWithinBounds = (x: number, y: number, gridWidth: number, gridHeight: number): boolean => {
   return x >= 0 && x < gridWidth && y >= 0 && y < gridHeight;
 };
 
-const generateRandomRoom = () => {
+const generateRandomRoom = (): Room => {
   const width = Math.floor(Math.random() * 6) + 2;
   const height = Math.floor(Math.random() * 6) + 2;
 
-  const cells = [];
+  const cells: [number, number][] = [];
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       cells.push([x, y]);
@@ -16,7 +18,14 @@ const generateRandomRoom = () => {
   return { width, height, cells };
 };
 
-const canPlaceRoom = (room, startX, startY, grid, gridWidth, gridHeight) => {
+const canPlaceRoom = (
+  room: Room,
+  startX: number,
+  startY: number,
+  grid: Grid,
+  gridWidth: number,
+  gridHeight: number,
+): boolean => {
   // Check room cells and buffer zone (1 cell padding around room)
   for (let y = -1; y <= room.height; y++) {
     for (let x = -1; x <= room.width; x++) {
@@ -30,7 +39,7 @@ const canPlaceRoom = (room, startX, startY, grid, gridWidth, gridHeight) => {
   return true;
 };
 
-const placeRoom = (room, startX, startY, grid) => {
+const placeRoom = (room: Room, startX: number, startY: number, grid: Grid): Grid => {
   const newGrid = grid.map((row) => [...row]);
 
   for (const [cellX, cellY] of room.cells) {
@@ -42,9 +51,23 @@ const placeRoom = (room, startX, startY, grid) => {
   return newGrid;
 };
 
-const createCorridor = (startX, startY, endX, endY, grid, gridWidth, gridHeight) => {
+interface CorridorCell {
+  x: number;
+  y: number;
+  isOccupied: CellValue;
+}
+
+const createCorridor = (
+  startX: number,
+  startY: number,
+  endX: number,
+  endY: number,
+  grid: Grid,
+  gridWidth: number,
+  gridHeight: number,
+): Grid => {
   const newGrid = grid.map((row) => [...row]);
-  const corridorCells = [];
+  const corridorCells: CorridorCell[] = [];
   let currentX = startX;
   let currentY = startY;
 
@@ -87,7 +110,7 @@ const createCorridor = (startX, startY, endX, endY, grid, gridWidth, gridHeight)
     const isLastEmpty = emptyIndex === emptyCells.length - 1;
 
     if (isFirstEmpty || isLastEmpty) {
-      let doorDirection = 'top';
+      let doorDirection: 'top' | 'bottom' | 'left' | 'right' = 'top';
 
       if (isFirstEmpty && emptyCells.length > 1) {
         const nextCell = emptyCells[1];
@@ -112,7 +135,7 @@ const createCorridor = (startX, startY, endX, endY, grid, gridWidth, gridHeight)
   return newGrid;
 };
 
-const canPlaceCorridorCell = (x, y, gridWidth, gridHeight) => {
+const canPlaceCorridorCell = (x: number, y: number, gridWidth: number, gridHeight: number): boolean => {
   for (let dy = -1; dy <= 1; dy++) {
     for (let dx = -1; dx <= 1; dx++) {
       if (dx === 0 && dy === 0) continue;
@@ -127,14 +150,14 @@ const canPlaceCorridorCell = (x, y, gridWidth, gridHeight) => {
   return true;
 };
 
-export const generateDungeon = () => {
+export const generateDungeon = (): Grid => {
   const gridWidth = 20;
   const gridHeight = 28;
-  let grid = Array(gridHeight)
-    .fill()
+  let grid: Grid = Array(gridHeight)
+    .fill(null)
     .map(() => Array(gridWidth).fill(false));
 
-  const entranceRoom = {
+  const entranceRoom: Room = {
     width: 6,
     height: 3,
     cells: [
@@ -165,7 +188,7 @@ export const generateDungeon = () => {
 
   const minRooms = 10;
   const targetRooms = minRooms + Math.floor(Math.random() * 10);
-  const placedRooms = [{ x: entranceStartX, y: entranceStartY, room: entranceRoom }];
+  const placedRooms: PlacedRoom[] = [{ x: entranceStartX, y: entranceStartY, room: entranceRoom }];
   let attempts = 0;
   const maxAttempts = 400;
 

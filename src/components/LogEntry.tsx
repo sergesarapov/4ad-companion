@@ -1,15 +1,22 @@
 import React, { useState } from 'react';
+import { LogEntryType } from '../types';
 
-export const LogEntry = ({ entry, updateEntry, deleteEntry }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedText, setEditedText] = useState(entry.text);
+interface LogEntryProps {
+  entry: LogEntryType;
+  updateEntry: (entry: LogEntryType) => void;
+  deleteEntry: (id: number) => void;
+}
 
-  const handleSave = () => {
+export const LogEntry: React.FC<LogEntryProps> = ({ entry, updateEntry, deleteEntry }) => {
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [editedText, setEditedText] = useState<string>(entry.text);
+
+  const handleSave = (): void => {
     updateEntry({ ...entry, text: editedText });
     setIsEditing(false);
   };
 
-  const handleCancel = () => {
+  const handleCancel = (): void => {
     setEditedText(entry.text);
     setIsEditing(false);
   };
@@ -22,7 +29,7 @@ export const LogEntry = ({ entry, updateEntry, deleteEntry }) => {
             className="dark:bg-gray-800 dark:text-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             value={editedText}
             onChange={(e) => setEditedText(e.target.value)}
-            rows="3"
+            rows={3}
           />
           <div className="flex justify-end mt-4">
             <button
