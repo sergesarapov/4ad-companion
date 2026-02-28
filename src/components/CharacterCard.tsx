@@ -315,7 +315,6 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   onChange={handleInputChange}
                   placeholder="Attack"
                   className="w-[100px] dark:bg-gray-800 mt-1 block p-2 border border-gray-300 rounded"
-                  min="0"
                 />
               </div>
               <div>
@@ -333,7 +332,6 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   onChange={handleInputChange}
                   placeholder="Defense"
                   className="w-[100px] dark:bg-gray-800 mt-1 block p-2 border border-gray-300 rounded"
-                  min="0"
                 />
               </div>
             </div>
