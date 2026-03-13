@@ -11,7 +11,7 @@ const App: React.FC = () => {
   const [isHelpModalOpen, setIsHelpModalOpen] = useState<boolean>(false);
 
   return (
-    <div className="relative dark:bg-black dark:text-white max-w-screen-lg mx-auto p-4">
+    <div className="min-h-[100vh] flex flex-col justify-between relative dark:bg-black dark:text-white max-w-screen-lg mx-auto p-4">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-3xl font-bold place-self-start">4AD Companion</h1>
         <div className="flex flex-col items-end gap-2">

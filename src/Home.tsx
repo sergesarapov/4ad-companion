@@ -45,25 +45,23 @@ export const Home: React.FC = () => {
   };
 
   return (
-    <div className="h-[80vh] grid place-items-center">
-      <div className="flex flex-col items-center gap-4">
-        <button
-          onClick={createNewDungeon}
-          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
-        >
-          Delve into a new dungeon
-        </button>
-        <label className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">
-          Load existing dungeon
-          <input
-            type="file"
-            accept=".json"
-            onChange={handleLoadDungeon}
-            ref={fileInputRef}
-            className="hidden"
-          />
-        </label>
-      </div>
+    <div className="flex flex-col items-center gap-4">
+      <button
+        onClick={createNewDungeon}
+        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
+      >
+        Delve into a new dungeon
+      </button>
+      <label className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">
+        Load existing dungeon
+        <input
+          type="file"
+          accept=".json"
+          onChange={handleLoadDungeon}
+          ref={fileInputRef}
+          className="hidden"
+        />
+      </label>
     </div>
   );
 };
