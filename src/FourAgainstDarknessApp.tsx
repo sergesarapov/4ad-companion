@@ -335,12 +335,14 @@ export const FourAgainstDarknessApp: React.FC = () => {
         setActiveCharacterId={setActiveCharacterId}
       />
       <h2 className="text-xl font-bold mt-6 mb-2">Encounters</h2>
-      <button
-        className="mb-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
-        onClick={addNewEncounter}
-      >
-        + New Encounter
-      </button>
+      <div>
+        <button
+          className="mb-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+          onClick={addNewEncounter}
+        >
+          + New Encounter
+        </button>
+      </div>
       <div className="flex flex-col-reverse">
         {encounters.map((encounter, index) => (
           <EncounterCard
