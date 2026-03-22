@@ -265,9 +265,9 @@ export const FourAgainstDarknessApp: React.FC = () => {
         <h2 className="text-lg font-bold mb-4 dark:text-white text-gray-800">
           Dungeon Exploration
         </h2>
-        <DiceRoller title="Tile" d="d66" />
-        <DiceRoller title="Contents" d="2d6" />
-        <DiceRoller title="Outcome" d="d6" />
+        <DiceRoller title="Tile (d66)" d="d66" />
+        <DiceRoller title="Contents (2d6)" d="2d6" />
+        <DiceRoller title="Outcome (d6)" d="d6" />
       </div>
       <DungeonGrid
         grid={grid}

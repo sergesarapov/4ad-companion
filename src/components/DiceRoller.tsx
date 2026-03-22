@@ -44,13 +44,12 @@ export const DiceRoller: React.FC<DiceRollerProps> = ({ title, d }) => {
         <button
           onClick={rollDice}
           disabled={isRolling}
-          className="relative bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-2 rounded
+          className="relative bg-gradient-to-r from-blue-500 to-blue-600 text-white px-3 py-2 h-[40px] rounded
                      hover:from-blue-600 hover:to-blue-700 transition-all duration-300
                      shadow-lg hover:shadow-xl
                      disabled:opacity-50 disabled:cursor-not-allowed
                      font-medium flex items-center gap-2"
         >
-          <span>Roll {d}</span>
           <div className={`flex ${isRolling ? 'animate-bounce' : ''}`}>
             <Dice6 className={`inline-block ${isRolling ? 'animate-spin' : ''}`} size={20} />
             {d !== 'd6' && (
