@@ -46,6 +46,7 @@ export interface CellObject {
   door?: DoorOrientation | null;
   encounter?: number | null;
   terrain?: TerrainValue | null;
+  searched?: boolean | null;
 }
 
 export type CellValue = boolean | CellObject;
