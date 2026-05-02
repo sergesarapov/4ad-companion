@@ -23,6 +23,7 @@ type DrawMode =
   | 'door'
   | 'erase'
   | 'encounter'
+  | 'searched'
   | 'forest'
   | 'mountain'
   | 'water'
@@ -180,6 +181,21 @@ export const DungeonGrid: React.FC<DungeonGridProps> = ({
     });
   };
 
+  const toggleSearched = (rowIndex: number, colIndex: number): void => {
+    onGridUpdate((prevGrid: Grid) => {
+      const newGrid: Grid = prevGrid.map((row, rIndex) =>
+        row.map((cell, cIndex): CellValue => {
+          if (rIndex === rowIndex && cIndex === colIndex) {
+            const cellObj: CellObject = typeof cell === 'object' ? cell : {};
+            return { ...cellObj, searched: cellObj.searched ? null : true } as CellObject;
+          }
+          return cell;
+        }),
+      );
+      return newGrid;
+    });
+  };
+
   const handleMouseDown = useCallback(
     (rowIndex: number, colIndex: number): void => {
       if (mode === 'draw') {
@@ -202,6 +218,8 @@ export const DungeonGrid: React.FC<DungeonGridProps> = ({
         toggleWater(rowIndex, colIndex);
       } else if (mode === 'bridge') {
         toggleBridge(rowIndex, colIndex);
+      } else if (mode === 'searched') {
+        toggleSearched(rowIndex, colIndex);
       }
     },
     [grid, mode, doorOrientation, selectedEncounter],
@@ -238,6 +256,7 @@ export const DungeonGrid: React.FC<DungeonGridProps> = ({
   const toggleMountainMode = (): void => setMode('mountain');
   const toggleWaterMode = (): void => setMode('water');
   const toggleBridgeMode = (): void => setMode('bridge');
+  const toggleSearchedMode = (): void => setMode('searched');
 
   const rotateDoorOrientation = (): void => {
     setDoorOrientation((prev) => {
@@ -379,6 +398,16 @@ export const DungeonGrid: React.FC<DungeonGridProps> = ({
               </button>
             </div>
             <div className="h-8 w-[1px] bg-gray-400 dark:bg-gray-500"></div>
+            <button
+              className={`inline-flex items-center justify-center font-bold py-3 px-3 rounded ${
+                mode === 'searched' ? 'bg-yellow-500 text-white' : 'bg-gray-300 text-gray-700'
+              }`}
+              onClick={toggleSearchedMode}
+              title="Searched"
+            >
+              <span className="text-sm leading-none">S</span>
+            </button>
+            <div className="h-8 w-[1px] bg-gray-400 dark:bg-gray-500"></div>
             <div className="flex flex-nowrap gap-2">
               <button
                 className={`inline-flex items-center justify-center font-bold py-3 px-3 rounded ${
@@ -473,6 +502,11 @@ export const DungeonGrid: React.FC<DungeonGridProps> = ({
                                 : 0,
                         }}
                       ></i>
+                    )}
+                    {cellObj.searched && (
+                      <div className="absolute inset-0 flex items-center justify-center text-xs font-bold text-yellow-400 dark:text-yellow-700">
+                        S
+                      </div>
                     )}
                     {cellObj.encounter && (
                       <div className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white dark:text-red-500">
