@@ -46,6 +46,16 @@ const App: React.FC = () => {
           Disclaimer: This companion app is not part of the official Four Against Darkness game and
           is not affiliated with or endorsed by Ganesha Games.
         </p>
+        <p className="text-sm dark:text-slate-400 text-gray-600 mt-2">
+          <a
+            href="https://buymeacoffee.com/sergesarapov"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-green-600 hover:underline dark:text-green-400"
+          >
+            Support the developer
+          </a>
+        </p>
       </footer>
       <HelpModal isOpen={isHelpModalOpen} onClose={() => setIsHelpModalOpen(false)} />
     </div>
